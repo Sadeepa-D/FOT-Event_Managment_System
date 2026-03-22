@@ -1,0 +1,106 @@
+package com.example.FOT_Event_Managment_System.Model;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "events")
+public class Event {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String eventName;
+    private String organizerName;
+    private String venue;
+    private String date;
+    private String time;
+    private Double ticketPrice;
+    private Integer availableSlots;
+    private String description;
+
+    public Event() {}
+
+    public Event(String description, Integer availableSlots, Double ticketPrice, String time, String date, String venue, String organizerName, String eventName, Long id) {
+        this.description = description;
+        this.availableSlots = availableSlots;
+        this.ticketPrice = ticketPrice;
+        this.time = time;
+        this.date = date;
+        this.venue = venue;
+        this.organizerName = organizerName;
+        this.eventName = eventName;
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getEventName() {
+        return eventName;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+
+    public String getOrganizerName() {
+        return organizerName;
+    }
+
+    public void setOrganizerName(String organizerName) {
+        this.organizerName = organizerName;
+    }
+
+    public String getVenue() {
+        return venue;
+    }
+
+    public void setVenue(String venue) {
+        this.venue = venue;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public Double getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public void setTicketPrice(Double ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
+
+    public Integer getAvailableSlots() {
+        return availableSlots;
+    }
+
+    public void setAvailableSlots(Integer availableSlots) {
+        this.availableSlots = availableSlots;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+}

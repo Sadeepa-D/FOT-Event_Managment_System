@@ -26,8 +26,12 @@ public class UserController {
 
     @PostMapping("/users/save")
     public String saveUser(@ModelAttribute("UserForm") Users user) {
-
         userServices.addUser(user);
         return "redirect:/users";
+    }
+
+    @GetMapping("/login")
+    public String showLogin(Model model) {
+        return "Login";
     }
 }
