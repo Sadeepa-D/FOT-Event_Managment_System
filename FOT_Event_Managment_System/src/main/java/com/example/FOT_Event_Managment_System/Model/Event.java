@@ -17,7 +17,7 @@ public class Event {
     private Double ticketPrice;
     private Integer availableSlots;
     private String description;
-
+    private Long organizerId;
     public Event() {}
 
     public Event(String description, Integer availableSlots, Double ticketPrice, String time, String date, String venue, String organizerName, String eventName, Long id) {
@@ -102,5 +102,9 @@ public class Event {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setOrganizerId(Long uId) {
+        this.organizerId = uId;
     }
 }
