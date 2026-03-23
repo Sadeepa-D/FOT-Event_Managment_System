@@ -27,7 +27,7 @@ public class MyUserDetailsService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUseremail())
                 .password(user.getUserpassword()) // This MUST be the BCrypt hash from DB
-                .roles("PARTICIPANT") // Assign a default role
+                .roles(user.getUserrole())
                 .build();
     }
 }

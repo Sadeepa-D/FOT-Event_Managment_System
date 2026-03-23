@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class EventController {
     @Autowired
     private EventServices eventServices;
+    @Autowired
     private UserRepo userRepo;
     @GetMapping("/events")
     public String events(Model model) {
