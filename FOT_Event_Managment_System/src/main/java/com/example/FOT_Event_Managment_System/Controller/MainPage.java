@@ -21,4 +21,14 @@ public class MainPage {
         model.addAttribute("View_All_Events",eventServices.getEvents());
         return "AllEvents";
     }
+    @GetMapping("/paticipanthome")
+    public String ViewPaticipanthome(Model model) {
+        // 1. Fetch all events so the student can see what is available
+        model.addAttribute("events", eventServices.getEvents());
+
+        // 2. Optional: Add a custom welcome message
+        model.addAttribute("welcomeMsg", "Welcome to the Student Event Portal");
+
+        return "Participant/ParticiHome";
+    }
 }
