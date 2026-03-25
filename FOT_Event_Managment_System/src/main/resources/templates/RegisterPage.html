@@ -6,22 +6,17 @@
 <body>
 <h2>Register New User</h2>
 <form th:action="@{/users/save}" th:object="${UserForm}" method="post">
-
-  <label>User ID:</label>
-  <input type="text" th:field="*{u_id}" required/><br/>
-
   <label>Name:</label>
-  <input type="text" th:field="*{u_name}" required/><br/>
+  <input type="text" th:field="*{username}" required/><br/>
 
   <label>Email:</label>
-  <input type="email" th:field="*{u_email}" required/><br/>
+  <input type="email" th:field="*{useremail}" required/><br/>
 
   <label>Password:</label>
-  <input type="password" th:field="*{u_password}" required/><br/>
+  <input type="password" th:field="*{userpassword}" required/><br/>
 
   <label>Role:</label>
-  <select th:field="*{role}">
-    <option value="ADMIN">Admin</option>
+  <select th:field="*{userrole}">
     <option value="ORGANIZER">Organizer</option>
     <option value="PARTICIPANT">Participant</option>
   </select><br/>

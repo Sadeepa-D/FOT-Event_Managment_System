@@ -16,12 +16,12 @@
     </thead>
     <tbody>
     <tr th:each="user : ${UserList}">
-        <td th:text="${user.u_id}">1</td>
-        <td th:text="${user.u_name}">JohnDoe</td>
-        <td th:text="${user.role}">Admin</td>
+        <td th:text="${user.userid}">1</td>
+        <td th:text="${user.username}">JohnDoe</td>
+        <td th:text="${user.userrole}">Admin</td>
         <td>
-            <a th:href="@{/users/edit/{id}(id=${user.u_id})}">Edit</a>
-            <a th:href="@{/users/delete/{id}(id=${user.u_id})}">Delete</a>
+            <a th:href="@{/users/edit/{id}(id=${user.userid})}">Edit</a>
+            <a th:href="@{/users/delete/{id}(id=${user.userid})}">Delete</a>
         </td>
     </tr>
     </tbody>
