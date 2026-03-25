@@ -1,66 +1,65 @@
 package com.example.FOT_Event_Managment_System.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name="user")
 public class Users {
     @Id
-    private String u_id;
-    private String u_name;
-    private String u_password;
-    private String u_email;
-    private String role;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userid;
+    private String username;
+    private String userpassword;
+    private String useremail;
+    private String userrole;
 
     public Users() {}
 
-    public Users(String u_id, String u_name, String u_password, String u_email, String role) {
-        this.u_id = u_id;
-        this.u_name = u_name;
-        this.u_password = u_password;
-        this.u_email = u_email;
-        this.role = role;
+    public Users(Long userid, String username, String userpassword, String useremail, String userrole) {
+        this.userid = userid;
+        this.username = username;
+        this.userpassword = userpassword;
+        this.useremail = useremail;
+        this.userrole = userrole;
     }
 
-    public String getU_id() {
-        return u_id;
+    public Long getUserid() {
+        return userid;
     }
 
-    public void setU_id(String u_id) {
-        this.u_id = u_id;
+    public void setUserid(Long userid) {
+        this.userid = userid;
     }
 
-    public String getU_name() {
-        return u_name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setU_name(String u_name) {
-        this.u_name = u_name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getU_password() {
-        return u_password;
+    public String getUserpassword() {
+        return userpassword;
     }
 
-    public void setU_password(String u_password) {
-        this.u_password = u_password;
+    public void setUserpassword(String userpassword) {
+        this.userpassword = userpassword;
     }
 
-    public String getU_email() {
-        return u_email;
+    public String getUseremail() {
+        return useremail;
     }
 
-    public void setU_email(String u_email) {
-        this.u_email = u_email;
+    public void setUseremail(String useremail) {
+        this.useremail = useremail;
     }
 
-    public String getRole() {
-        return role;
+    public String getUserrole() {
+        return userrole;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setUserrole(String userrole) {
+        this.userrole = userrole;
     }
 }
