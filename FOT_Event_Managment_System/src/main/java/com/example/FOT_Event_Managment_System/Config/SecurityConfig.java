@@ -18,7 +18,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index.html","/users/add","/users/save", "/css/**", "/js/**").permitAll() // Public Main Page
+                        .requestMatchers("/", "/index.html","/users/add","/users/save","/allevents","/css/**", "/js/**").permitAll() // Public Main Page
                         .anyRequest().authenticated() // Everything else requires login
                 )
                 .formLogin(login -> login
@@ -27,7 +27,13 @@ public class SecurityConfig {
 //                        .defaultSuccessUrl("/dashboard", true)
                         .permitAll()
                 )
-                .logout(logout -> logout.permitAll());
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
+                );
 
         return http.build();
     }

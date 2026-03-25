@@ -21,6 +21,9 @@ public class EventServices {
     public Event getEventById(long id) {
         return eventRepo.findById(id).orElse(null);
     }
+    public List<Event> getEventsByOrganizer(Long organizerId) {
+        return eventRepo.findByOrganizerId(organizerId);
+    }
     public void deleteEvent(long id) {
         eventRepo.deleteById(id);
     }
