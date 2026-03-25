@@ -16,12 +16,12 @@ public class UserController {
     @GetMapping("/users")
     public String viewUsers(Model model) {
         model.addAttribute("UserList",userServices.getUsers());
-        return "Users";
+        return "Admin/Users";
     }
     @GetMapping("/users/add")
     public String showaddUserform(Model model) {
        model.addAttribute("UserForm", new Users());
-       return "RegisterPage";
+       return "auth/RegisterPage";
     }
 
     @PostMapping("/users/save")
@@ -32,6 +32,6 @@ public class UserController {
 
     @GetMapping("/login")
     public String showLogin(Model model) {
-        return "Login";
+        return "auth/Login";
     }
 }

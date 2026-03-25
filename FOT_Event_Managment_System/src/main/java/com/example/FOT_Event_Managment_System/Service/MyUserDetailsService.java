@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.FOT_Event_Managment_System.Model.Users;
 
-import java.util.ArrayList;
-
 @Service
 public class MyUserDetailsService implements UserDetailsService {
     @Autowired

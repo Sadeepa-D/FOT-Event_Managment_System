@@ -23,12 +23,12 @@ public class EventController {
     public String events(Model model) {
         model.addAttribute("events", eventServices.getEvents());
         model.addAttribute("eventForm", new Event());
-        return "Events";
+        return "Organizer/Events";
     }
     @GetMapping("/event/add")
     public String addEventForm(Model model) {
         model.addAttribute("eventForm", new Event());
-        return "AddEvent";
+        return "Organizer/AddEvent";
     }
     @PostMapping("/event/save")
     public String SaveEvent(@ModelAttribute("eventForm") Event event, Authentication authentication) {
@@ -54,5 +54,5 @@ public class EventController {
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         Event existingEvent = eventServices.getEventById(id);
         model.addAttribute("eventForm", existingEvent);
-        return "AddEvent";}
+        return "Organizer/AddEvent";}
 }
