@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.ArrayList;
+
 @Controller
 public class EventController {
     @Autowired
@@ -20,15 +22,27 @@ public class EventController {
     @Autowired
     private UserRepo userRepo;
     @GetMapping("/events")
-    public String events(Model model) {
-        model.addAttribute("events", eventServices.getEvents());
+    public String events(Model model, Authentication authentication) {
+        // 1. Get current logged-in user email
+        String email = authentication.getName();
+
+        // 2. Find user to get their ID
+        Users user = userRepo.findByUseremail(email);
+
+        // 3. ONLY fetch events for this specific user
+        if (user != null) {
+            model.addAttribute("events", eventServices.getEventsByOrganizer(user.getUserid()));
+        } else {
+            model.addAttribute("events", new ArrayList<>());
+        }
+
         model.addAttribute("eventForm", new Event());
-        return "Events";
+        return "Organizer/Events";
     }
     @GetMapping("/event/add")
     public String addEventForm(Model model) {
         model.addAttribute("eventForm", new Event());
-        return "AddEvent";
+        return "Organizer/AddEvent";
     }
     @PostMapping("/event/save")
     public String SaveEvent(@ModelAttribute("eventForm") Event event, Authentication authentication) {
@@ -54,5 +68,5 @@ public class EventController {
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         Event existingEvent = eventServices.getEventById(id);
         model.addAttribute("eventForm", existingEvent);
-        return "AddEvent";}
+        return "Organizer/AddEvent";}
 }
