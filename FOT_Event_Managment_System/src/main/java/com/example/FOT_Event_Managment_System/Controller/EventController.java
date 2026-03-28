@@ -32,8 +32,10 @@ public class EventController {
         // 3. ONLY fetch events for this specific user
         if (user != null) {
             model.addAttribute("events", eventServices.getEventsByOrganizer(user.getUserid()));
+            model.addAttribute("fullName", user.getUsername());
         } else {
             model.addAttribute("events", new ArrayList<>());
+            model.addAttribute("fullName", "User");
         }
 
         model.addAttribute("eventForm", new Event());
