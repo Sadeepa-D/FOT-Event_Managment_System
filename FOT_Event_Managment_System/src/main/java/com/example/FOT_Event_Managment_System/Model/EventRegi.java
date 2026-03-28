@@ -16,11 +16,12 @@ public class EventRegi {
     private String pnumber;
     private int pslots;
     private Long eventId;
+    private String registatus ;
 
     public EventRegi() {
     }
 
-    public EventRegi(Long id, String eventName, String organizerName, String pname, String pRegistrationnnum, String pnumber, int pslots, Long eventId) {
+    public EventRegi(Long id, String eventName, String organizerName, String pname, String pRegistrationnnum, String pnumber, int pslots, Long eventId, String registatus) {
         this.id = id;
         this.eventName = eventName;
         this.organizerName = organizerName;
@@ -29,6 +30,7 @@ public class EventRegi {
         this.pnumber = pnumber;
         this.pslots = pslots;
         this.eventId = eventId;
+        this.registatus = registatus;
     }
 
     public Long getId() {
@@ -93,5 +95,13 @@ public class EventRegi {
 
     public void setEventId(Long eventId) {
         this.eventId = eventId;
+    }
+
+    public String getRegistatus() {
+        return registatus;
+    }
+
+    public void setRegistatus(String registatus) {
+        this.registatus = registatus;
     }
 }

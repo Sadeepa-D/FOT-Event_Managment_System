@@ -18,9 +18,10 @@ public class Event {
     private Integer availableSlots;
     private String description;
     private Long organizerId;
+    private String eventstatus;
     public Event() {}
 
-    public Event(String description, Integer availableSlots, Double ticketPrice, String time, String date, String venue, String organizerName, String eventName, Long id) {
+    public Event(String description, Integer availableSlots, Double ticketPrice, String time, String date, String venue, String organizerName, String eventName, Long id, String eventstatus) {
         this.description = description;
         this.availableSlots = availableSlots;
         this.ticketPrice = ticketPrice;
@@ -30,6 +31,7 @@ public class Event {
         this.organizerName = organizerName;
         this.eventName = eventName;
         this.id = id;
+        this.eventstatus = eventstatus;
     }
 
     public Long getId() {
@@ -107,4 +109,18 @@ public class Event {
     public void setOrganizerId(Long uId) {
         this.organizerId = uId;
     }
+
+    public String getEventstatus() {
+        return eventstatus;
+    }
+
+    public void setEventstatus(String eventstatus) {
+        this.eventstatus = eventstatus;
+    }
+
+    public Long getOrganizerId() {
+        return organizerId;
+    }
+
+
 }

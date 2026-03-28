@@ -1,6 +1,8 @@
 package com.example.FOT_Event_Managment_System.Controller;
 
 import com.example.FOT_Event_Managment_System.Model.Event;
+import com.example.FOT_Event_Managment_System.Repository.EventRegiRepo;
+import com.example.FOT_Event_Managment_System.Service.EventServices;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import com.example.FOT_Event_Managment_System.Model.EventRegi;
@@ -16,6 +18,10 @@ import java.util.List;
 public class EventRegiController {
     @Autowired
     private EventRegiServices eventRegiServices;
+    @Autowired
+    private EventRegiRepo eventRegiRepo;
+    @Autowired
+    private EventServices eventServices;
     @GetMapping("/event/register") // This opens the form page
     public String showRegistrationForm(@RequestParam("id") Long eventId,
                                        @RequestParam("name") String eventName,
@@ -50,22 +56,39 @@ public class EventRegiController {
     }
     @GetMapping("/event/Showparticipant/{id}")
     public String showParticipant(@PathVariable("id") Long eventId, Model model) {
+        // 1. Get ONLY active participants
         List<EventRegi> participants = eventRegiServices.getParticipantsByEventId(eventId);
         model.addAttribute("participants", participants);
-
-        // Explicitly send the ID to the page for the "Register" button
         model.addAttribute("selectedEventId", eventId);
 
-        EventRegi headerInfo = new EventRegi();
-        if (!participants.isEmpty()) {
-            headerInfo = participants.get(0);
+        // 2. Fetch official Event details so the header is always correct
+        // Replace 'eventService' with your actual Event Service name
+        Event actualEvent = eventServices.getEventById(eventId);
+
+        if (actualEvent != null) {
+            model.addAttribute("event", actualEvent);
         } else {
-            // Fallback info
-            headerInfo.setEventName("New Event");
-            headerInfo.setOrganizerName("Faculty Organizer");
+            // Fallback if event is totally missing
+            EventRegi fallback = new EventRegi();
+            fallback.setEventName("Event Not Found");
+            model.addAttribute("event", fallback);
         }
-        model.addAttribute("event", headerInfo);
 
         return "Organizer/ParticipantList";
+    }
+    @GetMapping("/event/registration/remove/{id}")
+    public String removeEventregistration(@PathVariable("id") Long registrationId) {
+
+        // 1. Find the registration record to know which event it belongs to
+        EventRegi registration = eventRegiRepo.findById(registrationId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid registration Id:" + registrationId));
+
+        Long eventId = registration.getEventId();
+
+        // 2. Perform the update to set status as 'true'
+        eventRegiServices.updateregistrationstatus(registrationId);
+
+        // 3. Redirect back to the participant list for that specific event
+        return "redirect:/event/Showparticipant/" + eventId;
     }
 }

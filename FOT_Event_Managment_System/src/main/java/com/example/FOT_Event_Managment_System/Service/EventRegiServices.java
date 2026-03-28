@@ -19,6 +19,8 @@ public class EventRegiServices {
         eventRegiRepo.save(eventRegi);
     }
     public List<EventRegi> getParticipantsByEventId(Long eventId) {
-        return eventRegiRepo.findByEventId(eventId);
+        return eventRegiRepo.findActiveParticipants(eventId);
     }
-}
+    public void updateregistrationstatus(Long eventrejiId) {
+        eventRegiRepo.updateStatusToTrue(eventrejiId);
+    }}
