@@ -32,8 +32,10 @@ public class EventController {
         // 3. ONLY fetch events for this specific user
         if (user != null) {
             model.addAttribute("events", eventServices.getEventsByOrganizer(user.getUserid()));
+            model.addAttribute("fullName", user.getUsername());
         } else {
             model.addAttribute("events", new ArrayList<>());
+            model.addAttribute("fullName", "User");
         }
 
         model.addAttribute("eventForm", new Event());
@@ -68,5 +70,6 @@ public class EventController {
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         Event existingEvent = eventServices.getEventById(id);
         model.addAttribute("eventForm", existingEvent);
-        return "Organizer/AddEvent";}
+        return "Organizer/AddEvent";
+    }
 }
