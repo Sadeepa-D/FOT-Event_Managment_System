@@ -1,6 +1,8 @@
 package com.example.FOT_Event_Managment_System.Controller;
 
 import com.example.FOT_Event_Managment_System.Model.Event;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import com.example.FOT_Event_Managment_System.Model.EventRegi;
 import com.example.FOT_Event_Managment_System.Service.EventRegiServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,29 +30,40 @@ public class EventRegiController {
         return "Participant/EventRegister"; // Points to your HTML file
     }
     @PostMapping("/event/register/save")
-    public String registerEvent(@ModelAttribute("EventRegForm") EventRegi eventRegi) {
+    public String registerEvent(@ModelAttribute("EventRegForm") EventRegi eventRegi,
+                                Authentication authentication) {
+
+        // 1. Save the registration as usual
         eventRegiServices.registerforEvent(eventRegi);
-        return "redirect:/paticipanthome?success";
+
+        // 2. Check the user's role
+        if (authentication != null && authentication.getAuthorities()
+                .contains(new SimpleGrantedAuthority("ROLE_ORGANIZER"))) {
+
+            // If Organizer: Redirect back to the participant list for that specific event
+            return "redirect:/event/Showparticipant/" + eventRegi.getEventId();
+        } else {
+
+            // If Participant: Redirect to their home dashboard with a success message
+            return "redirect:/paticipanthome?success";
+        }
     }
     @GetMapping("/event/Showparticipant/{id}")
     public String showParticipant(@PathVariable("id") Long eventId, Model model) {
-        // 1. Fetch the list of registrations
         List<EventRegi> participants = eventRegiServices.getParticipantsByEventId(eventId);
         model.addAttribute("participants", participants);
 
-        // 2. Create a "header" object to avoid the null error
-        EventRegi headerInfo = new EventRegi();
+        // Explicitly send the ID to the page for the "Register" button
+        model.addAttribute("selectedEventId", eventId);
 
+        EventRegi headerInfo = new EventRegi();
         if (!participants.isEmpty()) {
-            // Pass the FIRST registration object from the list
             headerInfo = participants.get(0);
         } else {
-            // Fallback data so the page doesn't crash if no one joined yet
-            headerInfo.setEventName("No registrations found for this event");
-            headerInfo.setOrganizerName("N/A");
+            // Fallback info
+            headerInfo.setEventName("New Event");
+            headerInfo.setOrganizerName("Faculty Organizer");
         }
-
-        // IMPORTANT: This object must be named "event" to match your HTML
         model.addAttribute("event", headerInfo);
 
         return "Organizer/ParticipantList";
