@@ -68,5 +68,6 @@ public class EventController {
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         Event existingEvent = eventServices.getEventById(id);
         model.addAttribute("eventForm", existingEvent);
-        return "Organizer/AddEvent";}
+        return "Organizer/AddEvent";
+    }
 }
