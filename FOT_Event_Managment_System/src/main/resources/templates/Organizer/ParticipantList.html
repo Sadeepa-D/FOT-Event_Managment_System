@@ -90,15 +90,12 @@
 
 <header>
   <h1>FOT Event Management System</h1>
-  <form th:action="@{/logout}" method="post">
-    <button type="submit" style="background: none; border: 1px solid white; color: white; padding: 5px 15px; border-radius: 4px; cursor: pointer;">Logout</button>
-  </form>
 </header>
 
 <div class="container">
   <div class="event-info-card">
     <h2 th:text="${event.eventName}">Event Name</h2>
-    <p th:text="${'Registered Participants for ' + event.venue}">Venue Info</p>
+    <p th:text="${'Registered Participants for ' + event.organizerName}">Organizer Info</p>
   </div>
 
   <table>
@@ -106,23 +103,19 @@
     <tr>
       <th>No.</th>
       <th>Participant Name</th>
-      <th>Email Address</th>
-      <th>Role</th>
+      <th>Registration Number</th>
+      <th>T.P Number</th>
+      <th>No.Of Slots Booked</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="participant, iter : ${participants}">
       <td th:text="${iter.count}">1</td>
-      <td th:text="${participant.username}" style="font-weight: 600;">Full Name</td>
-      <td th:text="${participant.useremail}">email@ruhuna.ac.lk</td>
+      <td th:text="${participant.Pname}" style="font-weight: 600;">Full Name</td>
+      <td th:text="${participant.pRegistrationnnum}">TG/2022/XXX</td>
+      <td th:text="${participant.pnumber}">07X XXX XXXX</td>
       <td>
-        <span class="role-badge" th:text="${participant.userrole}">PARTICIPANT</span>
-      </td>
-    </tr>
-
-    <tr th:if="${#lists.isEmpty(participants)}">
-      <td colspan="4" style="text-align: center; padding: 30px; color: #95a5a6;">
-        No participants have registered for this event yet.
+        <span class="role-badge" th:text="${participant.pslots}">1</span>
       </td>
     </tr>
     </tbody>
