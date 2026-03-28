@@ -166,7 +166,7 @@
     </div>
 
     <div class="action-header">
-      <a th:href="@{/event/register(id=${participants.isEmpty() ? id : participants[0].eventId}, name=${event.eventName}, organizer=${event.organizerName})}"
+      <a th:href="@{/event/register(id=${selectedEventId}, name=${event.eventName}, organizer=${event.organizerName})}"
          class="btn-register">
         <span class="plus-icon">+</span> Register New Participant
       </a>
@@ -194,9 +194,9 @@
         <span class="role-badge" th:text="${participant.pslots}">1</span>
       </td>
       <td style="text-align: right;">
-        <a th:href="@{/event/registration/delete/{id}(id=${participant.id})}"
+        <a th:href="@{/event/registration/remove/{id}(id=${participant.id})}"
            class="btn-delete"
-           onclick="return confirm('Remove this participant from the event?')">
+           onclick="return confirm('Are you sure you want to remove this participant?')">
           Remove
         </a>
       </td>
