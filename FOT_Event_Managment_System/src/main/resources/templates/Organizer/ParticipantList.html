@@ -30,11 +30,22 @@
 
     .event-info-card {
       background: white;
-      padding: 20px;
+      padding: 20px 25px;
       border-radius: 8px;
-      border-left: 5px solid #27ae60; /* Theme Green */
+      border-left: 5px solid #27ae60;
       margin-bottom: 25px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+
+      /* Adds Flexbox to keep content in one row */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Ensure the button doesn't have extra bottom margin inside the card */
+    .event-info-card .action-header {
+      margin-bottom: 0;
+      padding: 0;
     }
 
     .event-info-card h2 { color: #2c3e50; margin-bottom: 5px; }
@@ -84,6 +95,61 @@
       text-decoration: none;
       font-weight: bold;
     }
+    .btn-delete {
+      background-color: #e74c3c; /* Theme Red */
+      color: white;
+      padding: 6px 14px;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      display: inline-block;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-delete:hover {
+      background-color: #c0392b; /* Darker Red */
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+    }
+
+    .btn-delete:active {
+      transform: translateY(0);
+    }
+
+    /* The Green Register Button */
+    .btn-register {
+      background-color: #27ae60; /* Theme Green */
+      color: white;
+      padding: 12px 22px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px; /* Space between the plus and text */
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-register:hover {
+      background-color: #2ecc71; /* Brighter Green */
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(46, 204, 113, 0.4);
+      color: white;
+    }
+
+    /* The Plus Mark (+) Styling */
+    .plus-icon {
+      font-size: 1.4rem;
+      line-height: 1;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -94,8 +160,17 @@
 
 <div class="container">
   <div class="event-info-card">
-    <h2 th:text="${event.eventName}">Event Name</h2>
-    <p th:text="${'Registered Participants for ' + event.organizerName}">Organizer Info</p>
+    <div>
+      <h2 th:text="${event.eventName}" style="margin-bottom: 5px;">Event Name</h2>
+      <p th:text="${'Registered Participants for ' + event.organizerName}">Organizer Info</p>
+    </div>
+
+    <div class="action-header">
+      <a th:href="@{/event/register(id=${participants.isEmpty() ? id : participants[0].eventId}, name=${event.eventName}, organizer=${event.organizerName})}"
+         class="btn-register">
+        <span class="plus-icon">+</span> Register New Participant
+      </a>
+    </div>
   </div>
 
   <table>
@@ -106,6 +181,7 @@
       <th>Registration Number</th>
       <th>T.P Number</th>
       <th>No.Of Slots Booked</th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
@@ -114,8 +190,21 @@
       <td th:text="${participant.Pname}" style="font-weight: 600;">Full Name</td>
       <td th:text="${participant.pRegistrationnnum}">TG/2022/XXX</td>
       <td th:text="${participant.pnumber}">07X XXX XXXX</td>
-      <td>
+      <td style="text-align: center;">
         <span class="role-badge" th:text="${participant.pslots}">1</span>
+      </td>
+      <td style="text-align: right;">
+        <a th:href="@{/event/registration/delete/{id}(id=${participant.id})}"
+           class="btn-delete"
+           onclick="return confirm('Remove this participant from the event?')">
+          Remove
+        </a>
+      </td>
+    </tr>
+
+    <tr th:if="${#lists.isEmpty(participants)}">
+      <td colspan="6" style="text-align: center; padding: 30px; color: #95a5a6;">
+        No students have registered for this event yet.
       </td>
     </tr>
     </tbody>
