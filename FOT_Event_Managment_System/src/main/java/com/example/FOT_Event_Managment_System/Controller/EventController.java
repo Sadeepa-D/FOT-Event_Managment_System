@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class EventController {
@@ -23,15 +24,13 @@ public class EventController {
     private UserRepo userRepo;
     @GetMapping("/events")
     public String events(Model model, Authentication authentication) {
-        // 1. Get current logged-in user email
         String email = authentication.getName();
-
-        // 2. Find user to get their ID
         Users user = userRepo.findByUseremail(email);
 
-        // 3. ONLY fetch events for this specific user
         if (user != null) {
-            model.addAttribute("events", eventServices.getEventsByOrganizer(user.getUserid()));
+            // Change this call to the new 'Accepted' filter method
+            List<Event> acceptedEvents = eventServices.getAcceptedEventsByOrganizer(user.getUserid());
+            model.addAttribute("events", acceptedEvents);
             model.addAttribute("fullName", user.getUsername());
         } else {
             model.addAttribute("events", new ArrayList<>());
