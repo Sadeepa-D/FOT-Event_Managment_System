@@ -21,7 +21,12 @@ public class MainPage {
     }
     @GetMapping("/allevents")
     public String ViewAllEvents(Model model) {
-        model.addAttribute("View_All_Events",eventServices.getEvents());
+        // 1. Fetch only the events with 'accept' status
+        List<Event> approvedEvents = eventServices.getAcceptedEvents();
+
+        // 2. Add to model using your existing attribute name
+        model.addAttribute("View_All_Events", approvedEvents);
+
         return "AllEvents";
     }
     @GetMapping("/paticipanthome")
