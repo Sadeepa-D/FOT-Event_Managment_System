@@ -16,4 +16,5 @@ public interface EventRegiRepo extends JpaRepository<EventRegi,Long> {
     @Transactional
     @Query("UPDATE EventRegi e SET e.registatus = 'false' WHERE e.id = :id")
     void updateStatusToTrue(@Param("id") Long id);
+    List<EventRegi> findBypRegistrationnnum(String pRegistrationnnum);
 }

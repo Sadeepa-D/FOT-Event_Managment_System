@@ -12,15 +12,17 @@ public class Users {
     private String userpassword;
     private String useremail;
     private String userrole;
+    private String regno;
 
     public Users() {}
 
-    public Users(Long userid, String username, String userpassword, String useremail, String userrole) {
+    public Users(Long userid, String username, String userpassword, String useremail, String userrole, String regno) {
         this.userid = userid;
         this.username = username;
         this.userpassword = userpassword;
         this.useremail = useremail;
         this.userrole = userrole;
+        this.regno = regno;
     }
 
     public Long getUserid() {
@@ -61,5 +63,13 @@ public class Users {
 
     public void setUserrole(String userrole) {
         this.userrole = userrole;
+    }
+
+    public String getRegno() {
+        return regno;
+    }
+
+    public void setRegno(String regno) {
+        this.regno = regno;
     }
 }

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Bookings - FOT Events</title>
+    <style>
+        /* General Reset */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', Arial, sans-serif; }
+
+        /* Navigation Header - Matching Student Portal */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        header h1 { font-size: 1.4rem; letter-spacing: 1px; }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Welcome Container - Matching Student Portal */
+        .welcome-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .welcome-section h2 { color: #2c3e50; font-size: 1.8rem; }
+        .welcome-section p { color: #7f8c8d; }
+
+        /* Table Styling - Matching Student Portal */
+        .table-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 15px;
+            text-align: left;
+            border-bottom: 2px solid #f1c40f; /* Yellow Highlight for My Bookings */
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            color: #444;
+            vertical-align: middle;
+        }
+
+        tr:hover { background-color: #fcfcfc; }
+
+        .event-title { font-weight: 600; color: #2c3e50; }
+
+        /* Unregister Button - Red Theme */
+        .btn-unregister {
+            background-color: #e74c3c;
+            color: white;
+            padding: 8px 18px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-unregister:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(231, 76, 60, 0.3);
+        }
+
+        .status-badge {
+            background-color: #e8f5e9; /* Light Green */
+            color: #2e7d32; /* Dark Green */
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        /* Back Link Styling */
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            margin-top: 25px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .btn-back:hover {
+            color: #2980b9;
+        }
+
+        .btn-logout {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .btn-logout:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>FOT EVENTS | My Dashboard</h1>
+</header>
+
+<div class="container">
+    <div class="welcome-container">
+        <div class="welcome-section">
+            <h2>My Registered Events</h2>
+            <p>You can review your schedule and manage your bookings here.</p>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <table>
+            <thead>
+            <tr>
+                <th>Event Name</th>
+                <th>Organizer</th>
+                <th>Slots Booked</th>
+                <th>Registration Status</th>
+                <th style="text-align: center;">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="reg : ${registrations}">
+                <td>
+                    <div class="event-title" th:text="${reg.eventName}">Workshop Name</div>
+                </td>
+                <td th:text="${reg.organizerName}">Department</td>
+                <td>
+                    <span th:text="${reg.pslots}">1</span> Slot(s)
+                </td>
+                <td>
+                    <span class="status-badge">Confirmed</span>
+                </td>
+                <td style="text-align: center;">
+                    <a th:href="@{/event/registration/delete/{id}(id=${reg.id})}"
+                       class="btn-unregister"
+                       onclick="return confirm('Are you sure you want to unregister from this event?')">
+                        Unregister
+                    </a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(registrations)}">
+                <td colspan="5" style="text-align: center; padding: 40px; color: #95a5a6;">
+                    You haven't registered for any events yet.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a th:href="@{/paticipanthome}" class="btn-back" style="margin-top:1;">
+        ← Browse More Events
+    </a>
+</div>
+</body>
+</html>
