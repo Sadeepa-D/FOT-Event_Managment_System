@@ -1,7 +1,9 @@
 package com.example.FOT_Event_Managment_System.Controller;
 
 import com.example.FOT_Event_Managment_System.Model.Event;
+import com.example.FOT_Event_Managment_System.Model.Users;
 import com.example.FOT_Event_Managment_System.Repository.EventRegiRepo;
+import com.example.FOT_Event_Managment_System.Repository.UserRepo;
 import com.example.FOT_Event_Managment_System.Service.EventServices;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,6 +24,8 @@ public class EventRegiController {
     private EventRegiRepo eventRegiRepo;
     @Autowired
     private EventServices eventServices;
+    @Autowired
+    private UserRepo userRepo;
     @GetMapping("/event/register") // This opens the form page
     public String showRegistrationForm(@RequestParam("id") Long eventId,
                                        @RequestParam("name") String eventName,
@@ -41,6 +45,16 @@ public class EventRegiController {
 
         // 1. Save the registration as usual
         eventRegiServices.registerforEvent(eventRegi);
+        // 2. Get the logged-in user's details
+        String email = authentication.getName();
+        Users user = userRepo.findByUseremail(email);
+
+        // 3. Update the User Table with the Reg No from the Form
+        // This fills the 'regno' field in the user table for the first time
+        if (user.getRegno() == null || user.getRegno().isEmpty()) {
+            user.setRegno(eventRegi.getpRegistrationnnum());
+            userRepo.save(user); // Persist the change to the 'user' table
+        }
 
         // 2. Check the user's role
         if (authentication != null && authentication.getAuthorities()
@@ -90,5 +104,28 @@ public class EventRegiController {
 
         // 3. Redirect back to the participant list for that specific event
         return "redirect:/event/Showparticipant/" + eventId;
+    }
+
+    @GetMapping("/myregistrations")
+    public String showMyEvents(Model model, Authentication authentication) {
+        Users user = userRepo.findByUseremail(authentication.getName());
+
+        // This will now find the value we saved in Step 2
+        String studentRegNo = user.getRegno();
+
+        if (studentRegNo != null) {
+            List<EventRegi> myRegistrations = eventRegiRepo.findBypRegistrationnnum(studentRegNo);
+            model.addAttribute("registrations", myRegistrations);
+        }
+
+        return "Participant/MyEvents";
+    }
+    @GetMapping("/event/registration/delete/{id}")
+    public String unregisterEvent(@PathVariable("id") Long id) {
+        // This actually deletes the record from the database
+        eventRegiRepo.deleteById(id);
+
+        // Redirect back to the "My Events" page
+        return "redirect:/myregistrations?unregistered";
     }
 }
