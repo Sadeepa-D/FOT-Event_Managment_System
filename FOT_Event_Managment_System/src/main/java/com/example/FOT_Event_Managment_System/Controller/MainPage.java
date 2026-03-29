@@ -1,10 +1,13 @@
 package com.example.FOT_Event_Managment_System.Controller;
 
+import com.example.FOT_Event_Managment_System.Model.Event;
 import com.example.FOT_Event_Managment_System.Service.EventServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
 
 @Controller
 public class MainPage {
@@ -23,10 +26,11 @@ public class MainPage {
     }
     @GetMapping("/paticipanthome")
     public String ViewPaticipanthome(Model model) {
-        // 1. Fetch all events so the student can see what is available
-        model.addAttribute("events", eventServices.getEvents());
+        // 1. Fetch ONLY approved events
+        List<Event> approvedEvents = eventServices.getAcceptedEvents();
+        model.addAttribute("events", approvedEvents);
 
-        // 2. Optional: Add a custom welcome message
+        // 2. Add custom welcome message
         model.addAttribute("welcomeMsg", "Welcome to the Student Event Portal");
 
         return "Participant/ParticiHome";

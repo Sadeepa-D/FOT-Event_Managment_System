@@ -25,6 +25,10 @@ public class EventServices {
         // We pass the ID and the hardcoded string "accept"
         return eventRepo.findByOrganizerIdAndEventstatus(organizerId, "APPROVED");
     }
+    public List<Event> getAcceptedEvents() {
+        // This fetches all events where eventstatus = "accept"
+        return eventRepo.findByEventstatus("APPROVED");
+    }
     public void deleteEvent(long id) {
         eventRepo.deleteById(id);
     }
