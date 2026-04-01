@@ -28,9 +28,9 @@ public class EventController {
         Users user = userRepo.findByUseremail(email);
 
         if (user != null) {
-            // Change this call to the new 'Accepted' filter method
-            List<Event> acceptedEvents = eventServices.getAcceptedEventsByOrganizer(user.getUserid());
-            model.addAttribute("events", acceptedEvents);
+            // Fetch ALL events for this user ID, ignoring status filters
+            List<Event> allUserEvents = eventServices.getEventsByOrganizer(user.getUserid());
+            model.addAttribute("events", allUserEvents);
             model.addAttribute("fullName", user.getUsername());
         } else {
             model.addAttribute("events", new ArrayList<>());

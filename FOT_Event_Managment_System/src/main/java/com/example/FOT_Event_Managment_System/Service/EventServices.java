@@ -29,6 +29,9 @@ public class EventServices {
         // This fetches all events where eventstatus = "accept"
         return eventRepo.findByEventstatus("APPROVED");
     }
+    public List<Event> getEventsByOrganizer(Long organizerId) {
+        return eventRepo.findByOrganizerId(organizerId);
+    }
     public void deleteEvent(long id) {
         eventRepo.deleteById(id);
     }

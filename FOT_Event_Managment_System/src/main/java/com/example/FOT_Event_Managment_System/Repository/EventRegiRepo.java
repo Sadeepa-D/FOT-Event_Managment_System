@@ -17,12 +17,19 @@ public interface EventRegiRepo extends JpaRepository<EventRegi,Long> {
     List<EventRegi> findActiveParticipants(@Param("eventId") Long eventId);
     @Modifying
     @Transactional
-    @Query("UPDATE EventRegi e SET e.registatus = 'false' WHERE e.id = :id")
+    @Query("UPDATE EventRegi e SET e.registatus = 'Rejected' WHERE e.id = :id")
     void updateStatusToTrue(@Param("id") Long id);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE EventRegi e SET e.registatus = 'Approved' WHERE e.id = :id")
+    void updateStatusToApproved(@Param("id") Long id);
 
     @Modifying
     @Transactional
     @Query("UPDATE EventRegi e SET e.registatus = 'false' WHERE e.id = :id")
     void deactivateParticipant(@Param("id") Long id);
     List<EventRegi> findBypRegistrationnnum(String pRegistrationnnum);
+
+    boolean existsByEventIdAndPRegistrationnnum(Long eventId, String pRegistrationnnum);
 }

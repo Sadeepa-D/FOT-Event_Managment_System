@@ -23,4 +23,8 @@ public class EventRegiServices {
     }
     public void updateregistrationstatus(Long eventrejiId) {
         eventRegiRepo.updateStatusToTrue(eventrejiId);
-    }}
+    }
+    public void updateregistrationstatustoapprove(Long eventrejiId) {
+        eventRegiRepo.updateStatusToApproved(eventrejiId);
+    }
+}
