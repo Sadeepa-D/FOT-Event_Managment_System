@@ -32,4 +32,14 @@ public interface EventRegiRepo extends JpaRepository<EventRegi,Long> {
     List<EventRegi> findBypRegistrationnnum(String pRegistrationnnum);
 
     boolean existsByEventIdAndPRegistrationnnum(Long eventId, String pRegistrationnnum);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE EventRegi e SET e.checkinstatus = 'Checked In' WHERE e.id = :id")
+    void updateCheckInStatus(@Param("id") Long id);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE EventRegi e SET e.checkinstatus = 'Checked Out' WHERE e.id = :id")
+    void updateCheckOutStatus(@Param("id") Long id);
 }

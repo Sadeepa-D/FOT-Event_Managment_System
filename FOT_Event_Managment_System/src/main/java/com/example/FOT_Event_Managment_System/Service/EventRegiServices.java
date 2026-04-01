@@ -27,4 +27,11 @@ public class EventRegiServices {
     public void updateregistrationstatustoapprove(Long eventrejiId) {
         eventRegiRepo.updateStatusToApproved(eventrejiId);
     }
+    public void checkInParticipant(Long id) {
+        eventRegiRepo.updateCheckInStatus(id);
+    }
+
+    public void checkOutParticipant(Long id) {
+        eventRegiRepo.updateCheckOutStatus(id);
+    }
 }

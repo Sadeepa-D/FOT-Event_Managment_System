@@ -94,13 +94,13 @@ public class EventRegiController {
         // --- STEP 4: SUCCESS REDIRECTS ---
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ORGANIZER"))) {
             // Organizers go back to the list of participants they are managing
-            return "redirect:/event/Showparticipant/" + eventRegi.getEventId();
+            return "redirect:/event/showparticipant/" + eventRegi.getEventId();
         } else {
             // Participants go to their home dashboard
             return "redirect:/paticipanthome?success";
         }
     }
-    @GetMapping("/event/Showparticipant/{id}")
+    @GetMapping("/event/showparticipant/{id}")
     public String showParticipant(@PathVariable("id") Long eventId, Model model) {
         // 1. Get ONLY active participants
         List<EventRegi> participants = eventRegiServices.getParticipantsByEventId(eventId);
@@ -135,7 +135,7 @@ public class EventRegiController {
         eventRegiServices.updateregistrationstatus(registrationId);
 
         // 3. Redirect back to the participant list for that specific event
-        return "redirect:/event/Showparticipant/" + eventId;
+        return "redirect:/event/showparticipant/" + eventId;
     }
     @GetMapping("/event/registration/approve/{id}")
     public String approveEventregistration(@PathVariable("id") Long registrationId) {
@@ -151,7 +151,7 @@ public class EventRegiController {
         eventRegiServices.updateregistrationstatustoapprove(registrationId);
 
         // 3. Redirect back to the participant list for that specific event
-        return "redirect:/event/Showparticipant/" + eventId;
+        return "redirect:/event/showparticipant/" + eventId;
     }
 
     @GetMapping("/myregistrations")
@@ -175,5 +175,24 @@ public class EventRegiController {
 
         // Redirect back to the "My Events" page
         return "redirect:/myregistrations?unregistered";
+    }
+    @GetMapping("/event/registration/checkin/{id}")
+    public String checkIn(@PathVariable("id") Long registrationId) {
+        EventRegi registration = eventRegiRepo.findById(registrationId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid registration Id:" + registrationId));
+
+        eventRegiServices.checkInParticipant(registrationId);
+
+        return "redirect:/event/showparticipant/" + registration.getEventId();
+    }
+
+    @GetMapping("/event/registration/checkout/{id}")
+    public String checkOut(@PathVariable("id") Long registrationId) {
+        EventRegi registration = eventRegiRepo.findById(registrationId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid registration Id:" + registrationId));
+
+        eventRegiServices.checkOutParticipant(registrationId);
+
+        return "redirect:/event/showparticipant/" + registration.getEventId();
     }
 }
