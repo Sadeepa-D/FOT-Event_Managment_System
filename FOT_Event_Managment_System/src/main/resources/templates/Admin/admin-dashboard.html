@@ -2,12 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard - FOT</title>
-
+    <title>Admin Dashboard - FOT Management</title>
     <style>
+        /* General Reset */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: #f4f7f6; font-family: 'Segoe UI', Arial, sans-serif; }
 
+        /* Header Styling - Matching System Theme */
         header {
             background-color: #2c3e50;
             color: white;
@@ -15,178 +16,245 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
-        header h1 { font-size: 1.5rem; }
+        header h1 { font-size: 1.5rem; margin: 0; }
 
-        .logout {
+        .logout-btn {
             background-color: #e74c3c;
-            padding: 8px 14px;
-            border-radius: 5px;
             color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
             text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
         }
+
+        .logout-btn:hover { background-color: #c0392b; }
 
         .container {
-            max-width: 90%;
+            max-width: 95%;
             margin: 30px auto;
+            padding: 0 20px;
         }
 
-        .info-bar {
+        /* Info Bar / Welcome Card */
+        .info-card {
             background: white;
-            padding: 15px 20px;
+            padding: 20px 25px;
+            border-radius: 10px;
             border-left: 5px solid #27ae60;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-card h2 { color: #2c3e50; font-size: 1.4rem; }
+
+        /* Search Box - Consistent with Participant List */
+        .search-box {
+            width: 300px;
+            padding: 10px 15px;
+            border: 2px solid #ecf0f1;
             border-radius: 8px;
-            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-box:focus { border-color: #27ae60; }
+
+        /* Table Styling */
+        .table-wrapper {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
             table-layout: fixed;
         }
 
         th {
             background-color: #ecf0f1;
-            padding: 16px;
+            color: #2c3e50;
+            padding: 15px;
             text-align: left;
             border-bottom: 3px solid #27ae60;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
         }
 
         td {
-            padding: 14px;
+            padding: 15px;
             border-bottom: 1px solid #eee;
+            color: #2c3e50;
+            vertical-align: middle;
             word-wrap: break-word;
-            vertical-align: top;
         }
 
-        /* Column widths */
-        th:nth-child(1), td:nth-child(1) { width: 30%; }
-        th:nth-child(2), td:nth-child(2) { width: 12%; }
-        th:nth-child(3), td:nth-child(3) { width: 12%; }
-        th:nth-child(4), td:nth-child(4) { width: 15%; }
-        th:nth-child(5), td:nth-child(5) { width: 8%; }
-        th:nth-child(6), td:nth-child(6) { width: 8%; }
-        th:nth-child(7), td:nth-child(7) { width: 10%; }
-        th:nth-child(8), td:nth-child(8) { width: 20%; }
+        tr:hover { background-color: #fcfcfc; }
 
-        .event-name { font-weight: bold; }
-        .date-text { color: #27ae60; font-weight: bold; }
+        /* Column Widths */
+        .col-event { width: 25%; }
+        .col-org { width: 12%; }
+        .col-venue { width: 12%; }
+        .col-date { width: 15%; }
+        .col-price { width: 8%; }
+        .col-status { width: 10%; }
+        .col-action { width: 18%; }
 
-        .btn {
-            padding: 6px 10px;
-            border-radius: 5px;
+        .event-title { font-weight: bold; display: block; color: #2c3e50; margin-bottom: 3px; }
+        .event-desc { font-size: 0.8rem; color: #7f8c8d; line-height: 1.2; }
+        .date-badge { color: #27ae60; font-weight: bold; font-size: 0.9rem; }
+
+        /* Status Pills - Matching System Theme */
+        .status-pill {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: inline-block;
+            text-align: center;
+            min-width: 90px;
+        }
+
+        .status-approved { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .status-rejected { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .status-pending { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+
+        /* Action Buttons Grid */
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .btn-sm {
+            padding: 6px 8px;
+            border-radius: 4px;
             text-decoration: none;
             color: white;
-            font-size: 0.85rem;
-            display: inline-block;
-            white-space: nowrap;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-align: center;
+            transition: 0.2s;
         }
 
-        .approve { background-color: #27ae60; }
-        .reject { background-color: #f39c12; }
-        .delete { background-color: #e74c3c; }
-        .view { background-color: #3498db; }
+        .btn-sm:hover { opacity: 0.9; transform: scale(1.02); }
 
-        .status { font-weight: bold; }
-        .approved { color: #27ae60; }
-        .rejected { color: #e74c3c; }
-        .pending { color: #f39c12; }
+        .btn-approve { background-color: #27ae60; }
+        .btn-reject { background-color: #f39c12; }
+        .btn-delete { background-color: #e74c3c; }
+        .btn-view { background-color: #3498db; }
 
-        /* Action column button layout */
-        .action-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-        }
-
-        .action-buttons .top-buttons,
-        .action-buttons .bottom-buttons {
-            display: flex;
-            gap: 5px;
-            width: 100%;
-            justify-content: flex-start;
-            margin-bottom: 5px;
-        }
     </style>
 </head>
 
 <body>
 
 <header>
-    <h1>FOT Event Management System - Admin</h1>
-    <a th:href="@{/login}" class="logout">Logout</a>
+    <h1>FOT Event Management System</h1>
+    <a th:href="@{/login}" class="logout-btn">Logout</a>
 </header>
 
 <div class="container">
 
-    <div class="info-bar">
-        <h3 th:text="'Take control: manage events, approvals, and participants'" style="text-align: center;"></h3>
+    <div class="info-card">
+        <div>
+            <h2>Admin Dashboard</h2>
+            <p style="color: #7f8c8d;">Manage event approvals and system records</p>
+        </div>
+        <input type="text" id="adminSearch" class="search-box" onkeyup="filterAdminTable()" placeholder="Search by Event or Organizer...">
     </div>
-    <br><br>
 
-    <table>
-        <thead>
-        <tr>
-            <th>Event</th>
-            <th>Organizer</th>
-            <th>Venue</th>
-            <th>Date & Time</th>
-            <th>Price</th>
-            <th>Slots</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-        </thead>
+    <div class="table-wrapper">
+        <table id="adminEventTable">
+            <thead>
+            <tr>
+                <th class="col-event">Event Details</th>
+                <th class="col-org">Organizer</th>
+                <th class="col-venue">Venue</th>
+                <th class="col-date">Date & Time</th>
+                <th class="col-price">Price</th>
+                <th class="col-status">Status</th>
+                <th class="col-action">Control Panel</th>
+            </tr>
+            </thead>
 
-        <tbody>
-        <tr th:each="event : ${events}">
-            <td>
-                <div class="event-name" th:text="${event.eventName}">Event</div>
-                <small th:text="${event.description}">desc</small>
-            </td>
-            <td th:text="${event.organizerName}"></td>
-            <td th:text="${event.venue}"></td>
-            <td>
-                <span class="date-text" th:text="${event.date}"></span><br>
-                <small th:text="${event.time}"></small>
-            </td>
-            <td th:text="${'Rs. ' + event.ticketPrice}"></td>
-            <td th:text="${event.availableSlots}"></td>
-            <td>
-                <span class="status"
-                      th:text="${event.eventstatus}"
-                      th:classappend="
-                        ${event.eventstatus == 'APPROVED'} ? ' approved' :
-                        (${event.eventstatus == 'REJECTED'} ? ' rejected' : ' pending')">
-                </span>
-            </td>
-            <td>
-                <div class="action-buttons">
-                    <div class="top-buttons">
-                        <a th:href="@{'/admin/approve/' + ${event.id}}" class="btn approve">Approve</a>
-                        <a th:href="@{'/admin/reject/' + ${event.id}}" class="btn reject">Reject</a>
+            <tbody>
+            <tr th:each="event : ${events}">
+                <td>
+                    <span class="event-title" th:text="${event.eventName}">Event Name</span>
+                    <p class="event-desc" th:text="${event.description}">Description</p>
+                </td>
+                <td th:text="${event.organizerName}">Organizer</td>
+                <td th:text="${event.venue}">Venue</td>
+                <td>
+                    <span class="date-badge" th:text="${event.date}">Date</span><br>
+                    <small th:text="${event.time}">Time</small>
+                </td>
+                <td th:text="${'Rs.' + event.ticketPrice}">Price</td>
+                <td>
+                    <span th:class="'status-pill ' +
+                          (${event.eventstatus == 'APPROVED'} ? 'status-approved' :
+                          (${event.eventstatus == 'REJECTED'} ? 'status-rejected' : 'status-pending'))"
+                          th:text="${event.eventstatus != null ? event.eventstatus : 'PENDING'}">
+                    </span>
+                </td>
+                <td>
+                    <div class="action-grid">
+                        <a th:href="@{'/admin/approve/' + ${event.id}}" class="btn-sm btn-approve" onclick="return confirm('Approve this event?')">Approve</a>
+                        <a th:href="@{'/admin/reject/' + ${event.id}}" class="btn-sm btn-reject" onclick="return confirm('Reject this event?')">Reject</a>
+                        <a th:href="@{'/admin/participants/' + ${event.id}}" class="btn-sm btn-view">Users</a>
+                        <a th:href="@{'/admin/delete/' + ${event.id}}" class="btn-sm btn-delete" onclick="return confirm('Delete this event permanently?')">Delete</a>
                     </div>
-                    <div class="bottom-buttons">
-                        <a th:href="@{'/admin/delete/' + ${event.id}}" class="btn delete">Delete</a>
-                        <a th:href="@{'/admin/participants/' + ${event.id}}" class="btn view">View Users</a>
-                    </div>
-                </div>
-            </td>
-        </tr>
+                </td>
+            </tr>
 
-        <tr th:if="${#lists.isEmpty(events)}">
-            <td colspan="8" style="text-align:center; padding:30px; color:#95a5a6;">
-                No events available
-            </td>
-        </tr>
-        </tbody>
-    </table>
+            <tr th:if="${#lists.isEmpty(events)}">
+                <td colspan="7" style="text-align:center; padding:40px; color:#95a5a6;">
+                    No event requests found in the system.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
 </div>
+
+<script>
+    function filterAdminTable() {
+        let input = document.getElementById("adminSearch");
+        let filter = input.value.toUpperCase();
+        let table = document.getElementById("adminEventTable");
+        let tr = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < tr.length; i++) {
+            // Checks Event Name (Col 0) and Organizer (Col 1)
+            let tdEvent = tr[i].getElementsByTagName("td")[0];
+            let tdOrg = tr[i].getElementsByTagName("td")[1];
+
+            if (tdEvent || tdOrg) {
+                let txtEvent = tdEvent.textContent || tdEvent.innerText;
+                let txtOrg = tdOrg.textContent || tdOrg.innerText;
+
+                if (txtEvent.toUpperCase().indexOf(filter) > -1 || txtOrg.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
 
 </body>
 </html>
