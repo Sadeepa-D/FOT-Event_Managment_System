@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin")
 public class AdminPageController {
 
+    
     @Autowired
     private AdminEventService service;
 
