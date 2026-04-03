@@ -16,10 +16,13 @@ public class EventRegi {
     private String pnumber;
     private int pslots;
     private Long eventId;
-    private String registatus = "true";
+    private String registatus = "Pending";
+    private String checkinstatus = "Pending";
 
     public EventRegi() {
-        this.registatus = "true";    }
+        this.registatus = "Pending";
+        this.checkinstatus = "Pending";
+    }
 
     public EventRegi(Long id, String eventName, String organizerName, String pname, String pRegistrationnnum, String pnumber, int pslots, Long eventId, String registatus) {
         this.id = id;
@@ -30,7 +33,8 @@ public class EventRegi {
         this.pnumber = pnumber;
         this.pslots = pslots;
         this.eventId = eventId;
-        this.registatus = (registatus != null) ? registatus : "true";
+        this.registatus = (registatus != null) ? registatus : "Pending";
+        this.checkinstatus = (checkinstatus != null) ? checkinstatus : "Pending";
     }
 
     public Long getId() {
@@ -103,5 +107,13 @@ public class EventRegi {
 
     public void setRegistatus(String registatus) {
         this.registatus = registatus;
+    }
+
+    public String getCheckinstatus() {
+        return checkinstatus;
+    }
+
+    public void setCheckinstatus(String checkinstatus) {
+        this.checkinstatus = checkinstatus;
     }
 }

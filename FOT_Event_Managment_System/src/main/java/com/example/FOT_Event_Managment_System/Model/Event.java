@@ -18,8 +18,10 @@ public class Event {
     private Integer availableSlots;
     private String description;
     private Long organizerId;
-    private String eventstatus;
-    public Event() {}
+    private String eventstatus="PENDING";
+    public Event() {
+        this.eventstatus="PENDING";
+    }
 
     public Event(String description, Integer availableSlots, Double ticketPrice, String time, String date, String venue, String organizerName, String eventName, Long id, String eventstatus) {
         this.description = description;

@@ -21,6 +21,14 @@ public class EventServices {
     public Event getEventById(long id) {
         return eventRepo.findById(id).orElse(null);
     }
+    public List<Event> getAcceptedEventsByOrganizer(Long organizerId) {
+        // We pass the ID and the hardcoded string "accept"
+        return eventRepo.findByOrganizerIdAndEventstatus(organizerId, "APPROVED");
+    }
+    public List<Event> getAcceptedEvents() {
+        // This fetches all events where eventstatus = "accept"
+        return eventRepo.findByEventstatus("APPROVED");
+    }
     public List<Event> getEventsByOrganizer(Long organizerId) {
         return eventRepo.findByOrganizerId(organizerId);
     }
