@@ -25,7 +25,6 @@
 
         header h1 { font-size: 1.4rem; letter-spacing: 1px; }
 
-        /* --- Logout Button --- */
         .btn-logout {
             background-color: #e74c3c;
             color: white;
@@ -47,19 +46,16 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        header form {
-            display: flex;
-            align-items: center;
-        }
+        header form { display: flex; align-items: center; }
 
         /* --- Main Container --- */
         .container {
-            max-width: 95%;
+            max-width: 98%;
             margin: 30px auto;
             padding: 0 10px;
         }
 
-        /* --- Info Card (Greeting & Controls) --- */
+        /* --- Info Card --- */
         .info-card {
             background: white;
             padding: 25px 30px;
@@ -69,18 +65,15 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             display: flex;
             justify-content: space-between;
-            align-items: center; /* Vertically centers the greeting with the button */
+            align-items: center;
             flex-wrap: wrap;
             gap: 20px;
         }
 
         .info-card h2 { color: #2c3e50; font-size: 1.8rem; margin: 0; }
-
         .greeting-name { color: #27ae60; }
-
         .info-card p { color: #7f8c8d; margin-top: 5px; font-size: 0.95rem; }
 
-        /* Container for Button and Search */
         .controls-wrapper {
             display: flex;
             flex-direction: column;
@@ -89,7 +82,6 @@
             justify-content: center;
         }
 
-        /* Add Event Button Styling */
         .btn-add {
             background-color: #27ae60;
             color: white;
@@ -108,7 +100,6 @@
             box-shadow: 0 6px 12px rgba(39, 174, 96, 0.3);
         }
 
-        /* Search Input Styling */
         #eventSearch {
             width: 250px;
             padding: 10px 15px;
@@ -116,16 +107,11 @@
             border-radius: 8px;
             outline: none;
             transition: all 0.3s;
-            font-family: inherit;
         }
 
-        #eventSearch:focus {
-            border-color: #27ae60;
-            box-shadow: 0 0 8px rgba(39, 174, 96, 0.1);
-            background-color: #fff;
-        }
+        #eventSearch:focus { border-color: #27ae60; box-shadow: 0 0 8px rgba(39, 174, 96, 0.1); }
 
-        /* --- Table Styling --- */
+        /* --- Table Styling Adjusted --- */
         .table-wrapper {
             background: white;
             border-radius: 12px;
@@ -133,11 +119,7 @@
             box-shadow: 0 6px 18px rgba(0,0,0,0.06);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 
         th {
             background-color: #f8f9fa;
@@ -146,49 +128,57 @@
             text-align: left;
             border-bottom: 3px solid #27ae60;
             text-transform: uppercase;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             letter-spacing: 1px;
             font-weight: 700;
         }
 
         td {
-            padding: 18px 15px;
+            padding: 15px;
             border-bottom: 1px solid #f1f1f1;
             color: #2c3e50;
             vertical-align: middle;
             word-wrap: break-word;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         tr:hover { background-color: #fcfcfc; }
 
-        /* Column Logic */
-        .col-event { width: 25%; }
+        /* Column Logic Optimized for new Column */
+        .col-event { width: 19%; }
         .col-org { width: 12%; }
         .col-venue { width: 12%; }
-        .col-date { width: 15%; }
-        .col-price { width: 8%; }
+        .col-date { width: 14%; }
+        .col-price { width: 9%; }
+        .col-slots { width: 8%; text-align: center; }
         .col-status { width: 10%; }
-        .col-action { width: 18%; }
+        .col-action { width: 12%; }
 
-        .event-title { font-weight: 700; display: block; color: #2c3e50; margin-bottom: 4px; font-size: 1rem; }
-        .slots-text { color: #95a5a6; font-size: 0.75rem; }
-        .date-text { color: #27ae60; font-weight: 700; font-size: 0.9rem; }
-        .time-text { color: #7f8c8d; }
+        .event-title { font-weight: 700; display: block; color: #2c3e50; margin-bottom: 4px; }
+        .date-text { color: #27ae60; font-weight: 700; }
         .price-text { font-weight: 600; color: #2c3e50; }
 
-        .action-col-header { text-align: center; }
+        /* Slot Badge Style */
+        .slot-badge {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            border: 1px solid #c8e6c9;
+        }
 
         /* --- Status Pills --- */
         .status-pill {
-            padding: 6px 12px;
+            padding: 6px 10px;
             border-radius: 20px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 800;
             text-transform: uppercase;
             display: inline-block;
             text-align: center;
-            min-width: 95px;
+            min-width: 85px;
         }
 
         .status-approved { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
@@ -200,36 +190,38 @@
         .action-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            gap: 5px;
         }
 
         .btn-grid {
-            padding: 8px 5px;
-            border-radius: 5px;
+            padding: 6px 4px;
+            border-radius: 4px;
             text-decoration: none;
             color: white;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 700;
             text-align: center;
-            transition: all 0.2s;
-            border: none;
+            transition: 0.2s;
         }
 
-        .btn-grid:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
+        .btn-grid:hover { transform: translateY(-2px); opacity: 0.9; }
 
         .btn-edit { background-color: #3498db; }
         .btn-delete { background-color: #e74c3c; }
         .btn-view { background-color: #f1c40f; color: #2c3e50; grid-column: span 2; }
 
-        .empty-row td {
-            text-align: center;
-            padding: 60px;
-            color: #bdc3c7;
-            font-style: italic;
+        .empty-row td { text-align: center; padding: 50px; color: #bdc3c7; font-style: italic; }
+        .event-desc {
+            font-size: 0.75rem;
+            color: #95a5a6; /* Subtle gray */
+            display: block;
+            margin-top: 2px;
+            line-height: 1.2;
+            /* Optional: Limits to 1 line with ellipsis if too long */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 250px;
         }
     </style>
 </head>
@@ -252,9 +244,7 @@
 
         <div class="controls-wrapper">
             <a th:href="@{/event/add}" class="btn-add">+ Register New Event</a>
-
-            <input type="text" id="eventSearch" onkeyup="filterEventTable()"
-                   placeholder="Search by event name...">
+            <input type="text" id="eventSearch" onkeyup="filterEventTable()" placeholder="Search event name...">
         </div>
     </div>
 
@@ -267,23 +257,27 @@
                 <th class="col-venue">Venue</th>
                 <th class="col-date">Date & Time</th>
                 <th class="col-price">Price</th>
+                <th class="col-slots">Slots</th>
                 <th class="col-status">Status</th>
-                <th class="action-col-header">Actions</th>
+                <th style="text-align: center;">Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="event : ${events}">
-                <td>
+                <td class="col-event">
                     <span class="event-title" th:text="${event.eventName}">Name</span>
-                    <small class="slots-text" th:text="${'Slots: ' + event.availableSlots}">Slots</small>
+                    <span class="event-desc" th:text="${event.description}">Event Description</span>
                 </td>
                 <td th:text="${event.organizerName}">Organizer</td>
                 <td th:text="${event.venue}">Venue</td>
                 <td>
                     <span class="date-text" th:text="${event.date}">Date</span><br>
-                    <small class="time-text" th:text="${event.time}">Time</small>
+                    <small th:text="${event.time}">Time</small>
                 </td>
                 <td class="price-text" th:text="${'Rs. ' + event.ticketPrice}">0.00</td>
+                <td class="col-slots">
+                    <span class="slot-badge" th:text="${event.availableSlots}">0</span>
+                </td>
                 <td>
                     <span th:text="${event.eventstatus != null ? event.eventstatus : 'PENDING'}"
                           th:class="'status-pill ' +
@@ -292,7 +286,7 @@
                           (${event.eventstatus == 'DELETED'} ? 'status-deleted' : 'status-pending')))">
                     </span>
                 </td>
-                <td>
+                <td class="col-action">
                     <div class="action-grid">
                         <a th:href="@{/events/edit/{id}(id=${event.id})}" class="btn-grid btn-edit">Edit</a>
                         <a th:href="@{/events/delete/{id}(id=${event.id})}"
@@ -304,9 +298,7 @@
             </tr>
 
             <tr th:if="${#lists.isEmpty(events)}" class="empty-row">
-                <td colspan="7">
-                    No events found in your account. Click "+ Register New Event" to get started!
-                </td>
+                <td colspan="8">No events found in your account.</td>
             </tr>
             </tbody>
         </table>
@@ -322,11 +314,9 @@
 
         for (let i = 1; i < tr.length; i++) {
             let td = tr[i].getElementsByTagName("td")[0];
-
             if (td) {
                 let titleSpan = td.querySelector(".event-title");
                 let txtValue = titleSpan ? (titleSpan.textContent || titleSpan.innerText) : td.innerText;
-
                 if (txtValue.toUpperCase().indexOf(filter) > -1) {
                     tr[i].style.display = "";
                 } else {
