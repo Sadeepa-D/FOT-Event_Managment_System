@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -41,34 +42,65 @@ public class EventRegiController {
     }
     @PostMapping("/event/register/save")
     public String registerEvent(@ModelAttribute("EventRegForm") EventRegi eventRegi,
-                                Authentication authentication) {
+                                Authentication authentication,
+                                RedirectAttributes redirectAttributes) {
 
-        // 1. Save the registration as usual
-        eventRegiServices.registerforEvent(eventRegi);
-        // 2. Get the logged-in user's details
         String email = authentication.getName();
-        Users user = userRepo.findByUseremail(email);
+        Users currentUser = userRepo.findByUseremail(email);
 
-        // 3. Update the User Table with the Reg No from the Form
-        // This fills the 'regno' field in the user table for the first time
-        if (user.getRegno() == null || user.getRegno().isEmpty()) {
-            user.setRegno(eventRegi.getpRegistrationnnum());
-            userRepo.save(user); // Persist the change to the 'user' table
+        if (currentUser != null) {
+            String providedRegNo = eventRegi.getpRegistrationnnum();
+            Long eventId = eventRegi.getEventId();
+
+            // Prepare common redirect parameters in case of error
+            String errorRedirect = "redirect:/event/register?id=" + eventId +
+                    "&name=" + eventRegi.getEventName() +
+                    "&organizer=" + eventRegi.getOrganizerName();
+
+            // --- STEP 1: DUPLICATE REGISTRATION CHECK ---
+            // Checks if this TG number is already in the table for this specific event
+            boolean alreadyRegistered = eventRegiRepo.existsByEventIdAndPRegistrationnnum(eventId, providedRegNo);
+
+            if (alreadyRegistered) {
+                redirectAttributes.addFlashAttribute("error", "This Registration Number is already registered for this event.");
+                return errorRedirect;
+            }
+
+            // --- STEP 2: ROLE-BASED PROFILE SYNC ---
+            boolean isParticipant = authentication.getAuthorities()
+                    .contains(new SimpleGrantedAuthority("ROLE_PARTICIPANT"));
+
+            if (isParticipant) {
+                String existingRegNo = currentUser.getRegno();
+
+                // If user already has a Reg No in their profile, it MUST match what they typed
+                if (existingRegNo != null && !existingRegNo.isEmpty()) {
+                    if (!existingRegNo.equalsIgnoreCase(providedRegNo)) {
+                        redirectAttributes.addFlashAttribute("error", "The Registration Number provided does not match your profile records.");
+                        return errorRedirect;
+                    }
+                } else {
+                    // If it's the user's first time, save this Reg No to their profile permanently
+                    currentUser.setRegno(providedRegNo);
+                    userRepo.save(currentUser);
+                }
+            }
+
+            // --- STEP 3: SAVE REGISTRATION ---
+            // This runs for both Participants and Organizers (if the above checks pass)
+            eventRegiServices.registerforEvent(eventRegi);
         }
 
-        // 2. Check the user's role
-        if (authentication != null && authentication.getAuthorities()
-                .contains(new SimpleGrantedAuthority("ROLE_ORGANIZER"))) {
-
-            // If Organizer: Redirect back to the participant list for that specific event
-            return "redirect:/event/Showparticipant/" + eventRegi.getEventId();
+        // --- STEP 4: SUCCESS REDIRECTS ---
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ORGANIZER"))) {
+            // Organizers go back to the list of participants they are managing
+            return "redirect:/event/showparticipant/" + eventRegi.getEventId();
         } else {
-
-            // If Participant: Redirect to their home dashboard with a success message
+            // Participants go to their home dashboard
             return "redirect:/paticipanthome?success";
         }
     }
-    @GetMapping("/event/Showparticipant/{id}")
+    @GetMapping("/event/showparticipant/{id}")
     public String showParticipant(@PathVariable("id") Long eventId, Model model) {
         // 1. Get ONLY active participants
         List<EventRegi> participants = eventRegiServices.getParticipantsByEventId(eventId);
@@ -103,7 +135,23 @@ public class EventRegiController {
         eventRegiServices.updateregistrationstatus(registrationId);
 
         // 3. Redirect back to the participant list for that specific event
-        return "redirect:/event/Showparticipant/" + eventId;
+        return "redirect:/event/showparticipant/" + eventId;
+    }
+    @GetMapping("/event/registration/approve/{id}")
+    public String approveEventregistration(@PathVariable("id") Long registrationId) {
+
+        // 1. Find the registration record to verify it exists and get the Event ID
+        EventRegi registration = eventRegiRepo.findById(registrationId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid registration Id:" + registrationId));
+
+        Long eventId = registration.getEventId();
+
+        // 2. Call the specific service method for APPROVAL
+        // This maps to: UPDATE EventRegi e SET e.registatus = 'Approved'
+        eventRegiServices.updateregistrationstatustoapprove(registrationId);
+
+        // 3. Redirect back to the participant list for that specific event
+        return "redirect:/event/showparticipant/" + eventId;
     }
 
     @GetMapping("/myregistrations")
@@ -127,5 +175,24 @@ public class EventRegiController {
 
         // Redirect back to the "My Events" page
         return "redirect:/myregistrations?unregistered";
+    }
+    @GetMapping("/event/registration/checkin/{id}")
+    public String checkIn(@PathVariable("id") Long registrationId) {
+        EventRegi registration = eventRegiRepo.findById(registrationId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid registration Id:" + registrationId));
+
+        eventRegiServices.checkInParticipant(registrationId);
+
+        return "redirect:/event/showparticipant/" + registration.getEventId();
+    }
+
+    @GetMapping("/event/registration/checkout/{id}")
+    public String checkOut(@PathVariable("id") Long registrationId) {
+        EventRegi registration = eventRegiRepo.findById(registrationId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid registration Id:" + registrationId));
+
+        eventRegiServices.checkOutParticipant(registrationId);
+
+        return "redirect:/event/showparticipant/" + registration.getEventId();
     }
 }

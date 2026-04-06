@@ -10,11 +10,36 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface EventRegiRepo extends JpaRepository<EventRegi,Long> {
+    // Get all participants by eventId
+    List<EventRegi> findByEventId(Long eventId);
+
     @Query("SELECT e FROM EventRegi e WHERE e.eventId = :eventId AND (e.registatus IS NULL OR e.registatus != 'false')")
     List<EventRegi> findActiveParticipants(@Param("eventId") Long eventId);
     @Modifying
     @Transactional
-    @Query("UPDATE EventRegi e SET e.registatus = 'false' WHERE e.id = :id")
+    @Query("UPDATE EventRegi e SET e.registatus = 'Rejected' WHERE e.id = :id")
     void updateStatusToTrue(@Param("id") Long id);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE EventRegi e SET e.registatus = 'Approved' WHERE e.id = :id")
+    void updateStatusToApproved(@Param("id") Long id);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE EventRegi e SET e.registatus = 'false' WHERE e.id = :id")
+    void deactivateParticipant(@Param("id") Long id);
     List<EventRegi> findBypRegistrationnnum(String pRegistrationnnum);
+
+    boolean existsByEventIdAndPRegistrationnnum(Long eventId, String pRegistrationnnum);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE EventRegi e SET e.checkinstatus = 'Checked In' WHERE e.id = :id")
+    void updateCheckInStatus(@Param("id") Long id);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE EventRegi e SET e.checkinstatus = 'Checked Out' WHERE e.id = :id")
+    void updateCheckOutStatus(@Param("id") Long id);
 }
