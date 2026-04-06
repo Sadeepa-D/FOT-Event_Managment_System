@@ -2,6 +2,7 @@ package com.example.FOT_Event_Managment_System.Service;
 
 import com.example.FOT_Event_Managment_System.Model.Event;
 import com.example.FOT_Event_Managment_System.Repository.EventRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,28 @@ public class EventServices {
         eventRepo.softDeleteEvent(id);
     }
     public void updateEvent(long id, Event event) {
+        eventRepo.save(event);
+    }
+    @Transactional
+    public void decrementSlots(Long eventId, int count) {
+        Event event = eventRepo.findById(eventId)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        int currentSlots = event.getAvailableSlots();
+        if (currentSlots >= count) {
+            event.setAvailableSlots(currentSlots - count);
+            eventRepo.save(event);
+        } else {
+            throw new RuntimeException("No slots available!");
+        }
+    }
+
+    @Transactional
+    public void incrementSlots(Long eventId, int count) {
+        Event event = eventRepo.findById(eventId)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        event.setAvailableSlots(event.getAvailableSlots() + count);
         eventRepo.save(event);
     }
 }

@@ -51,52 +51,53 @@ public class EventRegiController {
         if (currentUser != null) {
             String providedRegNo = eventRegi.getpRegistrationnnum();
             Long eventId = eventRegi.getEventId();
+            int requestedSlots = eventRegi.getPslots();
 
-            // Prepare common redirect parameters in case of error
+            // Common redirect for errors
             String errorRedirect = "redirect:/event/register?id=" + eventId +
                     "&name=" + eventRegi.getEventName() +
                     "&organizer=" + eventRegi.getOrganizerName();
 
             // --- STEP 1: DUPLICATE REGISTRATION CHECK ---
-            // Checks if this TG number is already in the table for this specific event
             boolean alreadyRegistered = eventRegiRepo.existsByEventIdAndPRegistrationnnum(eventId, providedRegNo);
-
             if (alreadyRegistered) {
-                redirectAttributes.addFlashAttribute("error", "This Registration Number is already registered for this event.");
+                redirectAttributes.addFlashAttribute("error", "This Registration Number is already registered.");
                 return errorRedirect;
             }
 
-            // --- STEP 2: ROLE-BASED PROFILE SYNC ---
-            boolean isParticipant = authentication.getAuthorities()
-                    .contains(new SimpleGrantedAuthority("ROLE_PARTICIPANT"));
-
+            // --- STEP 2: PROFILE SYNC & VALIDATION ---
+            boolean isParticipant = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_PARTICIPANT"));
             if (isParticipant) {
                 String existingRegNo = currentUser.getRegno();
-
-                // If user already has a Reg No in their profile, it MUST match what they typed
                 if (existingRegNo != null && !existingRegNo.isEmpty()) {
                     if (!existingRegNo.equalsIgnoreCase(providedRegNo)) {
-                        redirectAttributes.addFlashAttribute("error", "The Registration Number provided does not match your profile records.");
+                        redirectAttributes.addFlashAttribute("error", "Registration Number does not match your profile.");
                         return errorRedirect;
                     }
                 } else {
-                    // If it's the user's first time, save this Reg No to their profile permanently
                     currentUser.setRegno(providedRegNo);
                     userRepo.save(currentUser);
                 }
             }
 
-            // --- STEP 3: SAVE REGISTRATION ---
-            // This runs for both Participants and Organizers (if the above checks pass)
-            eventRegiServices.registerforEvent(eventRegi);
+            // --- STEP 3: SLOT MANAGEMENT & SAVE ---
+            try {
+                // Check availability and reduce slots ONLY after all other checks pass
+                eventServices.decrementSlots(eventId, requestedSlots);
+
+                // Save the registration
+                eventRegiServices.registerforEvent(eventRegi);
+
+            } catch (RuntimeException e) {
+                redirectAttributes.addFlashAttribute("error", "Booking failed: " + e.getMessage());
+                return errorRedirect;
+            }
         }
 
         // --- STEP 4: SUCCESS REDIRECTS ---
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ORGANIZER"))) {
-            // Organizers go back to the list of participants they are managing
             return "redirect:/event/showparticipant/" + eventRegi.getEventId();
         } else {
-            // Participants go to their home dashboard
             return "redirect:/paticipanthome?success";
         }
     }
@@ -170,10 +171,19 @@ public class EventRegiController {
     }
     @GetMapping("/event/registration/delete/{id}")
     public String unregisterEvent(@PathVariable("id") Long id) {
-        // This actually deletes the record from the database
+        // 1. Find the registration record first
+        EventRegi registration = eventRegiRepo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid registration Id:" + id));
+
+        Long eventId = registration.getEventId();
+        int slotsToReturn = registration.getPslots();
+
+        // 2. Add the slots back to the main Event table
+        eventServices.incrementSlots(eventId, slotsToReturn);
+
+        // 3. Now it is safe to delete the registration
         eventRegiRepo.deleteById(id);
 
-        // Redirect back to the "My Events" page
         return "redirect:/myregistrations?unregistered";
     }
     @GetMapping("/event/registration/checkin/{id}")
