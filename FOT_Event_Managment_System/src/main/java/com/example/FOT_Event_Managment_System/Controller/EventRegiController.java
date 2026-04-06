@@ -187,22 +187,32 @@ public class EventRegiController {
         return "redirect:/myregistrations?unregistered";
     }
     @GetMapping("/event/registration/checkin/{id}")
-    public String checkIn(@PathVariable("id") Long registrationId) {
+    public String checkIn(@PathVariable("id") Long registrationId, RedirectAttributes redirectAttributes) {
         EventRegi registration = eventRegiRepo.findById(registrationId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid registration Id:" + registrationId));
 
-        eventRegiServices.checkInParticipant(registrationId);
+        // Check if the registration is approved
+        if (!"Approved".equalsIgnoreCase(registration.getRegistatus())) {
+            redirectAttributes.addFlashAttribute("error", "Cannot check-in. Participant is not Approved.");
+            return "redirect:/event/showparticipant/" + registration.getEventId();
+        }
 
+        eventRegiServices.checkInParticipant(registrationId);
         return "redirect:/event/showparticipant/" + registration.getEventId();
     }
 
     @GetMapping("/event/registration/checkout/{id}")
-    public String checkOut(@PathVariable("id") Long registrationId) {
+    public String checkOut(@PathVariable("id") Long registrationId, RedirectAttributes redirectAttributes) {
         EventRegi registration = eventRegiRepo.findById(registrationId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid registration Id:" + registrationId));
 
-        eventRegiServices.checkOutParticipant(registrationId);
+        // Check if the registration is approved
+        if (!"Approved".equalsIgnoreCase(registration.getRegistatus())) {
+            redirectAttributes.addFlashAttribute("error", "Cannot check-out. Participant is not Approved.");
+            return "redirect:/event/showparticipant/" + registration.getEventId();
+        }
 
+        eventRegiServices.checkOutParticipant(registrationId);
         return "redirect:/event/showparticipant/" + registration.getEventId();
     }
 }
