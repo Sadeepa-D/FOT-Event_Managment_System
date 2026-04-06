@@ -194,10 +194,14 @@
 </header>
 
 <div class="container">
-    <div class="welcome-container">
-        <div class="welcome-section" style="margin-bottom: 0;">
-            <h2>Upcoming FOT Events</h2>
-            <p>Select an event below to register your participation.</p>
+    <div class="welcome-container" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px;">
+        <div class="greeting-box">
+            <h2 style="color: #2c3e50; margin: 0; font-size: 1.8rem;">
+                Hi, <span th:text="${fullName}" style="color: #27ae60;">User</span>!
+            </h2>
+            <p class="sub-text" style="color: #7f8c8d; font-size: 0.95rem; margin-top: 5px;">
+                Manage your campus events and registrations here.
+            </p>
         </div>
 
         <a th:href="@{/myregistrations}" class="btn-bookings">

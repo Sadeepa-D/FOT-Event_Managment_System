@@ -1,7 +1,10 @@
 package com.example.FOT_Event_Managment_System.Controller;
 
 import com.example.FOT_Event_Managment_System.Model.Event;
+import com.example.FOT_Event_Managment_System.Model.Users;
 import com.example.FOT_Event_Managment_System.Service.EventServices;
+import org.springframework.security.core.Authentication;
+import com.example.FOT_Event_Managment_System.Repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +16,9 @@ import java.util.List;
 public class MainPage {
     @Autowired
     private EventServices eventServices;
+    @Autowired
+    private UserRepo userRepo;
+
     @GetMapping("/")
 
     public String ViewMainPage(Model model) {
@@ -30,7 +36,15 @@ public class MainPage {
         return "AllEvents";
     }
     @GetMapping("/paticipanthome")
-    public String ViewPaticipanthome(Model model) {
+    public String ViewPaticipanthome(Model model, Authentication authentication) {
+        String email = authentication.getName();
+        Users user = userRepo.findByUseremail(email);
+        // 3. Add the Name to the model for the greeting
+        if (user != null) {
+            model.addAttribute("fullName", user.getUsername());
+        } else {
+            model.addAttribute("fullName", "Student");
+        }
         // 1. Fetch ONLY approved events
         List<Event> approvedEvents = eventServices.getAcceptedEvents();
         model.addAttribute("events", approvedEvents);
