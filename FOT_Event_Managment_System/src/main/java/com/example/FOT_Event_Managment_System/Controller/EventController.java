@@ -56,7 +56,7 @@ public class EventController {
         // 3. Link the event to this user's ID
         // Assuming your Event model has a field like 'organizerId'
         event.setOrganizerId(currentUser.getUserid());
-
+        event.setEventstatus("Edited PENDING To Review");
         eventServices.addEvent(event);
         return "redirect:/events";
     }

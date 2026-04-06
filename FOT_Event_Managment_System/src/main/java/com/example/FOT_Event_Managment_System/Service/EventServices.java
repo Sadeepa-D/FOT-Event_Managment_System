@@ -33,7 +33,7 @@ public class EventServices {
         return eventRepo.findByOrganizerId(organizerId);
     }
     public void deleteEvent(long id) {
-        eventRepo.deleteById(id);
+        eventRepo.softDeleteEvent(id);
     }
     public void updateEvent(long id, Event event) {
         eventRepo.save(event);
