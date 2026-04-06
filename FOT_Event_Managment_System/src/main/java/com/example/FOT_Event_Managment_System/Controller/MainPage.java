@@ -37,6 +37,7 @@ public class MainPage {
 
         // 2. Add custom welcome message
         model.addAttribute("welcomeMsg", "Welcome to the Student Event Portal");
+        model.addAttribute("today", java.time.LocalDate.now());
 
         return "Participant/ParticiHome";
     }

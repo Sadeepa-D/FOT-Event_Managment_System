@@ -80,25 +80,6 @@
         .event-title { font-weight: 600; color: #2c3e50; }
         .venue-tag { color: #7f8c8d; font-size: 0.85rem; }
 
-        /* Join Button */
-        .btn-join {
-            background-color: #27ae60;
-            color: white;
-            padding: 8px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-
-        .btn-join:hover {
-            background-color: #219150;
-            transform: translateY(-2px);
-            box-shadow: 0 3px 8px rgba(39, 174, 96, 0.3);
-        }
-
         .price-text { font-weight: 700; color: #2c3e50; }
         .slots-badge {
             background-color: #e8f5e9;
@@ -152,6 +133,54 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(243, 156, 18, 0.3);
             color: #2c3e50;
+        }
+        /* Styling for the Expired button to match Join Now */
+        /* Base Shared Styles for Buttons */
+        .btn-join, .btn-expired {
+            padding: 10px 22px;
+            text-decoration: none;
+            border-radius: 8px; /* Slightly more modern rounded corners */
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-block;
+            text-align: center;
+            min-width: 120px; /* Ensures buttons are the same width */
+            border: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* --- ACTIVE STATE (Join Now) --- */
+        .btn-join {
+            background-color: #27ae60;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(39, 174, 96, 0.2);
+        }
+
+        .btn-join:hover {
+            background-color: #219150;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-join:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(39, 174, 96, 0.2);
+        }
+
+        /* --- EXPIRED STATE (Disabled) --- */
+        .btn-expired {
+            background-color: #f8d7da; /* Light Red Background */
+            color: #721c24;            /* Dark Red Text */
+            border: 1px solid #f5c6cb; /* Subtle Border */
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        /* No transform or shadow on hover for expired to feel "dead" */
+        .btn-expired:hover {
+            background-color: #f1b0b7;
+            color: #721c24;
         }
     </style>
 </head>
@@ -208,10 +237,23 @@
                     <span class="slots-badge" th:text="${event.availableSlots + ' Left'}">0 Left</span>
                 </td>
                 <td style="text-align: center;">
-                    <a th:href="@{/event/register(id=${event.id}, name=${event.eventName}, organizer=${event.organizerName})}"
-                       class="btn-join">
-                        Join Now
-                    </a>
+                    <div th:if="${event.date != null}"
+                         th:with="today=${T(java.time.LocalDate).now()},
+                  eventDateObj=${T(java.time.LocalDate).parse(event.date)}">
+
+                        <a th:if="${!eventDateObj.isBefore(today)}"
+                           th:href="@{/event/register(id=${event.id}, name=${event.eventName}, organizer=${event.organizerName})}"
+                           class="btn-join">
+                            Join Now
+                        </a>
+
+                        <button th:if="${eventDateObj.isBefore(today)}"
+                                class="btn-expired"
+                                disabled>
+                            Expired
+                        </button>
+
+                    </div>
                 </td>
             </tr>
             <tr th:if="${#lists.isEmpty(events)}">
