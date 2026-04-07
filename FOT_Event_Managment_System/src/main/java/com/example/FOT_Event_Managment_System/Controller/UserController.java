@@ -30,6 +30,12 @@ public class UserController {
         userServices.addUser(user);
         return "redirect:/login";
     }
+    @RequestMapping("/users/delete/{id}")
+    public String deleteUser(@PathVariable("id") Long id) {
+        String idAsString = String.valueOf(id);
+        userServices.deleteUser(idAsString);
+        return "redirect:/users";
+    }
 
     @GetMapping("/login")
     public String showLogin(Model model) {

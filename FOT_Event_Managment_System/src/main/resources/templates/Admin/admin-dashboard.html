@@ -305,10 +305,10 @@
                         <a th:href="@{'/admin/reject/' + ${event.id}}" class="btn-sm btn-reject"
                            onclick="return confirm('Confirm Rejection?')">Reject</a>
 
-                        <a th:href="@{'/admin/participants/' + ${event.id}}" class="btn-sm btn-view">Users</a>
+<!--                        <a th:href="@{/event/showparticipant/{id}(id=${event.id})}" class="btn-sm btn-view">Users</a>-->
 
-                        <a th:href="@{'/admin/delete/' + ${event.id}}" class="btn-sm btn-delete"
-                           onclick="return confirm('Delete this event permanently?')">Delete</a>
+                        <a th:href="@{/admin/events/delete/{id}(id=${event.id})}" class="btn-sm btn-delete"
+                           onclick="return confirm('If You Want to delete this event')">Delete</a>
                     </div>
                 </td>
             </tr>

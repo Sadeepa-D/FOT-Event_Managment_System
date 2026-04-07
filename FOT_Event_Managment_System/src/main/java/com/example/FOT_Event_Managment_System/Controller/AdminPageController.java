@@ -3,6 +3,7 @@ package com.example.FOT_Event_Managment_System.Controller;
 import com.example.FOT_Event_Managment_System.Model.Users;
 import com.example.FOT_Event_Managment_System.Repository.UserRepo;
 import com.example.FOT_Event_Managment_System.Service.AdminEventService;
+import com.example.FOT_Event_Managment_System.Service.EventServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,8 @@ public class AdminPageController {
     private AdminEventService service;
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private EventServices eventServices;
 
     // Redirect root /admin to /admin/events
     @GetMapping
@@ -60,9 +63,9 @@ public class AdminPageController {
     }
 
     // Delete event
-    @GetMapping("/delete/{id}")
-    public String deleteEvent(@PathVariable Long id) {
-        service.deleteEvent(id);
+    @RequestMapping("/events/delete/{id}")
+    public String deleteEvent(@PathVariable("id") Long id) {
+        eventServices.deleteEvent(id);
         return "redirect:/admin/events";
     }
 
