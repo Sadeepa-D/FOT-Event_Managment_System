@@ -27,13 +27,36 @@ public class UserController {
 
     @PostMapping("/users/save")
     public String saveUser(@ModelAttribute("UserForm") Users user) {
+        // Check if it's an update (id exists) or a new registration (id is null)
+        boolean isUpdate = (user.getUserid() != null);
+
+        // Save or Update the user
         userServices.addUser(user);
-        return "redirect:/login";
+
+        if (isUpdate) {
+            // Redirect back to User Management page after editing
+            return "redirect:/users";
+        } else {
+            // Redirect to Login page after new registration
+            return "redirect:/login";
+        }
     }
+
+    @RequestMapping("/users/edit/{id}")
+    public String showeditUserform(@PathVariable Long id, Model model) {
+        Users user = userRepo.findById(id).orElse(null);
+        if (user != null) {
+            model.addAttribute("UserForm", user);
+            // CHANGE THIS: Return the form, not the list
+            return "auth/RegisterPage";
+        } else {
+            return "redirect:/users";
+        }
+    }
+
     @RequestMapping("/users/delete/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
-        String idAsString = String.valueOf(id);
-        userServices.deleteUser(idAsString);
+        userServices.deleteUser(id);
         return "redirect:/users";
     }
 

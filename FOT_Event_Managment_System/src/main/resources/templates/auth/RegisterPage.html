@@ -2,123 +2,28 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Register - FOT Event Management</title>
+  <title th:text="${UserForm.userid != null ? 'Edit User - FOT Management' : 'Register - FOT Management'}">Register</title>
   <style>
-    /* General Reset */
+    /* --- Keep all your existing styles here --- */
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { min-height: 100vh; display: flex; flex-direction: column; background: #f4f7f6; font-family: 'Segoe UI', Arial, sans-serif; }
+    header { background-color: #2c3e50; color: white; padding: 1rem; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .reg-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 30px 20px; }
+    .card { background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); width: 100%; max-width: 500px; border-top: 5px solid #27ae60; }
+    h2 { text-align: center; margin-bottom: 25px; font-size: 1.7rem; color: #2c3e50; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-size: 0.9rem; font-weight: 600; color: #34495e; margin-bottom: 8px; }
+    input, select { width: 100%; padding: 12px 15px; border: 1px solid #dcdde1; border-radius: 6px; font-size: 1rem; outline: none; transition: all 0.3s; background-color: #fff; }
+    input:focus, select:focus { border-color: #27ae60; box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1); }
 
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      background: #f4f7f6; /* Matching System Background */
-      font-family: 'Segoe UI', Arial, sans-serif;
-    }
+    /* Dynamic Button Colors */
+    .btn-register { width: 100%; padding: 14px; background: #27ae60; color: #fff; border: none; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+    .btn-edit { background: #f39c12; }
+    .btn-register:hover { opacity: 0.9; }
 
-    /* Header Styling - Matching System Theme */
-    header {
-      background-color: #2c3e50;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-
-    .reg-container {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 30px 20px;
-    }
-
-    .card {
-      background: #fff;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 500px;
-      border-top: 5px solid #27ae60; /* Theme Green Accent */
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 25px;
-      font-size: 1.7rem;
-      color: #2c3e50; /* Theme Navy */
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #34495e;
-      margin-bottom: 8px;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="password"],
-    select {
-      width: 100%;
-      padding: 12px 15px;
-      border: 1px solid #dcdde1;
-      border-radius: 6px;
-      font-size: 1rem;
-      outline: none;
-      transition: all 0.3s;
-      background-color: #fff;
-    }
-
-    input:focus, select:focus {
-      border-color: #27ae60;
-      box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
-    }
-
-    .btn-register {
-      width: 100%;
-      padding: 14px;
-      background: #27ae60; /* Theme Green for Action */
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s ease;
-      margin-top: 10px;
-    }
-
-    .btn-register:hover {
-      background: #219150;
-    }
-
-    .login-link {
-      text-align: center;
-      margin-top: 25px;
-      font-size: 0.9rem;
-      color: #7f8c8d;
-    }
-
-    .login-link a {
-      color: #3498db;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .login-link a:hover { text-decoration: underline; }
-
-    .footer-note {
-      margin-top: 20px;
-      font-size: 0.8rem;
-      color: #bdc3c7;
-      text-align: center;
-    }
+    .login-link { text-align: center; margin-top: 25px; font-size: 0.9rem; color: #7f8c8d; }
+    .login-link a { color: #3498db; text-decoration: none; font-weight: bold; }
+    .footer-note { margin-top: 20px; font-size: 0.8rem; color: #bdc3c7; text-align: center; }
   </style>
 </head>
 
@@ -130,9 +35,13 @@
 
 <div class="reg-container">
   <div class="card">
-    <h2>Create Account</h2>
+    <h2 th:text="${UserForm.userid != null ? 'Update User Account' : 'Create Account'}">Create Account</h2>
 
     <form th:action="@{/users/save}" th:object="${UserForm}" method="post">
+
+      <input type="hidden" th:field="*{userid}" />
+
+      <input type="hidden" th:field="*{userstatus}" />
 
       <div class="form-group">
         <label for="username">Full Name</label>
@@ -145,8 +54,9 @@
       </div>
 
       <div class="form-group">
-        <label for="userpassword">Password</label>
-        <input type="password" id="userpassword" th:field="*{userpassword}" placeholder="Choose a strong password" required/>
+        <label for="userpassword" th:text="${UserForm.userid != null ? 'New Password (Leave as is to keep current)' : 'Password'}">Password</label>
+        <input type="password" id="userpassword" th:field="*{userpassword}" placeholder="••••••••"
+               th:required="${UserForm.userid == null}"/>
       </div>
 
       <div class="form-group">
@@ -154,15 +64,24 @@
         <select id="userrole" th:field="*{userrole}">
           <option value="ORGANIZER">Organizer (Can create events)</option>
           <option value="PARTICIPANT">Participant (Can join events)</option>
+          <option value="ADMIN" th:if="${UserForm.userrole == 'ADMIN'}">Administrator</option>
         </select>
       </div>
 
-      <button type="submit" class="btn-register">Register Now</button>
+      <button type="submit"
+              th:class="'btn-register ' + (${UserForm.userid != null ? 'btn-edit' : ''})"
+              th:text="${UserForm.userid != null ? 'Save Changes' : 'Register Now'}">
+        Register Now
+      </button>
     </form>
 
-    <p class="login-link">
+    <p class="login-link" th:if="${UserForm.userid == null}">
       Already have an account?
       <a th:href="@{/login}">Log in here</a>
+    </p>
+
+    <p class="login-link" th:if="${UserForm.userid != null}">
+      <a th:href="@{/users}">← Back to User List</a>
     </p>
 
     <p class="footer-note">University of Ruhuna - Faculty of Technology</p>

@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-public interface UserRepo extends JpaRepository<Users, String> {
+public interface UserRepo extends JpaRepository<Users, Long> {
     Users findByUseremail(String email);
     @Modifying
     @Transactional
