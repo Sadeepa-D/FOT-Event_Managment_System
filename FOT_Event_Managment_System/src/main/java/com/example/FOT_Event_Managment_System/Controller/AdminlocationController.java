@@ -49,4 +49,15 @@ public class AdminlocationController {
         locationService.deleteLocation(id);
         return "redirect:/admin/locations";
     }
+
+    //set availble or not
+    @GetMapping("/admin/locations/toggle/{id}")
+    public String toggleAvailability(@PathVariable Long id) {
+        location loc = locationService.getLocationById(id);
+        if(loc != null) {
+            loc.setAvailability(loc.getAvailability().equals("available") ? "unavailable" : "available");
+            locationService.saveLocation(loc);
+        }
+        return "redirect:/admin/locations";
+    }
 }

@@ -22,6 +22,15 @@
             margin: 30px auto;
         }
 
+        .btn-available {
+            background: #3498db;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-left: 5px;
+        }
+
         .info-card {
             background: white;
             padding: 25px;
@@ -123,6 +132,10 @@
                     <a th:href="@{'/admin/locations/delete/' + ${loc.id}}"
                        class="btn-delete"
                        onclick="return confirm('Delete this location?')">Delete</a>
+                    <a th:href="@{'/admin/locations/toggle/' + ${loc.id}}"
+                       class="btn-available"
+                       th:text="${loc.availability == 'available' ? 'Set Unavailable' : 'Set Available'}">
+                    </a>
                 </td>
             </tr>
 
