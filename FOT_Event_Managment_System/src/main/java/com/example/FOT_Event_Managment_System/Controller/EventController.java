@@ -64,7 +64,10 @@ public class EventController {
             event.setEventstatus("Edited PENDING To Review");
         }
         eventServices.addEvent(event);
+
         return "redirect:/events";
+
+
     }
     @GetMapping("/events/delete/{id}")
     public String deleteEvent(@PathVariable("id") Long id) {

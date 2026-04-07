@@ -75,7 +75,7 @@
         /* Container for Button and Search */
         .controls-wrapper {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             gap: 12px;
             align-items: flex-end;
             justify-content: center;
@@ -250,7 +250,10 @@
             <p>You have total control over event approvals and participant visibility.</p>
         </div>
 
+
+
         <div class="controls-wrapper">
+            <a th:href="@{/admin/locations}" class="btn-users">View Locations</a>
             <a th:href="@{/users}" class="btn-users">View System Users</a>
 
             <input type="text" id="adminSearch" onkeyup="filterAdminTable()"
