@@ -13,16 +13,20 @@ public class Users {
     private String useremail;
     private String userrole;
     private String regno;
+    private String userstatus ="Active";
 
-    public Users() {}
+    public Users() {
+        this.userstatus = "Active";
+    }
 
-    public Users(Long userid, String username, String userpassword, String useremail, String userrole, String regno) {
+    public Users(Long userid, String username, String userpassword, String useremail, String userrole, String regno, String userstatus) {
         this.userid = userid;
         this.username = username;
         this.userpassword = userpassword;
         this.useremail = useremail;
         this.userrole = userrole;
         this.regno = regno;
+        this.userstatus = (userstatus != null) ? userstatus : "Active";
     }
 
     public Long getUserid() {
@@ -71,5 +75,13 @@ public class Users {
 
     public void setRegno(String regno) {
         this.regno = regno;
+    }
+
+    public String getUserstatus() {
+        return userstatus;
+    }
+
+    public void setUserstatus(String userstatus) {
+        this.userstatus = userstatus;
     }
 }
