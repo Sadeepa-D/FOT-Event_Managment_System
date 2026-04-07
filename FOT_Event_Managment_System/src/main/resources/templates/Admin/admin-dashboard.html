@@ -7,7 +7,11 @@
     <style>
         /* --- Global Reset & Foundation --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #2c3e50;
+        }
 
         /* --- Header Navigation --- */
         header {
@@ -34,16 +38,11 @@
             font-weight: bold;
             font-size: 0.9rem;
             transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            display: inline-block;
-            line-height: 1;
         }
 
         .logout-btn:hover {
             background-color: #c0392b;
-            transform: scale(1.05);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
         }
 
         /* --- Main Container --- */
@@ -63,7 +62,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             display: flex;
             justify-content: space-between;
-            align-items: center; /* Vertically centers the greeting with the button */
+            align-items: center;
             flex-wrap: wrap;
             gap: 20px;
         }
@@ -72,38 +71,50 @@
         .greeting-name { color: #27ae60; }
         .info-card p { color: #7f8c8d; margin-top: 5px; font-size: 0.95rem; }
 
-        /* Container for Button and Search */
+        /* --- Control Section (Buttons & Search) --- */
         .controls-wrapper {
             display: flex;
-            flex-direction: row;
-            gap: 12px;
-            align-items: flex-end;
-            justify-content: center;
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-end; /* Aligns everything to the right */
         }
 
-        /* System Users Button Styling */
-        .btn-users {
-            background-color:#C08568;
-            color: white;
+        .button-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-base {
             padding: 12px 24px;
             text-decoration: none;
             border-radius: 8px;
             font-weight: bold;
             font-size: 0.95rem;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            color: white;
+            white-space: nowrap;
         }
 
-        .btn-users:hover {
-            background-color: #2980b9;
+        /* Specific Button Colors */
+        .btn-locations {
+            background-color: #1e3a8a; /* Dark Blue */
+        }
+
+        .btn-users {
+            background-color: #C08568; /* Theme Brown/Copper */
+        }
+
+        .btn-base:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            opacity: 0.9;
         }
 
         /* Search Input Styling */
         #adminSearch {
-            width: 280px;
-            padding: 11px 15px;
+            width: 400px;
+            padding: 12px 15px;
             border: 2px solid #ecf0f1;
             border-radius: 8px;
             outline: none;
@@ -138,7 +149,7 @@
             text-align: left;
             border-bottom: 3px solid #27ae60;
             text-transform: uppercase;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             letter-spacing: 1px;
             font-weight: 700;
         }
@@ -146,40 +157,25 @@
         td {
             padding: 15px;
             border-bottom: 1px solid #f1f1f1;
-            color: #2c3e50;
             vertical-align: middle;
-            word-wrap: break-word;
             font-size: 0.85rem;
         }
 
         tr:hover { background-color: #fcfcfc; }
 
-        /* Column Logic Optimized */
-        .col-event { width: 22%; }
+        /* Column Widths */
+        .col-event { width: 18%; }
         .col-org { width: 12%; }
-        .col-venue { width: 11%; }
-        .col-date { width: 13%; }
+        .col-venue { width: 12%; }
+        .col-date { width: 14%; }
         .col-price { width: 8%; }
         .col-slots { width: 7%; text-align: center; }
-        .col-status { width: 10%; }
-        .col-action { width: 17%; }
+        .col-status { width: 12%; }
+        .col-action { width: 13%; }
 
-        .event-title { font-weight: 700; display: block; color: #2c3e50; margin-bottom: 4px; font-size: 0.95rem; }
+        .event-title { font-weight: 700; display: block; color: #2c3e50; margin-bottom: 4px; }
         .event-desc { font-size: 0.75rem; color: #95a5a6; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .date-badge { color: #27ae60; font-weight: 700; font-size: 0.85rem; }
-        .price-text { font-weight: 600; color: #2c3e50; }
 
-        .slot-badge {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            border: 1px solid #c8e6c9;
-        }
-
-        /* --- Status Pills --- */
         .status-pill {
             padding: 6px 10px;
             border-radius: 20px;
@@ -188,50 +184,40 @@
             text-transform: uppercase;
             display: inline-block;
             text-align: center;
-            min-width: 85px;
+            min-width: 90px;
         }
 
         .status-approved { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .status-rejected { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
         .status-pending { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
-        .status-deleted { background-color: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
 
-        /* --- Action Grid (2x2) --- */
+        /* Action Grid */
         .action-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 6px;
+            gap: 5px;
         }
 
         .btn-sm {
-            padding: 7px 4px;
+            padding: 10px 4px;
             border-radius: 4px;
             text-decoration: none;
             color: white;
-            font-size: 0.65rem;
+            font-size: 0.85rem;
             font-weight: 700;
             text-align: center;
-            transition: all 0.2s;
-            border: none;
+            transition: 0.2s;
         }
 
-        .btn-sm:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
+        .btn-sm:hover{ transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            opacity: 0.9;}
 
         .btn-approve { background-color: #27ae60; }
         .btn-reject { background-color: #f39c12; }
-        .btn-view { background-color: #3498db; }
         .btn-delete { background-color: #e74c3c; }
 
-        .empty-row td {
-            text-align: center;
-            padding: 60px;
-            color: #bdc3c7;
-            font-style: italic;
-        }
+        .empty-row td { text-align: center; padding: 50px; color: #bdc3c7; font-style: italic; }
     </style>
 </head>
 
@@ -247,17 +233,17 @@
     <div class="info-card">
         <div class="greeting-box">
             <h2>Welcome Admin, <span class="greeting-name" th:text="${fullName}">Administrator</span>!</h2>
-            <p>You have total control over event approvals and participant visibility.</p>
+            <p>Manage faculty locations, system users, and event approvals from one place.</p>
         </div>
 
-
-
         <div class="controls-wrapper">
-            <a th:href="@{/admin/locations}" class="btn-users">View Locations</a>
-            <a th:href="@{/users}" class="btn-users">View System Users</a>
+            <div class="button-row">
+                <a th:href="@{/admin/locations}" class="btn-base btn-locations">View Locations</a>
+                <a th:href="@{/users}" class="btn-base btn-users">View System Users</a>
+            </div>
 
             <input type="text" id="adminSearch" onkeyup="filterAdminTable()"
-                   placeholder="Filter by Event or Organizer...">
+                   placeholder="Search by event name or organizer...">
         </div>
     </div>
 
@@ -272,54 +258,44 @@
                 <th class="col-price">Fee</th>
                 <th class="col-slots">Slots</th>
                 <th class="col-status">Status</th>
-                <th class="col-action">Control Panel</th>
+                <th class="col-action">Actions</th>
             </tr>
             </thead>
 
             <tbody>
             <tr th:each="event : ${events}">
-                <td class="col-event">
+                <td>
                     <span class="event-title" th:text="${event.eventName}">Event Name</span>
-                    <p class="event-desc" th:text="${event.description}">No description provided.</p>
+                    <p class="event-desc" th:text="${event.description}">Description</p>
                 </td>
                 <td th:text="${event.organizerName}">Organizer</td>
                 <td th:text="${event.venue}">Venue</td>
                 <td>
-                    <span class="date-badge" th:text="${event.date}">Date</span><br>
-                    <small th:text="${event.time}" style="color: #7f8c8d;">Time</small>
+                    <strong th:text="${event.date}" style="color: #27ae60;">Date</strong><br>
+                    <small th:text="${event.time}">Time</small>
                 </td>
-                <td class="price-text" th:text="${'Rs.' + event.ticketPrice}">Price</td>
-                <td class="col-slots">
-                    <span class="slot-badge" th:text="${event.availableSlots}">0</span>
+                <td th:text="${'Rs.' + event.ticketPrice}">Price</td>
+                <td style="text-align: center;">
+                    <span th:text="${event.availableSlots}" style="font-weight: bold;">0</span>
                 </td>
                 <td>
-                    <span th:text="${event.eventstatus != null ? event.eventstatus : 'PENDING'}"
+                    <span th:text="${event.eventstatus}"
                           th:class="'status-pill ' +
                           (${event.eventstatus == 'APPROVED'} ? 'status-approved' :
-                          (${event.eventstatus == 'REJECTED'} ? 'status-rejected' :
-                          (${event.eventstatus == 'DELETED'} ? 'status-deleted' : 'status-pending')))">
+                          (${event.eventstatus == 'REJECTED'} ? 'status-rejected' : 'status-pending'))">
                     </span>
                 </td>
-                <td class="col-action">
+                <td>
                     <div class="action-grid">
-                        <a th:href="@{'/admin/approve/' + ${event.id}}" class="btn-sm btn-approve"
-                           onclick="return confirm('Confirm Approval?')">Approve</a>
-
-                        <a th:href="@{'/admin/reject/' + ${event.id}}" class="btn-sm btn-reject"
-                           onclick="return confirm('Confirm Rejection?')">Reject</a>
-
-<!--                        <a th:href="@{/event/showparticipant/{id}(id=${event.id})}" class="btn-sm btn-view">Users</a>-->
-
-                        <a th:href="@{/admin/events/delete/{id}(id=${event.id})}" class="btn-sm btn-delete"
-                           onclick="return confirm('If You Want to delete this event')">Delete</a>
+                        <a th:href="@{'/admin/approve/' + ${event.id}}" class="btn-sm btn-approve" onclick="return confirm('Approve this event?')">Approve</a>
+                        <a th:href="@{'/admin/reject/' + ${event.id}}" class="btn-sm btn-reject" onclick="return confirm('Reject this event?')">Reject</a>
+                        <a th:href="@{'/admin/events/delete/' + ${event.id}}" class="btn-sm btn-delete" style="grid-column: span 2;" onclick="return confirm('Delete permanently?')">Delete Event</a>
                     </div>
                 </td>
             </tr>
 
             <tr th:if="${#lists.isEmpty(events)}" class="empty-row">
-                <td colspan="8">
-                    No pending or active event requests found in the system.
-                </td>
+                <td colspan="8">No events found in the system.</td>
             </tr>
             </tbody>
         </table>
@@ -337,11 +313,9 @@
         for (let i = 1; i < tr.length; i++) {
             const tdEvent = tr[i].getElementsByTagName("td")[0];
             const tdOrg = tr[i].getElementsByTagName("td")[1];
-
             if (tdEvent || tdOrg) {
                 const txtEvent = tdEvent.textContent || tdEvent.innerText;
                 const txtOrg = tdOrg.textContent || tdOrg.innerText;
-
                 if (txtEvent.toUpperCase().indexOf(filter) > -1 || txtOrg.toUpperCase().indexOf(filter) > -1) {
                     tr[i].style.display = "";
                 } else {
