@@ -2,13 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Event List - FOT Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizer Dashboard | FOT Management</title>
     <style>
-        /* Body and Reset */
+        /* --- Global Reset & Foundation --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #f4f7f6; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
-        /* Header Styling */
+        /* --- Header Navigation --- */
         header {
             background-color: #2c3e50;
             color: white;
@@ -17,212 +18,314 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        header h1 { font-size: 1.5rem; margin: 0; }
+        header h1 { font-size: 1.4rem; letter-spacing: 1px; }
 
         .btn-logout {
             background-color: #e74c3c;
             color: white;
             border: none;
-            padding: 8px 18px;
-            border-radius: 5px;
+            padding: 10px 20px;
+            border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
             font-size: 0.9rem;
-            transition: background 0.3s, transform 0.2s;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            display: inline-block;
+            line-height: 1;
         }
-        .btn-logout:hover { background-color: #c0392b; transform: scale(1.05); }
 
+        .btn-logout:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        header form { display: flex; align-items: center; }
+
+        /* --- Main Container --- */
         .container {
-            max-width: 1300px;
-            margin: 0 auto 50px auto;
-            padding: 0 20px;
+            max-width: 98%;
+            margin: 30px auto;
+            padding: 0 10px;
         }
 
-        .greeting-box h2 { margin-bottom: 5px; }
-        .sub-text { color: #7f8c8d; font-size: 0.95rem; }
+        /* --- Info Card --- */
+        .info-card {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            border-left: 6px solid #27ae60;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
 
-        /* Table Styling */
+        .info-card h2 { color: #2c3e50; font-size: 1.8rem; margin: 0; }
+        .greeting-name { color: #27ae60; }
+        .info-card p { color: #7f8c8d; margin-top: 5px; font-size: 0.95rem; }
+
+        .controls-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .btn-add {
+            background-color: #27ae60;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(39, 174, 96, 0.2);
+        }
+
+        .btn-add:hover {
+            background-color: #219150;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(39, 174, 96, 0.3);
+        }
+
+        #eventSearch {
+            width: 250px;
+            padding: 10px 15px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        #eventSearch:focus { border-color: #27ae60; box-shadow: 0 0 8px rgba(39, 174, 96, 0.1); }
+
+        /* --- Table Styling Adjusted --- */
         .table-wrapper {
             background: white;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            margin-top: 20px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 
         th {
-            background-color: #ecf0f1;
-            color: #2c3e50;
-            padding: 15px;
+            background-color: #f8f9fa;
+            color: #34495e;
+            padding: 18px 15px;
             text-align: left;
             border-bottom: 3px solid #27ae60;
-            font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            font-weight: 700;
         }
 
         td {
             padding: 15px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #f1f1f1;
+            color: #2c3e50;
             vertical-align: middle;
-            color: #444;
-            font-size: 0.95rem;
+            word-wrap: break-word;
+            font-size: 0.85rem;
         }
 
         tr:hover { background-color: #fcfcfc; }
 
-        /* Status Pill Styling */
-        .status-pill {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 11px;
+        /* Column Logic Optimized for new Column */
+        .col-event { width: 19%; }
+        .col-org { width: 12%; }
+        .col-venue { width: 12%; }
+        .col-date { width: 14%; }
+        .col-price { width: 9%; }
+        .col-slots { width: 8%; text-align: center; }
+        .col-status { width: 10%; }
+        .col-action { width: 12%; }
+
+        .event-title { font-weight: 700; display: block; color: #2c3e50; margin-bottom: 4px; }
+        .date-text { color: #27ae60; font-weight: 700; }
+        .price-text { font-weight: 600; color: #2c3e50; }
+
+        /* Slot Badge Style */
+        .slot-badge {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 5px 10px;
+            border-radius: 6px;
             font-weight: 700;
+            font-size: 0.8rem;
+            border: 1px solid #c8e6c9;
+        }
+
+        /* --- Status Pills --- */
+        .status-pill {
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 800;
             text-transform: uppercase;
             display: inline-block;
             text-align: center;
-            min-width: 90px;
+            min-width: 85px;
         }
 
         .status-approved { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .status-pending { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
         .status-rejected { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .status-pending { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .status-deleted { background-color: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
 
-        /* Top Action Button (+ Register) */
-        .btn-add {
-            background-color: #27ae60;
-            color: white;
-            padding: 12px 22px;
-            text-decoration: none;
-            border-radius: 8px;
-            display: inline-block;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .btn-add:hover {
-            background-color: #2ecc71;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
-        }
-
-        /* Grid Action Column Styling */
-        .action-col {
-            width: 180px; /* Fixed width for the grid */
-        }
-
+        /* --- Action Grid --- */
         .action-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* Two equal columns for top row */
-            gap: 6px;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
         }
 
         .btn-grid {
-            padding: 7px 5px;
+            padding: 6px 4px;
+            border-radius: 4px;
             text-decoration: none;
-            border-radius: 5px;
-            font-size: 12px;
-            font-weight: bold;
-            text-align: center;
-            transition: all 0.2s;
             color: white;
-            border: none;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-align: center;
+            transition: 0.2s;
         }
 
-        .btn-grid:hover { transform: translateY(-1px); opacity: 0.9; }
+        .btn-grid:hover { transform: translateY(-2px); opacity: 0.9; }
 
         .btn-edit { background-color: #3498db; }
         .btn-delete { background-color: #e74c3c; }
-        .btn-view {
-            background-color: #f1c40f;
-            color: #2c3e50;
-            grid-column: span 2; /* Spans across both columns in the second row */
-        }
+        .btn-view { background-color: #f1c40f; color: #2c3e50; grid-column: span 2; }
 
-        .price-tag { font-weight: bold; color: #2c3e50; }
-        .date-text { color: #27ae60; font-weight: 600; }
+        .empty-row td { text-align: center; padding: 50px; color: #bdc3c7; font-style: italic; }
+        .event-desc {
+            font-size: 0.75rem;
+            color: #95a5a6; /* Subtle gray */
+            display: block;
+            margin-top: 2px;
+            line-height: 1.2;
+            /* Optional: Limits to 1 line with ellipsis if too long */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 250px;
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>FOT Event Management System</h1>
+    <h1>FOT EVENTS | Organizer Dashboard</h1>
     <form th:action="@{/logout}" method="post">
         <button type="submit" class="btn-logout">Logout</button>
     </form>
 </header>
 
 <div class="container">
-    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px;">
+
+    <div class="info-card">
         <div class="greeting-box">
-            <h2 style="color: #2c3e50; margin: 0;">
-                Hi, <span th:text="${fullName}" style="color: #27ae60;">User</span>!
-            </h2>
-            <p class="sub-text">Manage your campus events and registrations here.</p>
+            <h2>Hi, <span class="greeting-name" th:text="${fullName}">User</span>!</h2>
+            <p>Manage your campus events, update details, and monitor participant registrations.</p>
         </div>
-        <a th:href="@{/event/add}" class="btn-add">+ Register New Event</a>
+
+        <div class="controls-wrapper">
+            <a th:href="@{/event/add}" class="btn-add">+ Register New Event</a>
+            <input type="text" id="eventSearch" onkeyup="filterEventTable()" placeholder="Search event name...">
+        </div>
     </div>
 
     <div class="table-wrapper">
         <table>
             <thead>
             <tr>
-                <th>Event Name</th>
-                <th>Organizer</th>
-                <th>Venue</th>
-                <th>Date & Time</th>
-                <th>Price</th>
-                <th>Slots</th>
-                <th>Status</th>
+                <th class="col-event">Event Name</th>
+                <th class="col-org">Organizer</th>
+                <th class="col-venue">Venue</th>
+                <th class="col-date">Date & Time</th>
+                <th class="col-price">Price</th>
+                <th class="col-slots">Slots</th>
+                <th class="col-status">Status</th>
                 <th style="text-align: center;">Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="event : ${events}">
-                <td th:text="${event.eventName}" style="font-weight: bold; color: #2c3e50;">Name</td>
+                <td class="col-event">
+                    <span class="event-title" th:text="${event.eventName}">Name</span>
+                    <span class="event-desc" th:text="${event.description}">Event Description</span>
+                </td>
                 <td th:text="${event.organizerName}">Organizer</td>
                 <td th:text="${event.venue}">Venue</td>
                 <td>
                     <span class="date-text" th:text="${event.date}">Date</span><br>
-                    <small th:text="${event.time}" style="color: #7f8c8d;">Time</small>
+                    <small th:text="${event.time}">Time</small>
                 </td>
-                <td class="price-tag" th:text="${'Rs. ' + event.ticketPrice}">0.00</td>
-                <td th:text="${event.availableSlots}" style="text-align: center;">0</td>
-                <td class="status-col">
-                    <span th:class="'status-pill ' +
+                <td class="price-text" th:text="${'Rs. ' + event.ticketPrice}">0.00</td>
+                <td class="col-slots">
+                    <span class="slot-badge" th:text="${event.availableSlots}">0</span>
+                </td>
+                <td>
+                    <span th:text="${event.eventstatus != null ? event.eventstatus : 'PENDING'}"
+                          th:class="'status-pill ' +
                           (${event.eventstatus == 'APPROVED'} ? 'status-approved' :
-                          (${event.eventstatus == 'REJECTED'} ? 'status-rejected' : 'status-pending'))"
-                          th:text="${event.eventstatus != null ? event.eventstatus : 'PENDING'}">
+                          (${event.eventstatus == 'REJECTED'} ? 'status-rejected' :
+                          (${event.eventstatus == 'DELETED'} ? 'status-deleted' : 'status-pending')))">
                     </span>
                 </td>
-                <td class="action-col">
+                <td class="col-action">
                     <div class="action-grid">
                         <a th:href="@{/events/edit/{id}(id=${event.id})}" class="btn-grid btn-edit">Edit</a>
                         <a th:href="@{/events/delete/{id}(id=${event.id})}"
                            class="btn-grid btn-delete"
                            onclick="return confirm('Are you sure you want to delete this event?')">Delete</a>
-
                         <a th:href="@{/event/showparticipant/{id}(id=${event.id})}" class="btn-grid btn-view">View Users</a>
                     </div>
                 </td>
             </tr>
 
-            <tr th:if="${#lists.isEmpty(events)}">
-                <td colspan="8" style="text-align: center; padding: 50px; color: #95a5a6;">
-                    No events found in your account. Click "+ Register New Event" to get started!
-                </td>
+            <tr th:if="${#lists.isEmpty(events)}" class="empty-row">
+                <td colspan="8">No events found in your account.</td>
             </tr>
             </tbody>
         </table>
     </div>
 </div>
+
+<script>
+    function filterEventTable() {
+        let input = document.getElementById("eventSearch");
+        let filter = input.value.toUpperCase();
+        let table = document.querySelector("table");
+        let tr = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < tr.length; i++) {
+            let td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                let titleSpan = td.querySelector(".event-title");
+                let txtValue = titleSpan ? (titleSpan.textContent || titleSpan.innerText) : td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
 
 </body>
 </html>
