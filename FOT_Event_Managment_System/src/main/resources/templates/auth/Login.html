@@ -140,7 +140,14 @@
         <h2>Login</h2>
 
         <div th:if="${param.error}" class="error-msg">
-            Invalid email or password. Please try again.
+    <span th:if="${session['SPRING_SECURITY_LAST_EXCEPTION'] != null}"
+          th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}">
+        Error Message
+    </span>
+
+            <span th:unless="${session['SPRING_SECURITY_LAST_EXCEPTION'] != null}">
+        Invalid email or password. Please try again.
+    </span>
         </div>
 
         <form th:action="@{/login}" method="post">

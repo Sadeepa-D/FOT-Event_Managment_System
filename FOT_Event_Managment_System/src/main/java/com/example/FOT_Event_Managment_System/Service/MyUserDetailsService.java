@@ -1,6 +1,8 @@
 package com.example.FOT_Event_Managment_System.Service;
 
 import com.example.FOT_Event_Managment_System.Repository.UserRepo;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,18 +16,23 @@ public class MyUserDetailsService implements UserDetailsService {
     private UserRepo userRepo;
 
     @Override
-    public UserDetails loadUserByUsername(String emailOrUsername) throws UsernameNotFoundException {
-        // Search by email since that's what the user provided
-        Users user = userRepo.findByUseremail(emailOrUsername);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Users user = userRepo.findByUseremail(email);
 
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
 
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUseremail())
-                .password(user.getUserpassword()) // This MUST be the BCrypt hash from DB
-                .roles(user.getUserrole())
-                .build();
+        // BLOCK SUSPENDED USERS
+        // We check if status is NOT "Active"
+        if (user.getUserstatus() != null && !user.getUserstatus().equalsIgnoreCase("Active")) {
+            throw new LockedException("Your account has been suspended. Please contact the administrator.");
+        }
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getUseremail(),
+                user.getUserpassword(), // CHANGED FROM getPass() TO getUserpassword()
+                AuthorityUtils.createAuthorityList("ROLE_" + user.getUserrole())
+        );
     }
 }
