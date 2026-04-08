@@ -2,6 +2,7 @@ package com.example.FOT_Event_Managment_System.Controller;
 
 import com.example.FOT_Event_Managment_System.Model.Event;
 import com.example.FOT_Event_Managment_System.Repository.UserRepo;
+import com.example.FOT_Event_Managment_System.Repository.locationRepo;
 import com.example.FOT_Event_Managment_System.Service.EventServices;
 import com.example.FOT_Event_Managment_System.Model.Users;
 import org.springframework.security.core.Authentication;
@@ -22,6 +23,9 @@ public class EventController {
     private EventServices eventServices;
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private locationRepo locationRepo;
+
     @GetMapping("/events")
     public String events(Model model, Authentication authentication) {
         String email = authentication.getName();
@@ -43,6 +47,7 @@ public class EventController {
     @GetMapping("/event/add")
     public String addEventForm(Model model) {
         model.addAttribute("eventForm", new Event());
+        model.addAttribute("locations", locationRepo.findAll());
         return "Organizer/AddEvent";
     }
     @PostMapping("/event/save")
@@ -78,6 +83,8 @@ public class EventController {
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         Event existingEvent = eventServices.getEventById(id);
         model.addAttribute("eventForm", existingEvent);
+        model.addAttribute("locations", locationRepo.findAll());
         return "Organizer/AddEvent";
     }
+
 }

@@ -29,7 +29,7 @@ public class AdminlocationService {
     }
 
     // Delete location
-    public void deleteLocation(Long id) {
-        locationRepo.deleteById(id);
+    public void disableLocation(Long id) {
+        locationRepo.disableLocation(id);
     }
 }
