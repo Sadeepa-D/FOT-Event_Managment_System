@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Upcoming Events - FOT Management</title>
+    <style>
+        /* General Reset */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', Arial, sans-serif; }
+
+        /* Header Styling - Matching System Theme */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1.5rem 5%;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        header h1 { font-size: 1.8rem; margin: 0; }
+
+        .container {
+            max-width: 90%;
+            margin: auto;
+        }
+
+        .info-bar {
+            background-color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            border-left: 5px solid #27ae60;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .info-bar p { color: #34495e; font-weight: 500; }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        th {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            padding: 18px;
+            text-align: left;
+            border-bottom: 3px solid #27ae60; /* Theme Green */
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 15px 18px;
+            border-bottom: 1px solid #eee;
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background-color: #fcfcfc; }
+
+        .event-name { font-weight: bold; color: #2c3e50; font-size: 1.05rem; }
+        .organizer-tag { color: #7f8c8d; font-size: 0.85rem; }
+        .date-text { color: #27ae60; font-weight: 600; }
+        .price-tag { color: #2c3e50; font-weight: bold; }
+
+        /* Navigation Link */
+        .btn-back {
+            display: inline-block;
+            margin-top: 25px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .btn-back:hover { color: #2980b9; text-decoration: underline; }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #95a5a6;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>FOT Event Management System</h1>
+</header>
+
+<div class="container">
+    <div class="info-bar">
+        <p>Explore all upcoming events at the Faculty of Technology.</p>
+        <a th:href="@{/login}" style="color: #27ae60; text-decoration: none; font-size: 0.9rem; font-weight: bold;">
+            Are you an Organizer/Participent ? Login here →
+        </a>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Event Details</th>
+            <th>Organizer</th>
+            <th>Venue</th>
+            <th>Schedule</th>
+            <th>Ticket Price</th>
+            <th>Availability</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="event : ${View_All_Events}">
+            <td>
+                <div class="event-name" th:text="${event.eventName}">Tech Symposium</div>
+                <div class="organizer-tag" th:text="${event.description}">Brief description here...</div>
+            </td>
+            <td th:text="${event.organizerName}">FOT Ruhuna</td>
+            <td th:text="${event.venue}">Auditorium</td>
+            <td>
+                <span class="date-text" th:text="${event.date}">2026-03-25</span><br>
+                <small th:text="${event.time}">10:00 AM</small>
+            </td>
+            <td class="price-tag" th:text="${'Rs. ' + event.ticketPrice}">Rs. 0.00</td>
+            <td th:text="${event.availableSlots + ' Slots Left'}">50 Slots</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(View_All_Events)}">
+            <td colspan="6" class="empty-state">
+                No events have been scheduled at this time. Please check back later!
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/}" class="btn-back">← Return to Welcome Page</a>
+</div>
+
+</body>
+</html>
