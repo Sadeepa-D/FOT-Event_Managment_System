@@ -1,6 +1,7 @@
 package com.example.FOT_Event_Managment_System.Controller;
 
 import com.example.FOT_Event_Managment_System.Model.Event;
+import com.example.FOT_Event_Managment_System.Repository.EventRepo;
 import com.example.FOT_Event_Managment_System.Repository.UserRepo;
 import com.example.FOT_Event_Managment_System.Repository.locationRepo;
 import com.example.FOT_Event_Managment_System.Service.EventServices;
@@ -9,10 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +23,8 @@ public class EventController {
     private UserRepo userRepo;
     @Autowired
     private locationRepo locationRepo;
+    @Autowired
+    private EventRepo eventRepo;
 
     @GetMapping("/events")
     public String events(Model model, Authentication authentication) {
@@ -86,5 +86,11 @@ public class EventController {
         model.addAttribute("locations", locationRepo.findAll());
         return "Organizer/AddEvent";
     }
-
+    @GetMapping("/api/booked-venues")
+    @ResponseBody
+    public List<String> getBookedVenues(@RequestParam String date) {
+        // This calls a query in your Repo to get names of venues
+        // already booked (Approved or Pending) on this date
+        return eventRepo.findBookedVenuesByDate(date);
+    }
 }

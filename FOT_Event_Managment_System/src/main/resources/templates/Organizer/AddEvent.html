@@ -82,10 +82,10 @@
             box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
         }
 
-        /* --- Specific Dropdown Styling for Unavailable Options --- */
+        /* Style for disabled options in the dropdown */
         select option:disabled {
-            color: #bdc3c7;
-            background-color: #f8f9fa;
+            color: #e74c3c; /* Red text for booked/disabled items */
+            background-color: #fdf2f2;
             font-style: italic;
         }
 
@@ -162,28 +162,30 @@
             <input type="text" th:field="*{organizerName}" placeholder="e.g. Department of ICT" required/>
         </div>
 
-        <div class="form-group">
-            <label>Venue / Location</label>
-            <select th:field="*{venue}" required>
-                <option value="" disabled selected>-- Select an Approved Venue --</option>
-                <option th:each="loc : ${locations}"
-                        th:value="${loc.locationName}"
-                        th:text="${loc.locationName} + ' (Cap: ' + ${loc.capacity} + ')' + (${loc.availability != 'available' ? ' - UNAVAILABLE' : ''})"
-                        th:disabled="${loc.availability != 'available'}">
-                </option>
-            </select>
-            <small class="helper-text">* Grayed out locations are currently disabled by the Administrator Or Already Booked.</small>
-        </div>
-
         <div class="row">
             <div class="form-group">
                 <label>Scheduled Date</label>
-                <input type="date" th:field="*{date}" required/>
+                <input type="date" id="eventDate" th:field="*{date}" onchange="checkVenueAvailability()" required/>
             </div>
             <div class="form-group">
                 <label>Start Time</label>
                 <input type="time" th:field="*{time}" required/>
             </div>
+        </div>
+
+        <div class="form-group">
+            <label>Venue / Location</label>
+            <select id="venueSelect" th:field="*{venue}" required>
+                <option value="" disabled selected>-- Select Date First --</option>
+
+                <option th:each="loc : ${locations}"
+                        th:value="${loc.locationName}"
+                        th:text="${loc.locationName} + ' (Cap: ' + ${loc.capacity} + ')'"
+                        th:data-capacity="${loc.capacity}"
+                        th:data-admin-status="${loc.availability}">
+                </option>
+            </select>
+            <small class="helper-text">* Grayed out locations are currently disabled by the Administrator Or Already Booked.</small>
         </div>
 
         <div class="row">
@@ -210,5 +212,42 @@
         <a th:href="@{/events}" class="btn-back">← Cancel and Back to Dashboard</a>
     </form>
 </div>
+<script>
+    function checkVenueAvailability() {
+        const selectedDate = document.getElementById("eventDate").value;
+        const venueSelect = document.getElementById("venueSelect");
+        const options = venueSelect.options;
+
+        if (!selectedDate) return;
+
+        fetch('/api/booked-venues?date=' + selectedDate)
+            .then(response => response.json())
+            .then(bookedVenues => {
+                for (let i = 0; i < options.length; i++) {
+                    const opt = options[i];
+                    // Skip the placeholder
+                    if (opt.value === "" || opt.text.includes("-- Select Date First --")) continue;
+
+                    const venueName = opt.value;
+                    const capacity = opt.getAttribute("data-capacity"); // Get the capacity back
+                    const isAdminDisabled = opt.getAttribute("data-admin-status") !== 'available';
+                    const isAlreadyBooked = bookedVenues.includes(venueName);
+
+                    if (isAdminDisabled) {
+                        opt.disabled = true;
+                        opt.text = venueName + " (Disabled by Admin)";
+                    } else if (isAlreadyBooked) {
+                        opt.disabled = true;
+                        opt.text = venueName + " (Already Booked)";
+                    } else {
+                        opt.disabled = false;
+                        // REBUILD the text with capacity here
+                        opt.text = venueName + " (Cap: " + capacity + ")";
+                    }
+                }
+            })
+            .catch(error => console.error('Error fetching availability:', error));
+    }
+</script>
 </body>
 </html>
