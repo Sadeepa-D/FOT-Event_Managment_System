@@ -3,6 +3,7 @@ package com.example.FOT_Event_Managment_System.Controller;
 import com.example.FOT_Event_Managment_System.Model.Event;
 import com.example.FOT_Event_Managment_System.Model.Users;
 import com.example.FOT_Event_Managment_System.Repository.EventRegiRepo;
+import com.example.FOT_Event_Managment_System.Repository.EventRepo;
 import com.example.FOT_Event_Managment_System.Repository.UserRepo;
 import com.example.FOT_Event_Managment_System.Service.EventServices;
 import org.springframework.security.core.Authentication;
@@ -27,6 +28,9 @@ public class EventRegiController {
     private EventServices eventServices;
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private EventRepo eventRepo;
+
     @GetMapping("/event/register") // This opens the form page
     public String showRegistrationForm(@RequestParam("id") Long eventId,
                                        @RequestParam("name") String eventName,
@@ -158,15 +162,22 @@ public class EventRegiController {
     @GetMapping("/myregistrations")
     public String showMyEvents(Model model, Authentication authentication) {
         Users user = userRepo.findByUseremail(authentication.getName());
+        if (user == null || user.getRegno() == null) return "Participant/MyEvents";
 
-        // This will now find the value we saved in Step 2
         String studentRegNo = user.getRegno();
+        List<EventRegi> myRegistrations = eventRegiRepo.findBypRegistrationnnum(studentRegNo);
 
-        if (studentRegNo != null) {
-            List<EventRegi> myRegistrations = eventRegiRepo.findBypRegistrationnnum(studentRegNo);
-            model.addAttribute("registrations", myRegistrations);
+        for (EventRegi reg : myRegistrations) {
+            // Fetch the actual event object to check its status
+            Event actualEvent = eventRepo.findById(reg.getEventId()).orElse(null);
+
+            // Check if event is missing OR if its status is "DELETED"
+            if (actualEvent == null || "DELETED".equalsIgnoreCase(actualEvent.getEventstatus())) {
+                reg.setRegistatus("Event Deleted");
+            }
         }
 
+        model.addAttribute("registrations", myRegistrations);
         return "Participant/MyEvents";
     }
     @GetMapping("/event/registration/delete/{id}")
