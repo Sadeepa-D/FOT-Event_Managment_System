@@ -212,6 +212,10 @@
     </form>
 </div>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("eventDate").setAttribute('min', today);
+    });
     function checkVenueAvailability() {
         const selectedDate = document.getElementById("eventDate").value;
         const venueSelect = document.getElementById("venueSelect");
