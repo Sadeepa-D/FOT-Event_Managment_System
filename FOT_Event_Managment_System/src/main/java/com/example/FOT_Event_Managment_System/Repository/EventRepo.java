@@ -19,4 +19,7 @@ public interface EventRepo extends JpaRepository<Event,Long> {
     @Transactional
     @Query("UPDATE Event e SET e.eventstatus = 'DELETED' WHERE e.id = :id")
     void softDeleteEvent(@Param("id") Long id);
+
+    @Query("SELECT e.venue FROM Event e WHERE e.date = :date AND e.eventstatus != 'REJECTED' AND e.eventstatus!='DELETED'")
+    List<String> findBookedVenuesByDate(@Param("date") String date);
 }

@@ -14,13 +14,14 @@ public class Event {
     private String venue;
     private String date;
     private String time;
-    private Double ticketPrice;
+    private Double ticketPrice = 0.00;
     private Integer availableSlots;
     private String description;
     private Long organizerId;
     private String eventstatus="PENDING";
     public Event() {
         this.eventstatus="PENDING";
+        this.ticketPrice = 0.00;
     }
 
     public Event(String description, Integer availableSlots, Double ticketPrice, String time, String date, String venue, String organizerName, String eventName, Long id, String eventstatus) {

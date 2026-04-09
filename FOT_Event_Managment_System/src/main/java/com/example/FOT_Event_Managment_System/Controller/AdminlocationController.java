@@ -46,7 +46,7 @@ public class AdminlocationController {
     // Delete location
     @GetMapping("/admin/locations/delete/{id}")
     public String deleteLocation(@PathVariable Long id) {
-        locationService.deleteLocation(id);
+        locationService.disableLocation(id);
         return "redirect:/admin/locations";
     }
 
