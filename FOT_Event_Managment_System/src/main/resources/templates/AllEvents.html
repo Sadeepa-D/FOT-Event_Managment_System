@@ -74,6 +74,8 @@
         .organizer-tag { color: #7f8c8d; font-size: 0.85rem; }
         .date-text { color: #27ae60; font-weight: 600; }
         .price-tag { color: #2c3e50; font-weight: bold; }
+        .org-name { font-weight: 600; display: block; color: #2c3e50; }
+        .org-phone { font-size: 0.75rem; color: #7f8c8d; display: block; margin-top: 2px; }
 
         /* Navigation Link */
         .btn-back {
@@ -125,7 +127,10 @@
                 <div class="event-name" th:text="${event.eventName}">Tech Symposium</div>
                 <div class="organizer-tag" th:text="${event.description}">Brief description here...</div>
             </td>
-            <td th:text="${event.organizerName}">FOT Ruhuna</td>
+            <td class="col-org">
+                <span class="org-name" th:text="${event.organizerName}">Dept Name</span>
+                <span class="org-phone" th:text="${event.organizerPhone != null ? event.organizerPhone : 'No Contact'}">0000000000</span>
+            </td>
             <td th:text="${event.venue}">Auditorium</td>
             <td>
                 <span class="date-text" th:text="${event.date}">2026-03-25</span><br>

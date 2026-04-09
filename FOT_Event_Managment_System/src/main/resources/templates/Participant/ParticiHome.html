@@ -25,7 +25,6 @@
 
         header h1 { font-size: 1.4rem; letter-spacing: 1px; }
 
-        /* --- Logout Button --- */
         .btn-logout {
             background-color: #e74c3c;
             color: white;
@@ -45,12 +44,12 @@
 
         /* --- Main Container --- */
         .container {
-            max-width: 1200px;
+            max-width: 95%;
             margin: 30px auto;
             padding: 0 20px;
         }
 
-        /* --- Info Card (Greeting & Controls) --- */
+        /* --- Info Card --- */
         .info-card {
             background: white;
             padding: 25px 30px;
@@ -60,22 +59,15 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             display: flex;
             justify-content: space-between;
-            align-items: center; /* Vertically centers greeting with buttons */
+            align-items: center;
             flex-wrap: wrap;
             gap: 20px;
         }
 
         .info-card h2 { color: #2c3e50; font-size: 1.8rem; margin: 0; }
-
         .greeting-name { color: #27ae60; }
+        .info-card p { color: #7f8c8d; margin-top: 5px; font-size: 0.95rem; }
 
-        .info-card p {
-            color: #7f8c8d;
-            margin-top: 5px;
-            font-size: 0.95rem;
-        }
-
-        /* Right side container for Button and Search */
         .controls-wrapper {
             display: flex;
             flex-direction: column;
@@ -84,7 +76,6 @@
             justify-content: center;
         }
 
-        /* Yellow Button Style */
         .btn-bookings {
             background-color: #f1c40f;
             color: #2c3e50;
@@ -94,18 +85,9 @@
             font-weight: bold;
             font-size: 0.95rem;
             transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
             box-shadow: 0 4px 12px rgba(241, 196, 15, 0.2);
         }
 
-        .btn-bookings:hover {
-            background-color: #f39c12;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(243, 156, 18, 0.3);
-        }
-
-        /* Search Input Styling */
         #eventSearch {
             width: 250px;
             padding: 10px 15px;
@@ -113,13 +95,9 @@
             border-radius: 8px;
             outline: none;
             transition: all 0.3s;
-            font-family: inherit;
         }
 
-        #eventSearch:focus {
-            border-color: #27ae60;
-            box-shadow: 0 0 8px rgba(39, 174, 96, 0.1);
-        }
+        #eventSearch:focus { border-color: #27ae60; }
 
         /* --- Success Alert --- */
         .alert-success {
@@ -131,7 +109,7 @@
             border-left: 5px solid #28a745;
         }
 
-        /* --- Table Styling --- */
+        /* --- Table Styling - Using All Events Structure --- */
         .table-card {
             background: white;
             border-radius: 12px;
@@ -145,29 +123,32 @@
         }
 
         th {
-            background-color: #f8f9fa;
+            background-color: #ecf0f1;
             color: #2c3e50;
-            padding: 15px;
+            padding: 18px;
             text-align: left;
             border-bottom: 3px solid #27ae60;
             text-transform: uppercase;
-            font-size: 0.8rem;
-            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
         }
 
         td {
-            padding: 15px;
+            padding: 15px 18px;
             border-bottom: 1px solid #eee;
-            color: #444;
+            color: #2c3e50;
+            font-size: 0.95rem;
             vertical-align: middle;
         }
 
         tr:hover { background-color: #fcfcfc; }
 
-        .event-title { font-weight: 600; color: #2c3e50; font-size: 1rem; }
-        .venue-tag { color: #7f8c8d; font-size: 0.85rem; }
-        .price-text { font-weight: 700; color: #2c3e50; }
-        .time-text { color: #7f8c8d; }
+        .event-name { font-weight: bold; color: #2c3e50; font-size: 1.05rem; }
+        .description-tag { color: #7f8c8d; font-size: 0.85rem; }
+        .org-name { font-weight: 600; display: block; color: #2c3e50; }
+        .org-phone { font-size: 0.75rem; color: #7f8c8d; display: block; margin-top: 2px; }
+        .date-text { color: #27ae60; font-weight: 600; }
+        .price-tag { color: #2c3e50; font-weight: bold; }
 
         .slots-badge {
             background-color: #e8f5e9;
@@ -178,9 +159,8 @@
             font-weight: bold;
         }
 
-        .action-cell { text-align: center; }
-
         /* --- Action Buttons --- */
+        .action-cell { text-align: center; }
         .btn-join, .btn-expired {
             padding: 10px 22px;
             text-decoration: none;
@@ -188,15 +168,12 @@
             font-weight: 600;
             font-size: 0.9rem;
             display: inline-block;
-            text-align: center;
             min-width: 120px;
             border: none;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.3s ease;
         }
-
         .btn-join { background-color: #27ae60; color: white; cursor: pointer; }
-        .btn-join:hover { background-color: #219150; transform: translateY(-2px); box-shadow: 0 5px 12px rgba(39, 174, 96, 0.4); }
-
+        .btn-join:hover { background-color: #219150; transform: translateY(-2px); }
         .btn-expired { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; cursor: not-allowed; opacity: 0.8; }
     </style>
 </head>
@@ -221,7 +198,6 @@
             <a th:href="@{/myregistrations}" class="btn-bookings">
                 Show My Bookings
             </a>
-
             <input type="text" id="eventSearch" onkeyup="filterEventTable()"
                    placeholder="Search by event name...">
         </div>
@@ -237,6 +213,7 @@
             <tr>
                 <th>Event Details</th>
                 <th>Organizer</th>
+                <th>Venue</th>
                 <th>Schedule</th>
                 <th>Ticket Price</th>
                 <th>Availability</th>
@@ -246,22 +223,26 @@
             <tbody>
             <tr th:each="event : ${events}">
                 <td>
-                    <div class="event-title" th:text="${event.eventName}">Workshop Name</div>
-                    <div class="venue-tag" th:text="${event.venue}">Location</div>
+                    <div class="event-name" th:text="${event.eventName}">Event Name</div>
+                    <div class="description-tag" th:text="${event.description}">Description</div>
                 </td>
-                <td th:text="${event.organizerName}">Department</td>
                 <td>
-                    <span th:text="${event.date}">Date</span><br>
+                    <span class="org-name" th:text="${event.organizerName}">Dept Name</span>
+                    <span class="org-phone" th:text="${event.organizerPhone != null ? event.organizerPhone : 'No Contact'}">0000000000</span>
+                </td>
+                <td th:text="${event.venue}">Venue</td>
+                <td>
+                    <span class="date-text" th:text="${event.date}">Date</span><br>
                     <small class="time-text" th:text="${event.time}">Time</small>
                 </td>
-                <td class="price-text" th:text="${'Rs. ' + event.ticketPrice}">Rs. 0.00</td>
+                <td class="price-tag" th:text="${'Rs. ' + event.ticketPrice}">Rs. 0.00</td>
                 <td>
                     <span class="slots-badge" th:text="${event.availableSlots + ' Left'}">0 Left</span>
                 </td>
                 <td class="action-cell">
                     <div th:if="${event.date != null}"
                          th:with="today=${T(java.time.LocalDate).now()},
-                  eventDateObj=${T(java.time.LocalDate).parse(event.date)}">
+                                  eventDateObj=${T(java.time.LocalDate).parse(event.date)}">
 
                         <a th:if="${!eventDateObj.isBefore(today)}"
                            th:href="@{/event/register(id=${event.id}, name=${event.eventName}, organizer=${event.organizerName})}"
@@ -278,7 +259,7 @@
                 </td>
             </tr>
             <tr th:if="${#lists.isEmpty(events)}">
-                <td colspan="6" style="text-align: center; padding: 40px; color: #95a5a6;">
+                <td colspan="7" style="text-align: center; padding: 40px; color: #95a5a6; font-style: italic;">
                     No upcoming events found. Please check back later.
                 </td>
             </tr>
@@ -288,9 +269,6 @@
 </div>
 
 <script>
-    /**
-     * Filters the table rows based on Event Name
-     */
     function filterEventTable() {
         let input = document.getElementById("eventSearch");
         let filter = input.value.toUpperCase();
@@ -299,11 +277,9 @@
 
         for (let i = 1; i < tr.length; i++) {
             let td = tr[i].getElementsByTagName("td")[0];
-
             if (td) {
-                let titleDiv = td.querySelector(".event-title");
+                let titleDiv = td.querySelector(".event-name");
                 let txtValue = titleDiv ? (titleDiv.textContent || titleDiv.innerText) : td.innerText;
-
                 if (txtValue.toUpperCase().indexOf(filter) > -1) {
                     tr[i].style.display = "";
                 } else {
