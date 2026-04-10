@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/FOT-Event_Managment_System.iml" filepath="$PROJECT_DIR$/.idea/FOT-Event_Managment_System.iml" />
       <module fileurl="file://$PROJECT_DIR$/FOT_Event_Managment_System/FOT_Event_Managment_System.iml" filepath="$PROJECT_DIR$/FOT_Event_Managment_System/FOT_Event_Managment_System.iml" />
     </modules>
   </component>
