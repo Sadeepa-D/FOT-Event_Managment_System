@@ -68,14 +68,18 @@ public class EventRegiController {
 
         if (currentUser != null) {
             Long eventId = eventRegi.getEventId();
-
+            String inputRegNo = eventRegi.getpRegistrationnnum();
             String errorRedirect = "redirect:/event/register?id=" + eventId +
                     "&name=" + URLEncoder.encode(eventRegi.getEventName(), StandardCharsets.UTF_8) +
                     "&organizer=" + URLEncoder.encode(eventRegi.getOrganizerName(), StandardCharsets.UTF_8);
-
+Users existingUserwithregno = userRepo.findByRegno(inputRegNo);
+            if (existingUserwithregno != null && !existingUserwithregno.getUseremail().equals(email)) {
+                redirectAttributes.addFlashAttribute("error", "This Registration Number is already associated with another account.");
+                return errorRedirect;
+            }
             // Save regno to profile if it's the first time
             if (currentUser.getRegno() == null || currentUser.getRegno().isEmpty()) {
-                currentUser.setRegno(eventRegi.getpRegistrationnnum());
+                currentUser.setRegno(inputRegNo);
                 userRepo.save(currentUser);
             }
 
