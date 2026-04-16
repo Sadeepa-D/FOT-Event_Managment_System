@@ -3,10 +3,10 @@ package com.example.FOT_Event_Managment_System.Controller;
 import com.example.FOT_Event_Managment_System.Model.Event;
 import com.example.FOT_Event_Managment_System.Model.Users;
 import com.example.FOT_Event_Managment_System.Repository.EventRegiRepo;
+import com.example.FOT_Event_Managment_System.Repository.EventRepo;
 import com.example.FOT_Event_Managment_System.Repository.UserRepo;
 import com.example.FOT_Event_Managment_System.Service.EventServices;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import com.example.FOT_Event_Managment_System.Model.EventRegi;
 import com.example.FOT_Event_Managment_System.Service.EventRegiServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -27,18 +29,34 @@ public class EventRegiController {
     private EventServices eventServices;
     @Autowired
     private UserRepo userRepo;
-    @GetMapping("/event/register") // This opens the form page
+    @Autowired
+    private EventRepo eventRepo;
+
+    @GetMapping("/event/register")
     public String showRegistrationForm(@RequestParam("id") Long eventId,
                                        @RequestParam("name") String eventName,
                                        @RequestParam("organizer") String organizerName,
-
+                                       Authentication authentication,
                                        Model model) {
-        EventRegi newReg = new EventRegi();
-        newReg.setEventId(eventId);
-        newReg.setEventName(eventName);
-        newReg.setOrganizerName(organizerName);
-        model.addAttribute("EventRegForm", newReg);
-        return "Participant/EventRegister"; // Points to your HTML file
+
+        // Check if the form object already exists (this happens after a redirect with errors)
+        // If it doesn't exist, only then do we create a fresh one.
+        if (!model.containsAttribute("EventRegForm")) {
+            EventRegi newReg = new EventRegi();
+            newReg.setEventId(eventId);
+            newReg.setEventName(eventName);
+            newReg.setOrganizerName(organizerName);
+
+            if (authentication != null) {
+                Users currentUser = userRepo.findByUseremail(authentication.getName());
+                if (currentUser != null && currentUser.getRegno() != null) {
+                    newReg.setpRegistrationnnum(currentUser.getRegno());
+                }
+            }
+            model.addAttribute("EventRegForm", newReg);
+        }
+
+        return "Participant/EventRegister";
     }
     @PostMapping("/event/register/save")
     public String registerEvent(@ModelAttribute("EventRegForm") EventRegi eventRegi,
@@ -49,64 +67,44 @@ public class EventRegiController {
         Users currentUser = userRepo.findByUseremail(email);
 
         if (currentUser != null) {
-            String providedRegNo = eventRegi.getpRegistrationnnum();
             Long eventId = eventRegi.getEventId();
-            int requestedSlots = eventRegi.getPslots();
 
-            // Common redirect for errors
             String errorRedirect = "redirect:/event/register?id=" + eventId +
-                    "&name=" + eventRegi.getEventName() +
-                    "&organizer=" + eventRegi.getOrganizerName();
+                    "&name=" + URLEncoder.encode(eventRegi.getEventName(), StandardCharsets.UTF_8) +
+                    "&organizer=" + URLEncoder.encode(eventRegi.getOrganizerName(), StandardCharsets.UTF_8);
 
-            // --- STEP 1: DUPLICATE REGISTRATION CHECK ---
-            boolean alreadyRegistered = eventRegiRepo.existsByEventIdAndPRegistrationnnum(eventId, providedRegNo);
-            if (alreadyRegistered) {
-                redirectAttributes.addFlashAttribute("error", "This Registration Number is already registered.");
+            // Save regno to profile if it's the first time
+            if (currentUser.getRegno() == null || currentUser.getRegno().isEmpty()) {
+                currentUser.setRegno(eventRegi.getpRegistrationnnum());
+                userRepo.save(currentUser);
+            }
+
+            String regNo = currentUser.getRegno(); // Always use profile value
+
+            // --- DUPLICATE CHECK ---
+            if (eventRegiRepo.existsByEventIdAndPRegistrationnnum(eventId, regNo)) {
+                redirectAttributes.addFlashAttribute("error", "You have already registered for this event.");
                 return errorRedirect;
             }
 
-            // --- STEP 2: PROFILE SYNC & VALIDATION ---
-            boolean isParticipant = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_PARTICIPANT"));
-            if (isParticipant) {
-                String existingRegNo = currentUser.getRegno();
-                if (existingRegNo != null && !existingRegNo.isEmpty()) {
-                    if (!existingRegNo.equalsIgnoreCase(providedRegNo)) {
-                        redirectAttributes.addFlashAttribute("error", "Registration Number does not match your profile.");
-                        return errorRedirect;
-                    }
-                } else {
-                    currentUser.setRegno(providedRegNo);
-                    userRepo.save(currentUser);
-                }
-            }
-
-            // --- STEP 3: SLOT MANAGEMENT & SAVE ---
+            // --- SAVE ---
             try {
-                // Check availability and reduce slots ONLY after all other checks pass
-                eventServices.decrementSlots(eventId, requestedSlots);
-
-                // Save the registration
+                eventRegi.setpRegistrationnnum(regNo); // Ensure form uses trusted value
+                eventServices.decrementSlots(eventId, eventRegi.getPslots());
                 eventRegiServices.registerforEvent(eventRegi);
-
             } catch (RuntimeException e) {
                 redirectAttributes.addFlashAttribute("error", "Booking failed: " + e.getMessage());
                 return errorRedirect;
             }
         }
 
-        // --- STEP 4: SUCCESS REDIRECTS ---
-        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ORGANIZER"))) {
-            return "redirect:/event/showparticipant/" + eventRegi.getEventId();
-        } else {
-            return "redirect:/paticipanthome?success";
-        }
+        return "redirect:/paticipanthome?success";
     }
     @GetMapping("/event/showparticipant/{id}")
     public String showParticipant(@PathVariable("id") Long eventId, Model model) {
         // 1. Get ONLY active participants
         List<EventRegi> participants = eventRegiServices.getParticipantsByEventId(eventId);
         model.addAttribute("participants", participants);
-        model.addAttribute("selectedEventId", eventId);
 
         // 2. Fetch official Event details so the header is always correct
         // Replace 'eventService' with your actual Event Service name
@@ -158,15 +156,22 @@ public class EventRegiController {
     @GetMapping("/myregistrations")
     public String showMyEvents(Model model, Authentication authentication) {
         Users user = userRepo.findByUseremail(authentication.getName());
+        if (user == null || user.getRegno() == null) return "Participant/MyEvents";
 
-        // This will now find the value we saved in Step 2
         String studentRegNo = user.getRegno();
+        List<EventRegi> myRegistrations = eventRegiRepo.findBypRegistrationnnum(studentRegNo);
 
-        if (studentRegNo != null) {
-            List<EventRegi> myRegistrations = eventRegiRepo.findBypRegistrationnnum(studentRegNo);
-            model.addAttribute("registrations", myRegistrations);
+        for (EventRegi reg : myRegistrations) {
+            // Fetch the actual event object to check its status
+            Event actualEvent = eventRepo.findById(reg.getEventId()).orElse(null);
+
+            // Check if event is missing OR if its status is "DELETED"
+            if (actualEvent == null || "DELETED".equalsIgnoreCase(actualEvent.getEventstatus())) {
+                reg.setRegistatus("Event Deleted");
+            }
         }
 
+        model.addAttribute("registrations", myRegistrations);
         return "Participant/MyEvents";
     }
     @GetMapping("/event/registration/delete/{id}")

@@ -19,12 +19,14 @@ public class Event {
     private String description;
     private Long organizerId;
     private String eventstatus="PENDING";
+    private String organizerPhone;
+
     public Event() {
         this.eventstatus="PENDING";
         this.ticketPrice = 0.00;
     }
 
-    public Event(String description, Integer availableSlots, Double ticketPrice, String time, String date, String venue, String organizerName, String eventName, Long id, String eventstatus) {
+    public Event(String description, Integer availableSlots, Double ticketPrice, String time, String date, String venue, String organizerName, String eventName, Long id, String eventstatus, String organizerPhone, Long organizerId) {
         this.description = description;
         this.availableSlots = availableSlots;
         this.ticketPrice = ticketPrice;
@@ -35,6 +37,7 @@ public class Event {
         this.eventName = eventName;
         this.id = id;
         this.eventstatus = eventstatus;
+        this.organizerPhone = organizerPhone;
     }
 
     public Long getId() {
@@ -125,5 +128,11 @@ public class Event {
         return organizerId;
     }
 
+    public String getOrganizerPhone() {
+        return organizerPhone;
+    }
 
+    public void setOrganizerPhone(String organizerPhone) {
+        this.organizerPhone = organizerPhone;
+    }
 }

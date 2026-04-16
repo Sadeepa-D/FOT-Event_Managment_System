@@ -146,7 +146,7 @@
 
         /* Column Logic Optimized for new Column */
         .col-event { width: 19%; }
-        .col-org { width: 12%; }
+        .col-org { width: 13%; }
         .col-venue { width: 12%; }
         .col-date { width: 14%; }
         .col-price { width: 9%; }
@@ -157,6 +157,9 @@
         .event-title { font-weight: 700; display: block; color: #2c3e50; margin-bottom: 4px; }
         .date-text { color: #27ae60; font-weight: 700; }
         .price-text { font-weight: 600; color: #2c3e50; }
+
+        .org-name { font-weight: 600; display: block; color: #2c3e50; }
+        .org-phone { font-size: 0.75rem; color: #7f8c8d; display: block; margin-top: 2px; }
 
         /* Slot Badge Style */
         .slot-badge {
@@ -268,7 +271,10 @@
                     <span class="event-title" th:text="${event.eventName}">Name</span>
                     <span class="event-desc" th:text="${event.description}">Event Description</span>
                 </td>
-                <td th:text="${event.organizerName}">Organizer</td>
+                <td class="col-org">
+                    <span class="org-name" th:text="${event.organizerName}">Dept Name</span>
+                    <span class="org-phone" th:text="${event.organizerPhone != null ? event.organizerPhone : 'No Contact'}">0000000000</span>
+                </td>
                 <td th:text="${event.venue}">Venue</td>
                 <td>
                     <span class="date-text" th:text="${event.date}">Date</span><br>

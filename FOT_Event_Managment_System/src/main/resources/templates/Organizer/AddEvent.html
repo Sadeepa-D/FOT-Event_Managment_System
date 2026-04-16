@@ -162,6 +162,16 @@
             <input type="text" th:field="*{organizerName}" placeholder="e.g. Department of ICT" required/>
         </div>
 
+        <div class="form-group">
+            <label>Organizer Contact Number</label>
+            <input type="tel" th:field="*{organizerPhone}"
+                   placeholder="e.g. 07X XXXXXXX"
+                   pattern="[0-9]{10}"
+                   title="Please enter a valid 10-digit phone number"
+                   required/>
+            <span class="helper-text">10-digit mobile or office number</span>
+        </div>
+
         <div class="row">
             <div class="form-group">
                 <label>Scheduled Date</label>
@@ -212,6 +222,10 @@
     </form>
 </div>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("eventDate").setAttribute('min', today);
+    });
     function checkVenueAvailability() {
         const selectedDate = document.getElementById("eventDate").value;
         const venueSelect = document.getElementById("venueSelect");

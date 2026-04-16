@@ -126,6 +126,7 @@
         .status-approved { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .status-rejected { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
         .status-pending { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .status-deleted {background-color: #6c757d; color: white; border: 1px solid #5a6268;}
 
         /* --- Action Button --- */
         .btn-unregister {
@@ -208,19 +209,25 @@
                     <span class="slot-count" th:text="${reg.pslots}">1</span> Slot(s)
                 </td>
                 <td>
-                    <span th:class="'status-pill ' +
-                          (${reg.registatus == 'Approved'} ? 'status-approved' :
-                          (${reg.registatus == 'Rejected'} ? 'status-rejected' : 'status-pending'))"
-                          th:text="${reg.registatus != null ? reg.registatus : 'Pending'}">
-                        Pending
-                    </span>
+    <span th:class="'status-pill ' +
+          (${reg.registatus == 'Approved'} ? 'status-approved' :
+          (${reg.registatus == 'Rejected'} ? 'status-rejected' :
+          (${reg.registatus == 'Event Deleted'} ? 'status-deleted' : 'status-pending')))"
+          th:text="${reg.registatus != null ? reg.registatus : 'Pending'}">
+        Pending
+    </span>
                 </td>
+
                 <td class="action-cell">
-                    <a th:href="@{/event/registration/delete/{id}(id=${reg.id})}"
+                    <a th:if="${reg.registatus != 'Event Deleted'}"
+                       th:href="@{/event/registration/delete/{id}(id=${reg.id})}"
                        class="btn-unregister"
-                       onclick="return confirm('Are you sure you want to unregister from this event?')">
+                       onclick="return confirm('Are you sure you want to unregister?')">
                         Unregister
                     </a>
+                    <span th:if="${reg.registatus == 'Event Deleted'}" style="color: #95a5a6; font-size: 0.8rem;">
+        Not Available
+    </span>
                 </td>
             </tr>
             <tr th:if="${#lists.isEmpty(registrations)}">
