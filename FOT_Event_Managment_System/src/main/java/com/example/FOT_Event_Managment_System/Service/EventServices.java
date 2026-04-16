@@ -1,9 +1,12 @@
 package com.example.FOT_Event_Managment_System.Service;
 
 import com.example.FOT_Event_Managment_System.Model.Event;
+import com.example.FOT_Event_Managment_System.Observer.EventCreatedEvent;
 import com.example.FOT_Event_Managment_System.Repository.EventRepo;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +16,17 @@ public class EventServices {
     @Autowired
     private EventRepo eventRepo;
 
+    private final ApplicationEventPublisher publisher;
+
+    public EventServices(EventRepo eventrepo, ApplicationEventPublisher publisher) {
+        this.eventRepo = eventrepo;
+        this.publisher = publisher;
+    }
+
     public void addEvent(Event event) {
+        String triggerType = (event.getId() == null) ? "NEW" : "EDITED";
         eventRepo.save(event);
+        publisher.publishEvent(new EventCreatedEvent(this, event, triggerType));
     }
     public List<Event> getEvents(){
         return eventRepo.findAll();
