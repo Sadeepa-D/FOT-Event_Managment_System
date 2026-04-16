@@ -64,7 +64,7 @@
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Application.FotEventManagmentSystemApplication">
     <configuration name="FotEventManagmentSystemApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="temurin-17" />
@@ -116,6 +116,7 @@
       <workItem from="1775617835357" duration="152000" />
       <workItem from="1775618712666" duration="751000" />
       <workItem from="1775619569055" duration="21000" />
+      <workItem from="1776348045715" duration="36000" />
     </task>
     <task id="LOCAL-00001" summary="Adjust css of the location adding pages and admin dashboard">
       <option name="closed" value="true" />
