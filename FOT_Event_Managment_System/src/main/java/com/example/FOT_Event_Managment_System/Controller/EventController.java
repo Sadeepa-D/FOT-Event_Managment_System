@@ -51,28 +51,39 @@ public class EventController {
         return "Organizer/AddEvent";
     }
     @PostMapping("/event/save")
-    public String SaveEvent(@ModelAttribute("eventForm") Event event, Authentication authentication) {
-        // 1. Get the username of the person logged in
+    public String SaveEvent(@ModelAttribute("eventForm") Event event, Authentication authentication, Model model) {
         String currentUsername = authentication.getName();
-
-        // 2. Find that user in your database
         Users currentUser = userRepo.findByUseremail(currentUsername);
 
-        // 3. Link the event to this user's ID
-        // Assuming your Event model has a field like 'organizerId'
+        // 1. Check if Venue is null or empty
+        if (event.getVenue() == null || event.getVenue().isEmpty()) {
+            model.addAttribute("errorMessage", "⚠️ Error: Please select a valid venue before submitting.");
+            model.addAttribute("locations", locationRepo.findAll());
+            return "Organizer/AddEvent"; // Same page reload
+        }
+
+        // 2. Double-check booking conflict on the backend
+        List<String> bookedVenues = eventRepo.findBookedVenuesByDate(event.getDate());
+        if (bookedVenues.contains(event.getVenue())) {
+            // If it's an edit, check if it's the SAME event's booking (allowed) or a different one (blocked)
+            Event existing = (event.getId() != null) ? eventServices.getEventById(event.getId()) : null;
+            if (existing == null || !event.getVenue().equals(existing.getVenue())) {
+                model.addAttribute("errorMessage", "⚠️ Conflict: This venue is already booked for the selected date.");
+                model.addAttribute("locations", locationRepo.findAll());
+                return "Organizer/AddEvent";
+            }
+        }
+
+        // 3. Normal Saving Logic
         event.setOrganizerId(currentUser.getUserid());
         if (event.getId() == null) {
-            // This is a BRAND NEW event
             event.setEventstatus("PENDING");
         } else {
-            // This is an EDIT of an existing event
             event.setEventstatus("Edited PENDING To Review");
         }
+
         eventServices.addEvent(event);
-
-        return "redirect:/events";
-
-
+        return "redirect:/events"; // Only redirect on success
     }
     @GetMapping("/events/delete/{id}")
     public String deleteEvent(@PathVariable("id") Long id) {

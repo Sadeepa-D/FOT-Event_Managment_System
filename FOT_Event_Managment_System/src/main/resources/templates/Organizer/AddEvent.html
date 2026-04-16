@@ -137,6 +137,17 @@
 
         /* Placeholder style */
         ::placeholder { color: #bdc3c7; }
+        /* --- Alert Box --- */
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #f5c6cb;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -147,7 +158,9 @@
 
 <div class="form-container">
     <h2 th:text="${eventForm.id != null ? 'Update Event Details' : 'Register New Event'}">Register New Event</h2>
-
+    <div th:if="${errorMessage}" class="alert-error">
+        <span th:text="${errorMessage}">⚠️ Error message goes here</span>
+    </div>
     <form th:action="@{/event/save}" th:object="${eventForm}" method="post">
 
         <input type="hidden" th:field="*{id}" />
@@ -223,8 +236,16 @@
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // 1. Set the min date (your existing code)
         const today = new Date().toISOString().split('T')[0];
-        document.getElementById("eventDate").setAttribute('min', today);
+        const dateInput = document.getElementById("eventDate");
+        dateInput.setAttribute('min', today);
+
+        // 2. NEW: If a date is already present (like during an Edit or after Error reload),
+        // immediately check venue availability.
+        if (dateInput.value) {
+            checkVenueAvailability();
+        }
     });
     function checkVenueAvailability() {
         const selectedDate = document.getElementById("eventDate").value;
