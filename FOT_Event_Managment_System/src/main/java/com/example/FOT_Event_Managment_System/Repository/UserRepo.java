@@ -17,4 +17,5 @@ public interface UserRepo extends JpaRepository<Users, Long> {
     @Transactional
     @Query("UPDATE Users u SET u.userstatus = 'Active' WHERE u.userid = ?1")
     void activateUser(Long id);
+    Users findByRegno(String regno);
 }

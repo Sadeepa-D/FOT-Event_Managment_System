@@ -3,7 +3,7 @@ package com.example.FOT_Event_Managment_System.Model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="user")
+@Table(name="users")
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
