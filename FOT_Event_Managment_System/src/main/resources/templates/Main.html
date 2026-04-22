@@ -39,6 +39,14 @@
             padding: 20px;
         }
 
+        /* Image Styling */
+        .hero-image {
+            width: 220px;
+            max-width: 80%;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+
         h1 {
             color: #2c3e50;
             font-size: 3rem;
@@ -109,7 +117,9 @@
 
 <div class="hero-container">
     <h1>Welcome to FOT Event Management System</h1>
-    <h3>Your central hub for campus events and symposiums</h3>
+    <img th:src="@{/images/uni.png}" alt="Logo" class="hero-image">
+    <br>
+    <h3>Your central hub for campus events and faculty activities</h3>
 
     <div class="button-group">
         <a th:href="@{/login}" class="btn btn-login">Login</a>
