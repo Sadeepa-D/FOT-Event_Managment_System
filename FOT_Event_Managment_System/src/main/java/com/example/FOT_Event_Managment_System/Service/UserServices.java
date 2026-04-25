@@ -17,7 +17,7 @@ public class UserServices {
     private PasswordEncoder passwordEncoder;
 
     public List<Users> getUsers() {
-        return userRepo.findAll();
+        return userRepo.findByuserroleNot("ADMIN");
     }
     public Users getUserbyid(Long id) {
         return userRepo.findById(id).orElse(null);
