@@ -16,6 +16,7 @@ public class UserController {
     private UserRepo userRepo;
     @GetMapping("/users")
     public String viewUsers(Model model) {
+
         model.addAttribute("UserList",userServices.getUsers());
         return "Admin/Users";
     }

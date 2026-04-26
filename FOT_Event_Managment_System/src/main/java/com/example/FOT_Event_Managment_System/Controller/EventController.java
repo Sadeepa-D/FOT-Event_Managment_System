@@ -99,9 +99,11 @@ public class EventController {
     }
     @GetMapping("/api/booked-venues")
     @ResponseBody
-    public List<String> getBookedVenues(@RequestParam String date) {
-        // This calls a query in your Repo to get names of venues
-        // already booked (Approved or Pending) on this date
+    public List<String> getBookedVenues(@RequestParam String date,
+                                        @RequestParam(required = false) Long excludeId) {
+        if (excludeId != null) {
+            return eventRepo.findBookedVenuesByDateExcluding(date, excludeId);
+        }
         return eventRepo.findBookedVenuesByDate(date);
     }
 }
