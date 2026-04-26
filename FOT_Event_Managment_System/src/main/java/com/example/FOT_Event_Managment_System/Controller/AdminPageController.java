@@ -36,15 +36,7 @@ public class AdminPageController {
 
     // Load admin dashboard (list of events)
     @GetMapping("/events")
-    public String viewEvents(Model model, Authentication authentication) {
-        String email = authentication.getName();
-        Users user= userRepo.findByUseremail(email);
-        if (user != null) {
-            model.addAttribute("fullName", user.getUsername());
-        }else {
-            model.addAttribute("fullName", "Admin");
-        }
-
+    public String viewEvents(Model model) {
         model.addAttribute("events", service.getAllEvents());
         return "Admin/admin-dashboard";
     }
