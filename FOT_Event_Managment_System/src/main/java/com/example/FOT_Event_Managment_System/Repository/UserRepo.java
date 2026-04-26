@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface UserRepo extends JpaRepository<Users, Long> {
     Users findByUseremail(String email);
     @Modifying
@@ -18,4 +20,5 @@ public interface UserRepo extends JpaRepository<Users, Long> {
     @Query("UPDATE Users u SET u.userstatus = 'Active' WHERE u.userid = ?1")
     void activateUser(Long id);
     Users findByRegno(String regno);
+    List<Users> findByuserroleNot(String role);
 }
