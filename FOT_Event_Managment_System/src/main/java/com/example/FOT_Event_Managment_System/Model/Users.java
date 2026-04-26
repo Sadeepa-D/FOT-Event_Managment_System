@@ -1,66 +1,87 @@
 package com.example.FOT_Event_Managment_System.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name="user")
+@Table(name="users")
 public class Users {
     @Id
-    private String u_id;
-    private String u_name;
-    private String u_password;
-    private String u_email;
-    private String role;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userid;
+    private String username;
+    private String userpassword;
+    private String useremail;
+    private String userrole;
+    private String regno;
+    private String userstatus ="Active";
 
-    public Users() {}
-
-    public Users(String u_id, String u_name, String u_password, String u_email, String role) {
-        this.u_id = u_id;
-        this.u_name = u_name;
-        this.u_password = u_password;
-        this.u_email = u_email;
-        this.role = role;
+    public Users() {
+        this.userstatus = "Active";
     }
 
-    public String getU_id() {
-        return u_id;
+    public Users(Long userid, String username, String userpassword, String useremail, String userrole, String regno, String userstatus) {
+        this.userid = userid;
+        this.username = username;
+        this.userpassword = userpassword;
+        this.useremail = useremail;
+        this.userrole = userrole;
+        this.regno = regno;
+        this.userstatus = (userstatus != null) ? userstatus : "Active";
     }
 
-    public void setU_id(String u_id) {
-        this.u_id = u_id;
+    public Long getUserid() {
+        return userid;
     }
 
-    public String getU_name() {
-        return u_name;
+    public void setUserid(Long userid) {
+        this.userid = userid;
     }
 
-    public void setU_name(String u_name) {
-        this.u_name = u_name;
+    public String getUsername() {
+        return username;
     }
 
-    public String getU_password() {
-        return u_password;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setU_password(String u_password) {
-        this.u_password = u_password;
+    public String getUserpassword() {
+        return userpassword;
     }
 
-    public String getU_email() {
-        return u_email;
+    public void setUserpassword(String userpassword) {
+        this.userpassword = userpassword;
     }
 
-    public void setU_email(String u_email) {
-        this.u_email = u_email;
+    public String getUseremail() {
+        return useremail;
     }
 
-    public String getRole() {
-        return role;
+    public void setUseremail(String useremail) {
+        this.useremail = useremail;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public String getUserrole() {
+        return userrole;
+    }
+
+    public void setUserrole(String userrole) {
+        this.userrole = userrole;
+    }
+
+    public String getRegno() {
+        return regno;
+    }
+
+    public void setRegno(String regno) {
+        this.regno = regno;
+    }
+
+    public String getUserstatus() {
+        return userstatus;
+    }
+
+    public void setUserstatus(String userstatus) {
+        this.userstatus = userstatus;
     }
 }
