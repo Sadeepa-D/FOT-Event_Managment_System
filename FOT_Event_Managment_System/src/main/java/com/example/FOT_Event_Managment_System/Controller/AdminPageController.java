@@ -62,10 +62,10 @@ public class AdminPageController {
         return "redirect:/admin/events";
     }
 
-    // View participants
-    @GetMapping("/participants/{eventId}")
-    public String viewParticipants(@PathVariable Long eventId, Model model) {
-        model.addAttribute("participants", service.getParticipants(eventId));
-        return "participants";
-    }
+//    // View participants
+//    @GetMapping("/participants/{eventId}")
+//    public String viewParticipants(@PathVariable Long eventId, Model model) {
+//        model.addAttribute("participants", service.getParticipants(eventId));
+//        return "participants";
+//    }
 }
