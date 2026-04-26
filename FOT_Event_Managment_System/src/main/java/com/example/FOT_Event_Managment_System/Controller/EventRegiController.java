@@ -36,6 +36,7 @@ public class EventRegiController {
     public String showRegistrationForm(@RequestParam("id") Long eventId,
                                        @RequestParam("name") String eventName,
                                        @RequestParam("organizer") String organizerName,
+                                       @RequestParam(value = "source", defaultValue = "participant") String source,
                                        Authentication authentication,
                                        Model model) {
 
@@ -53,6 +54,7 @@ public class EventRegiController {
                     newReg.setpRegistrationnnum(currentUser.getRegno());
                 }
             }
+            model.addAttribute("source", source);
             model.addAttribute("EventRegForm", newReg);
         }
 
@@ -60,6 +62,7 @@ public class EventRegiController {
     }
     @PostMapping("/event/register/save")
     public String registerEvent(@ModelAttribute("EventRegForm") EventRegi eventRegi,
+                                @RequestParam(value = "source", defaultValue = "participant") String source,
                                 Authentication authentication,
                                 RedirectAttributes redirectAttributes) {
 
@@ -71,19 +74,24 @@ public class EventRegiController {
             String inputRegNo = eventRegi.getpRegistrationnnum();
             String errorRedirect = "redirect:/event/register?id=" + eventId +
                     "&name=" + URLEncoder.encode(eventRegi.getEventName(), StandardCharsets.UTF_8) +
-                    "&organizer=" + URLEncoder.encode(eventRegi.getOrganizerName(), StandardCharsets.UTF_8);
-Users existingUserwithregno = userRepo.findByRegno(inputRegNo);
-            if (existingUserwithregno != null && !existingUserwithregno.getUseremail().equals(email)) {
-                redirectAttributes.addFlashAttribute("error", "This Registration Number is already associated with another account.");
-                return errorRedirect;
+                    "&organizer=" + URLEncoder.encode(eventRegi.getOrganizerName(), StandardCharsets.UTF_8) +
+                    "&source=" + source; // ✅ don't lose source on error
+            if ("participant".equals(source)) {
+                Users existingUserwithregno = userRepo.findByRegno(inputRegNo);
+                if (existingUserwithregno != null && !existingUserwithregno.getUseremail().equals(email)) {
+                    redirectAttributes.addFlashAttribute("error", "This Registration Number is already associated with another account.");
+                    return errorRedirect;
+                }
             }
             // Save regno to profile if it's the first time
-            if (currentUser.getRegno() == null || currentUser.getRegno().isEmpty()) {
+            if ("participant".equals(source)) { if (currentUser.getRegno() == null || currentUser.getRegno().isEmpty()) {
                 currentUser.setRegno(inputRegNo);
                 userRepo.save(currentUser);
-            }
+            }}
 
-            String regNo = currentUser.getRegno(); // Always use profile value
+            String regNo = "organizer".equals(source)
+                    ? inputRegNo
+                    : (currentUser.getRegno() != null ? currentUser.getRegno() : inputRegNo);
 
             // --- DUPLICATE CHECK ---
             if (eventRegiRepo.existsByEventIdAndPRegistrationnnum(eventId, regNo)) {
@@ -102,7 +110,11 @@ Users existingUserwithregno = userRepo.findByRegno(inputRegNo);
             }
         }
 
-        return "redirect:/paticipanthome?success";
+        if ("organizer".equals(source)) {
+            return "redirect:/event/showparticipant/" + eventRegi.getEventId();
+        } else {
+            return "redirect:/paticipanthome?success";
+        }
     }
     @GetMapping("/event/showparticipant/{id}")
     public String showParticipant(@PathVariable("id") Long eventId, Model model) {

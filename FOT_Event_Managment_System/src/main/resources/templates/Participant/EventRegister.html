@@ -100,6 +100,7 @@
     <p class="event-sub">Sign up to participate in the upcoming event.</p>
 
     <form th:action="@{/event/register/save}" th:object="${EventRegForm}" method="post">
+        <input type="hidden" name="source" th:value="${source}" />
         <div th:if="${error != null}"
              style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; margin-bottom: 20px; border-radius: 6px; text-align: center; font-size: 0.9rem;">
             <strong>Validation Error:</strong> <span th:text="${error}">Error Message</span>
