@@ -233,6 +233,9 @@
 
         <a th:href="@{/events}" class="btn-back">← Cancel and Back to Dashboard</a>
     </form>
+    <div id="eventMeta"
+         th:data-event-id="${eventForm.id != null ? eventForm.id : ''}">
+    </div>
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -251,19 +254,25 @@
         const selectedDate = document.getElementById("eventDate").value;
         const venueSelect = document.getElementById("venueSelect");
         const options = venueSelect.options;
+        const eventId = document.getElementById("eventMeta").getAttribute("data-event-id");
 
         if (!selectedDate) return;
 
-        fetch('/api/booked-venues?date=' + selectedDate)
+        // Append excludeId only when editing an existing event
+        let url = '/api/booked-venues?date=' + selectedDate;
+        if (eventId) {
+            url += '&excludeId=' + eventId;
+        }
+
+        fetch(url)
             .then(response => response.json())
             .then(bookedVenues => {
                 for (let i = 0; i < options.length; i++) {
                     const opt = options[i];
-                    // Skip the placeholder
                     if (opt.value === "" || opt.text.includes("-- Select Date First --")) continue;
 
                     const venueName = opt.value;
-                    const capacity = opt.getAttribute("data-capacity"); // Get the capacity back
+                    const capacity = opt.getAttribute("data-capacity");
                     const isAdminDisabled = opt.getAttribute("data-admin-status") !== 'available';
                     const isAlreadyBooked = bookedVenues.includes(venueName);
 
@@ -275,7 +284,6 @@
                         opt.text = venueName + " (Already Booked)";
                     } else {
                         opt.disabled = false;
-                        // REBUILD the text with capacity here
                         opt.text = venueName + " (Cap: " + capacity + ")";
                     }
                 }

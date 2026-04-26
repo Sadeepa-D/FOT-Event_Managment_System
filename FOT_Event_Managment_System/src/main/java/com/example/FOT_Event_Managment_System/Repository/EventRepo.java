@@ -22,4 +22,8 @@ public interface EventRepo extends JpaRepository<Event,Long> {
 
     @Query("SELECT e.venue FROM Event e WHERE e.date = :date AND e.eventstatus != 'REJECTED' AND e.eventstatus!='DELETED'")
     List<String> findBookedVenuesByDate(@Param("date") String date);
+
+    // Excludes the current event's own booking (for edit mode)
+    @Query("SELECT e.venue FROM Event e WHERE e.date = :date AND e.id != :excludeId AND e.eventstatus != 'REJECTED' AND e.eventstatus != 'DELETED'")
+    List<String> findBookedVenuesByDateExcluding(@Param("date") String date, @Param("excludeId") Long excludeId);
 }
