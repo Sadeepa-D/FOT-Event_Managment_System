@@ -76,17 +76,18 @@ public class EventRegiController {
                     "&name=" + URLEncoder.encode(eventRegi.getEventName(), StandardCharsets.UTF_8) +
                     "&organizer=" + URLEncoder.encode(eventRegi.getOrganizerName(), StandardCharsets.UTF_8) +
                     "&source=" + source; // ✅ don't lose source on error
-Users existingUserwithregno = userRepo.findByRegno(inputRegNo);
-            if (existingUserwithregno != null && !existingUserwithregno.getUseremail().equals(email)) {
-                redirectAttributes.addFlashAttribute("error", "This Registration Number is already associated with another account.");
-                return errorRedirect;
+            if ("participant".equals(source)) {
+                Users existingUserwithregno = userRepo.findByRegno(inputRegNo);
+                if (existingUserwithregno != null && !existingUserwithregno.getUseremail().equals(email)) {
+                    redirectAttributes.addFlashAttribute("error", "This Registration Number is already associated with another account.");
+                    return errorRedirect;
+                }
             }
             // Save regno to profile if it's the first time
             if ("participant".equals(source)) { if (currentUser.getRegno() == null || currentUser.getRegno().isEmpty()) {
                 currentUser.setRegno(inputRegNo);
                 userRepo.save(currentUser);
             }}
-
 
             String regNo = "organizer".equals(source)
                     ? inputRegNo
