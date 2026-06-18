@@ -34,6 +34,11 @@ public class AdminPageController {
         return "redirect:/admin/events";
     }
 
+    @Autowired
+    private com.example.FOT_Event_Managment_System.Repository.EventRepo eventRepo;
+    @Autowired
+    private com.example.FOT_Event_Managment_System.Repository.locationRepo locationRepo;
+
     // Load admin dashboard (list of events)
     @GetMapping("/events")
     public String viewEvents(Model model, Authentication authentication) {
@@ -44,6 +49,14 @@ public class AdminPageController {
         }else {
             model.addAttribute("fullName", "Admin");
         }
+
+        // Add dynamic KPI stats
+        model.addAttribute("totalEvents", eventRepo.count());
+        long pendingCount = eventRepo.findByEventstatus("PENDING").size() 
+                          + eventRepo.findByEventstatus("Edited PENDING To Review").size();
+        model.addAttribute("pendingApprovals", pendingCount);
+        model.addAttribute("totalUsers", userRepo.count());
+        model.addAttribute("totalLocations", locationRepo.count());
 
         model.addAttribute("events", service.getAllEvents());
         return "Admin/admin-dashboard";

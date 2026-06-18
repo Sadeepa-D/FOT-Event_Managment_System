@@ -2,27 +2,46 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - FOT Event Management</title>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* General Reset */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --navy: #1e2d3d;
+            --teal: #17b89e;
+            --teal-light: rgba(23, 184, 158, 0.15);
+            --red: #e24b4a;
+            --red-light: rgba(226, 75, 74, 0.15);
+            --gray-bg: #f4f6f9;
+            --white: #ffffff;
+            --gray-text: #6b7280;
+            --gray-dark: #374151;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
 
         body {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background: #f4f7f6; /* Matching main page bg */
-            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--gray-bg);
+            color: var(--gray-dark);
         }
 
-        /* Header Styling - Matching Main/Add Page */
+        /* Header Styling */
         header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 1rem;
+            background-color: var(--navy);
+            color: var(--white);
+            padding: 1.5rem;
             text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-sm);
         }
+        
+        header h1 { font-size: 1.5rem; font-weight: 600; }
 
         .login-container {
             flex: 1;
@@ -33,39 +52,40 @@
         }
 
         .card {
-            background: #fff;
+            background: var(--white);
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-md);
             width: 100%;
-            max-width: 400px;
-            border-top: 5px solid #27ae60; /* Using the theme Green */
+            max-width: 420px;
+            border-top: 5px solid var(--teal);
         }
 
         h2 {
             text-align: center;
             margin-bottom: 30px;
             font-size: 1.8rem;
-            color: #2c3e50; /* Theme Navy */
+            color: var(--navy);
+            font-weight: 700;
         }
 
         /* Error Message Styling */
         .error-msg {
-            color: #e74c3c;
-            background: #fdf2f2;
-            padding: 10px;
-            border-radius: 5px;
+            color: var(--red);
+            background: var(--red-light);
+            padding: 12px;
+            border-radius: 8px;
             text-align: center;
             margin-bottom: 20px;
-            font-size: 0.85rem;
-            border: 1px solid #facccc;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
         label {
             display: block;
             font-size: 0.9rem;
             font-weight: 600;
-            color: #34495e;
+            color: var(--gray-dark);
             margin-bottom: 8px;
         }
 
@@ -73,47 +93,49 @@
         input[type="password"] {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid #dcdde1;
-            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             font-size: 1rem;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             outline: none;
             transition: all 0.3s;
+            color: var(--gray-dark);
         }
 
         input:focus {
-            border-color: #27ae60;
-            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px var(--teal-light);
         }
 
         button {
             width: 100%;
             padding: 14px;
-            background: #2c3e50; /* Theme Navy */
-            color: #fff;
+            background: var(--navy);
+            color: var(--white);
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 1rem;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, transform 0.2s ease;
         }
 
         button:hover {
-            background: #1a252f;
+            background: #14202b;
+            transform: translateY(-1px);
         }
 
         .signup {
             text-align: center;
             margin-top: 25px;
             font-size: 0.9rem;
-            color: #7f8c8d;
+            color: var(--gray-text);
         }
 
         .signup a {
-            color: #27ae60;
+            color: var(--teal);
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 600;
         }
 
         .signup a:hover { text-decoration: underline; }
@@ -125,7 +147,15 @@
             font-size: 0.85rem;
         }
 
-        .back-home a { color: #3498db; text-decoration: none; }
+        .back-home a { 
+            color: var(--gray-text); 
+            text-decoration: none; 
+            transition: color 0.2s;
+        }
+        
+        .back-home a:hover {
+            color: var(--navy);
+        }
     </style>
 </head>
 
@@ -137,17 +167,16 @@
 
 <div class="login-container">
     <div class="card">
-        <h2>Login</h2>
+        <h2>Welcome Back</h2>
 
         <div th:if="${param.error}" class="error-msg">
-    <span th:if="${session['SPRING_SECURITY_LAST_EXCEPTION'] != null}"
-          th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}">
-        Error Message
-    </span>
-
+            <span th:if="${session['SPRING_SECURITY_LAST_EXCEPTION'] != null}"
+                  th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}">
+                Error Message
+            </span>
             <span th:unless="${session['SPRING_SECURITY_LAST_EXCEPTION'] != null}">
-        Invalid email or password. Please try again.
-    </span>
+                Invalid email or password. Please try again.
+            </span>
         </div>
 
         <form th:action="@{/login}" method="post">

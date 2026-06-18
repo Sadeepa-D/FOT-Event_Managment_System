@@ -20,9 +20,28 @@ public class MainPage {
     private UserRepo userRepo;
 
     @GetMapping("/")
-
     public String ViewMainPage(Model model) {
         model.addAttribute("message", "Welcome to Fot Event Management System");
+        
+        // Dynamic stats
+        long totalEvents = eventServices.getEvents().size();
+        long totalStudents = userRepo.countByUserrole("Participant");
+        long totalClubs = userRepo.countByUserrole("Organizer");
+        
+        model.addAttribute("totalEvents", totalEvents);
+        model.addAttribute("totalStudents", totalStudents);
+        model.addAttribute("totalClubs", totalClubs);
+        
+        List<Event> approvedEvents = eventServices.getAcceptedEvents();
+        
+        // Sort by date ascending (nearest events first)
+        approvedEvents.sort(java.util.Comparator.comparing(Event::getDate, java.util.Comparator.nullsLast(String::compareTo)));
+
+        if (approvedEvents.size() > 3) {
+            approvedEvents = approvedEvents.subList(0, 3);
+        }
+        model.addAttribute("upcomingEvents", approvedEvents);
+        
         return "Main";
     }
     @GetMapping("/allevents")

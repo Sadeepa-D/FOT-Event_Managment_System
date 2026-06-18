@@ -1,154 +1,668 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Upcoming Events - FOT Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Events - FOT Event Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* General Reset */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #f4f7f6; font-family: 'Segoe UI', Arial, sans-serif; }
-
-        /* Header Styling - Matching System Theme */
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 1.5rem 5%;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
+        :root {
+            --navy: #1e2d3d;
+            --teal: #17b89e;
+            --white: #ffffff;
+            --gray-light: #f4f6f9;
+            --gray-text: #667085;
+            
+            /* Category Colors */
+            --cat-workshop: #17b89e;
+            --cat-symposium: #8b5cf6;
+            --cat-hackathon: #ef4444;
+            --cat-cultural: #f59e0b;
         }
 
-        header h1 { font-size: 1.8rem; margin: 0; }
-
-        .container {
-            max-width: 90%;
-            margin: auto;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
 
-        .info-bar {
-            background-color: white;
-            padding: 15px 25px;
-            border-radius: 8px;
-            border-left: 5px solid #27ae60;
-            margin-bottom: 20px;
+        body {
+            background-color: var(--gray-light);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: var(--navy);
+            color: var(--white);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
-        .info-bar p { color: #34495e; font-weight: 500; }
-
-        /* Table Styling */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            text-decoration: none;
         }
 
-        th {
-            background-color: #ecf0f1;
-            color: #2c3e50;
-            padding: 18px;
-            text-align: left;
-            border-bottom: 3px solid #27ae60; /* Theme Green */
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-        }
-
-        td {
-            padding: 15px 18px;
-            border-bottom: 1px solid #eee;
-            color: #2c3e50;
-            font-size: 0.95rem;
-        }
-
-        tr:last-child td { border-bottom: none; }
-        tr:hover { background-color: #fcfcfc; }
-
-        .event-name { font-weight: bold; color: #2c3e50; font-size: 1.05rem; }
-        .organizer-tag { color: #7f8c8d; font-size: 0.85rem; }
-        .date-text { color: #27ae60; font-weight: 600; }
-        .price-tag { color: #2c3e50; font-weight: bold; }
-        .org-name { font-weight: 600; display: block; color: #2c3e50; }
-        .org-phone { font-size: 0.75rem; color: #7f8c8d; display: block; margin-top: 2px; }
-
-        /* Navigation Link */
-        .btn-back {
-            display: inline-block;
-            margin-top: 25px;
-            color: #3498db;
+        .nav-buttons a {
+            color: var(--white);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.2s;
+            margin-left: 20px;
+            transition: color 0.3s;
         }
-        .btn-back:hover { color: #2980b9; text-decoration: underline; }
 
-        .empty-state {
+        .nav-buttons a.btn-register {
+            background-color: var(--teal);
+            padding: 8px 20px;
+            border-radius: 20px;
+        }
+
+        .nav-buttons a.btn-register:hover {
+            background-color: #14a089;
+        }
+
+        /* Header Bar */
+        .header-bar {
+            background-color: var(--white);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 0;
+        }
+
+        .hb-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .hb-text {
+            color: var(--navy);
+            font-weight: 500;
+        }
+
+        .hb-link {
+            color: var(--teal);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .hb-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Search & Filter Row */
+        .filter-row {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--teal);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            fill: #94a3b8;
+        }
+
+        .filter-dropdown {
+            padding: 12px 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background-color: var(--white);
+            color: var(--navy);
+            font-size: 0.95rem;
+            outline: none;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        /* Main Grid */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto 50px;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        @media (max-width: 992px) {
+            .events-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            .events-grid { grid-template-columns: 1fr; }
+            .hb-container { flex-direction: column; align-items: flex-start; }
+        }
+
+        /* Event Card */
+        .event-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+
+        .accent-bar {
+            height: 6px;
+            width: 100%;
+        }
+
+        /* Categories */
+        .cat-workshop { background-color: var(--cat-workshop); }
+        .cat-symposium { background-color: var(--cat-symposium); }
+        .cat-hackathon { background-color: var(--cat-hackathon); }
+        .cat-cultural { background-color: var(--cat-cultural); }
+
+        .card-body {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .event-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--navy);
+            line-height: 1.3;
+            margin-right: 10px;
+        }
+
+        .price-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .price-badge.free {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .price-badge.paid {
+            background-color: #e0e7ff;
+            color: var(--navy);
+        }
+
+        .org-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-text);
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        .org-info svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .meta-row {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: #475569;
+        }
+
+        .meta-item svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .meta-item.date {
+            color: var(--teal);
+            font-weight: 500;
+        }
+
+        .availability {
+            margin-top: auto;
+            margin-bottom: 20px;
+        }
+
+        .avail-text {
+            font-size: 0.85rem;
+            color: var(--gray-text);
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .progress-fill.green { background-color: #10b981; }
+        .progress-fill.amber { background-color: #f59e0b; }
+        .progress-fill.red { background-color: #ef4444; }
+
+        .btn-card {
+            display: block;
+            width: 100%;
             text-align: center;
-            padding: 50px;
-            color: #95a5a6;
-            font-style: italic;
+            background-color: var(--navy);
+            color: var(--white);
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-card:hover {
+            background-color: #2c4159;
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state svg {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+            fill: #cbd5e1;
+        }
+
+        .empty-state p {
+            font-size: 1.2rem;
+            color: var(--gray-text);
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--navy);
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            margin-top: auto;
         }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>FOT Event Management System</h1>
-</header>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="brand">FOT Events</a>
+            <div class="nav-buttons">
+                <a th:href="@{/login}">Login</a>
+                <a th:href="@{/users/add}" class="btn-register">Register</a>
+            </div>
+        </div>
+    </nav>
 
-<div class="container">
-    <div class="info-bar">
-        <p>Explore all upcoming events at the Faculty of Technology.</p>
-        <a th:href="@{/login}" style="color: #27ae60; text-decoration: none; font-size: 0.9rem; font-weight: bold;">
-            Are you an Organizer/Participent ? Login here →
-        </a>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="hb-container">
+            <div class="hb-text">Explore all upcoming events at the Faculty of Technology</div>
+            <a th:href="@{/login}" class="hb-link">Are you an Organizer/Participant? Login here &rarr;</a>
+        </div>
     </div>
 
-    <table>
-        <thead>
-        <tr>
-            <th>Event Details</th>
-            <th>Organizer</th>
-            <th>Venue</th>
-            <th>Schedule</th>
-            <th>Ticket Price</th>
-            <th>Availability</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="event : ${View_All_Events}">
-            <td>
-                <div class="event-name" th:text="${event.eventName}">Tech Symposium</div>
-                <div class="organizer-tag" th:text="${event.description}">Brief description here...</div>
-            </td>
-            <td class="col-org">
-                <span class="org-name" th:text="${event.organizerName}">Dept Name</span>
-                <span class="org-phone" th:text="${event.organizerPhone != null ? event.organizerPhone : 'No Contact'}">0000000000</span>
-            </td>
-            <td th:text="${event.venue}">Auditorium</td>
-            <td>
-                <span class="date-text" th:text="${event.date}">2026-03-25</span><br>
-                <small th:text="${event.time}">10:00 AM</small>
-            </td>
-            <td class="price-tag" th:text="${'Rs. ' + event.ticketPrice}">Rs. 0.00</td>
-            <td th:text="${event.availableSlots + ' Slots Left'}">50 Slots</td>
-        </tr>
-        <tr th:if="${#lists.isEmpty(View_All_Events)}">
-            <td colspan="6" class="empty-state">
-                No events have been scheduled at this time. Please check back later!
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <!-- Filter Row -->
+    <div class="filter-row">
+        <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="text" id="searchInput" placeholder="Search events by name...">
+        </div>
+        <select class="filter-dropdown" id="categoryFilter">
+            <option value="all">All Categories</option>
+            <option value="workshop">Workshop</option>
+            <option value="symposium">Symposium</option>
+            <option value="hackathon">Hackathon</option>
+            <option value="cultural">Cultural</option>
+        </select>
+        <select class="filter-dropdown" id="priceFilter">
+            <option value="all">All Prices</option>
+            <option value="free">Free</option>
+            <option value="paid">Paid</option>
+        </select>
+    </div>
 
-    <a th:href="@{/}" class="btn-back">← Return to Welcome Page</a>
-</div>
+    <!-- Main Grid -->
+    <div class="main-container">
+        <div class="events-grid" id="eventsGrid">
+            
+            <!-- Dynamic Real Events -->
+            <th:block th:each="event, stat : ${View_All_Events}">
+                <div class="event-card" 
+                     th:attr="data-name=${#strings.toLowerCase(event.eventName)}, 
+                              data-price=${event.ticketPrice == 0 ? 'free' : 'paid'}, 
+                              data-category=${#strings.containsIgnoreCase(event.eventName, 'workshop') ? 'workshop' : (#strings.containsIgnoreCase(event.eventName, 'symposium') ? 'symposium' : (#strings.containsIgnoreCase(event.eventName, 'hackathon') ? 'hackathon' : 'cultural'))}"
+                     th:style="'animation-delay: ' + (${stat.index} * 0.1) + 's;'">
+                    
+                    <div class="accent-bar" 
+                         th:classappend="${#strings.containsIgnoreCase(event.eventName, 'workshop') ? 'cat-workshop' : (#strings.containsIgnoreCase(event.eventName, 'symposium') ? 'cat-symposium' : (#strings.containsIgnoreCase(event.eventName, 'hackathon') ? 'cat-hackathon' : 'cat-cultural'))}">
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="card-header">
+                            <h2 class="event-title" th:text="${event.eventName}">Event Name</h2>
+                            <div class="price-badge" 
+                                 th:classappend="${event.ticketPrice == 0 ? 'free' : 'paid'}"
+                                 th:text="${event.ticketPrice == 0 ? 'Free' : 'Rs. ' + event.ticketPrice}">Free</div>
+                        </div>
+                        
+                        <div class="org-info">
+                            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            <span th:text="${event.organizerName} + ' • ' + ${event.organizerPhone != null ? event.organizerPhone : 'No Contact'}">Organizer</span>
+                        </div>
+                        
+                        <div class="meta-row">
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                                <span th:text="${event.venue}">Venue</span>
+                            </div>
+                            <div class="meta-item date">
+                                <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                                <span th:text="${event.date} + ' • ' + ${event.time}">Date & Time</span>
+                            </div>
+                        </div>
+                        
+                        <div class="availability">
+                            <div class="avail-text" th:text="${event.availableSlots} + ' Slots Left'">0 Slots Left</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" 
+                                     th:classappend="${event.availableSlots > 50 ? 'green' : (event.availableSlots > 10 ? 'amber' : 'red')}"
+                                     th:style="'width: ' + (${event.availableSlots > 100 ? 100 : (event.availableSlots < 5 ? 5 : event.availableSlots)}) + '%;'">
+                                </div>
+                            </div>
+                        </div>
+                        
 
+                    </div>
+                </div>
+            </th:block>
+
+            <!-- 4 Mock Events (Displayed ONLY if database is empty so design is visible) -->
+            <th:block th:if="${#lists.isEmpty(View_All_Events)}">
+                
+                <!-- Mock 1: Workshop -->
+                <div class="event-card" data-name="web development workshop" data-price="free" data-category="workshop" style="animation-delay: 0s;">
+                    <div class="accent-bar cat-workshop"></div>
+                    <div class="card-body">
+                        <div class="card-header">
+                            <h2 class="event-title">Web Development Workshop</h2>
+                            <div class="price-badge free">Free</div>
+                        </div>
+                        <div class="org-info">
+                            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            <span>FOT IT Club • 0712345678</span>
+                        </div>
+                        <div class="meta-row">
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                                <span>Lab 02, IT Complex</span>
+                            </div>
+                            <div class="meta-item date">
+                                <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                                <span>2026-11-15 • 09:00 AM</span>
+                            </div>
+                        </div>
+                        <div class="availability">
+                            <div class="avail-text">85 Slots Left</div>
+                            <div class="progress-bar"><div class="progress-fill green" style="width: 85%;"></div></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Mock 2: Symposium -->
+                <div class="event-card" data-name="future tech symposium" data-price="paid" data-category="symposium" style="animation-delay: 0.1s;">
+                    <div class="accent-bar cat-symposium"></div>
+                    <div class="card-body">
+                        <div class="card-header">
+                            <h2 class="event-title">Future Tech Symposium</h2>
+                            <div class="price-badge paid">Rs. 500.00</div>
+                        </div>
+                        <div class="org-info">
+                            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            <span>Dr. Perera • 0779876543</span>
+                        </div>
+                        <div class="meta-row">
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                                <span>Main Auditorium</span>
+                            </div>
+                            <div class="meta-item date">
+                                <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                                <span>2026-11-20 • 10:00 AM</span>
+                            </div>
+                        </div>
+                        <div class="availability">
+                            <div class="avail-text">15 Slots Left</div>
+                            <div class="progress-bar"><div class="progress-fill amber" style="width: 30%;"></div></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Mock 3: Hackathon -->
+                <div class="event-card" data-name="codefest hackathon" data-price="free" data-category="hackathon" style="animation-delay: 0.2s;">
+                    <div class="accent-bar cat-hackathon"></div>
+                    <div class="card-body">
+                        <div class="card-header">
+                            <h2 class="event-title">CodeFest Hackathon</h2>
+                            <div class="price-badge free">Free</div>
+                        </div>
+                        <div class="org-info">
+                            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            <span>FOT IEEE Branch • 0765554443</span>
+                        </div>
+                        <div class="meta-row">
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                                <span>Library Hall</span>
+                            </div>
+                            <div class="meta-item date">
+                                <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                                <span>2026-12-05 • 08:00 AM</span>
+                            </div>
+                        </div>
+                        <div class="availability">
+                            <div class="avail-text">3 Slots Left</div>
+                            <div class="progress-bar"><div class="progress-fill red" style="width: 10%;"></div></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Mock 4: Cultural -->
+                <div class="event-card" data-name="annual cultural night" data-price="paid" data-category="cultural" style="animation-delay: 0.3s;">
+                    <div class="accent-bar cat-cultural"></div>
+                    <div class="card-body">
+                        <div class="card-header">
+                            <h2 class="event-title">Annual Cultural Night</h2>
+                            <div class="price-badge paid">Rs. 1000.00</div>
+                        </div>
+                        <div class="org-info">
+                            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            <span>Student Council • 0722223333</span>
+                        </div>
+                        <div class="meta-row">
+                            <div class="meta-item">
+                                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                                <span>Open Air Theater</span>
+                            </div>
+                            <div class="meta-item date">
+                                <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                                <span>2026-12-20 • 06:00 PM</span>
+                            </div>
+                        </div>
+                        <div class="availability">
+                            <div class="avail-text">200 Slots Left</div>
+                            <div class="progress-bar"><div class="progress-fill green" style="width: 100%;"></div></div>
+                        </div>
+
+                    </div>
+                </div>
+            </th:block>
+
+        </div>
+
+        <!-- Empty State Placeholder (Shown by JS) -->
+        <div class="empty-state" id="emptyState">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+            <p>No events found. Check back later.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        &copy; 2026 FOT Ruhuna. All Rights Reserved.
+    </footer>
+
+    <!-- JavaScript for Filtering -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const priceFilter = document.getElementById('priceFilter');
+            const cards = document.querySelectorAll('.event-card');
+            const emptyState = document.getElementById('emptyState');
+
+            function filterEvents() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const category = categoryFilter.value;
+                const price = priceFilter.value;
+
+                let visibleCount = 0;
+
+                cards.forEach(card => {
+                    const cardName = card.getAttribute('data-name') || '';
+                    const cardCategory = card.getAttribute('data-category') || '';
+                    const cardPrice = card.getAttribute('data-price') || '';
+
+                    const matchesSearch = cardName.includes(searchTerm);
+                    const matchesCategory = (category === 'all' || cardCategory === category);
+                    const matchesPrice = (price === 'all' || cardPrice === price);
+
+                    if (matchesSearch && matchesCategory && matchesPrice) {
+                        card.style.display = 'flex';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                if (visibleCount === 0) {
+                    emptyState.style.display = 'block';
+                } else {
+                    emptyState.style.display = 'none';
+                }
+            }
+
+            searchInput.addEventListener('input', filterEvents);
+            categoryFilter.addEventListener('change', filterEvents);
+            priceFilter.addEventListener('change', filterEvents);
+        });
+    </script>
 </body>
 </html>
