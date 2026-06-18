@@ -292,11 +292,33 @@
             padding: 0 30px 30px 30px;
         }
 
+        @media (max-width: 768px) {
+            .table-section {
+                padding: 0 15px 20px 15px;
+            }
+
+            .event-cards-grid {
+                padding: 16px !important;
+            }
+        }
+
         .table-card {
             background: var(--white);
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Card Footer */
+        .card-footer {
+            padding: 16px 20px;
+            background: var(--gray-bg);
+            border-top: 1px solid var(--gray-border);
+            display: flex;
+            gap: 8px;
+            justify-content: flex-start;
         }
 
         .table-header {
@@ -305,6 +327,8 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--gray-border);
+            flex-wrap: wrap;
+            gap: 16px;
         }
 
         .table-header h2 {
@@ -342,84 +366,187 @@
             fill: var(--gray-text);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
+        @media (max-width: 768px) {
+            .table-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
         }
 
-        th {
-            background: #fafafa;
-            padding: 16px 24px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--gray-text);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid var(--gray-border);
+        /* Card Grid Layout */
+        .event-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 24px;
+            padding: 24px;
         }
 
-        td {
-            padding: 16px 24px;
-            font-size: 14px;
-            border-bottom: 1px solid var(--gray-border);
-            vertical-align: middle;
+        @media (max-width: 1024px) {
+            .event-cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+                gap: 20px;
+            }
         }
 
-        tr:hover td {
-            background-color: var(--gray-hover);
+        @media (max-width: 768px) {
+            .event-cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 16px;
+            }
         }
 
-        tr:nth-child(even) {
-            background-color: #fafbfc;
+        @media (max-width: 480px) {
+            .event-cards-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
         }
 
-        .event-main {
-            font-weight: 600;
-            color: var(--navy);
-            display: block;
-        }
-        
-        .org-main {
-            font-weight: 500;
-            color: var(--gray-dark);
-            display: block;
-        }
-        
-        .sub-text {
-            font-size: 12px;
-            color: var(--gray-text);
-            margin-top: 2px;
+        /* Admin Event Card */
+        .admin-event-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
-        /* Pill Badges */
-        .pill {
-            padding: 6px 12px;
+        .admin-event-card:hover {
+            box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+            transform: translateY(-4px);
+        }
+
+        .card-header-admin {
+            background: linear-gradient(135deg, var(--navy) 0%, #2a3e52 100%);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 60px;
+        }
+
+        .status-pill {
+            padding: 6px 14px;
             border-radius: 20px;
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            min-width: 85px;
         }
 
-        .pill-approved { background: var(--teal-light); color: var(--teal); border: 1px solid rgba(23,184,158,0.2); }
-        .pill-pending { background: var(--amber-light); color: var(--amber); border: 1px solid rgba(239,159,39,0.2); }
-        .pill-rejected { background: var(--red-light); color: var(--red); border: 1px solid rgba(226,75,74,0.2); }
+        .status-pill.pill-approved { background: var(--teal-light); color: var(--teal); }
+        .status-pill.pill-pending { background: var(--amber-light); color: var(--amber); }
+        .status-pill.pill-rejected { background: var(--red-light); color: var(--red); }
+
+        .card-body-admin {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .event-title-admin {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin: 0;
+        }
+
+        .organizer-info-admin {
+            background: var(--gray-bg);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid var(--teal);
+        }
+
+        .org-main {
+            font-weight: 600;
+            color: var(--navy);
+            display: block;
+            font-size: 0.95rem;
+        }
+
+        .sub-text {
+            font-size: 0.8rem;
+            color: var(--gray-text);
+            margin-top: 3px;
+            display: block;
+        }
+
+        .card-details-admin {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 12px 0;
+            border-top: 1px solid var(--gray-border);
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .detail-label {
+            color: var(--gray-text);
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+        /* No Events Message */
+        .no-events-admin {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 40px;
+            background: var(--white);
+            border-radius: 12px;
+        }
+
+        .no-events-icon-admin {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+        }
+
+        .no-events-title-admin {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+
+        .no-events-text-admin {
+            color: var(--gray-text);
+            font-size: 0.9rem;
+        }
 
         /* Action Buttons */
         .actions-cell {
             display: flex;
             gap: 8px;
             align-items: center;
+            width: 100%;
+            flex-wrap: wrap;
         }
 
         .btn-action {
-            width: 32px;
-            height: 32px;
+            flex: 1;
+            padding: 10px 12px;
             border-radius: 6px;
             display: inline-flex;
             align-items: center;
@@ -429,9 +556,13 @@
             text-decoration: none;
             transition: 0.2s;
             position: relative;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            min-height: 38px;
         }
 
-        .btn-action svg { width: 16px; height: 16px; fill: currentColor; }
+        .btn-action svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
         
         /* Tooltip */
         .btn-action[title]:hover::after {
@@ -575,156 +706,119 @@
                     <h2>Event Approvals</h2>
                     <div class="search-box">
                         <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                        <input type="text" id="adminSearch" onkeyup="filterAdminTable()" placeholder="Search events or organizers...">
+                        <input type="text" id="adminSearch" onkeyup="filterAdminCards()" placeholder="Search events or organizers...">
                     </div>
                 </div>
 
-                <table id="adminEventTable">
-                    <thead>
-                        <tr>
-                            <th>Event Name</th>
-                            <th>Organizer</th>
-                            <th>Venue</th>
-                            <th>Schedule</th>
-                            <th>Fee</th>
-                            <th>Slots</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Dynamic Data -->
-                        <tr th:each="event : ${events}">
-                            <td>
-                                <span class="event-main" th:text="${event.eventName}">Event Name</span>
-                            </td>
-                            <td>
+                <div class="event-cards-grid" id="adminEventsGrid">
+                    <!-- Dynamic Data -->
+                    <div th:each="event : ${events}" class="admin-event-card" 
+                         th:attr="data-event-name=${event.eventName}, data-organizer-name=${event.organizerName}">
+                        <!-- Card Header -->
+                        <div class="card-header-admin">
+                            <span th:class="'status-pill ' + 
+                                  (${event.eventstatus == 'APPROVED'} ? 'pill-approved' : 
+                                  (${event.eventstatus == 'REJECTED'} ? 'pill-rejected' : 'pill-pending'))"
+                                  th:text="${event.eventstatus}">STATUS</span>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="card-body-admin">
+                            <!-- Event Title -->
+                            <h3 class="event-title-admin" th:text="${event.eventName}">Event Name</h3>
+
+                            <!-- Organizer Info -->
+                            <div class="organizer-info-admin">
                                 <span class="org-main" th:text="${event.organizerName}">Organizer</span>
-                                <div class="sub-text" th:text="${event.organizerPhone}">000000000</div>
-                            </td>
-                            <td th:text="${event.venue}">Venue</td>
-                            <td>
-                                <span class="event-main" th:text="${event.date}" style="font-size: 13px;">Date</span>
-                                <div class="sub-text" th:text="${event.time}">Time</div>
-                            </td>
-                            <td th:text="${'Rs. ' + event.ticketPrice}">Price</td>
-                            <td th:text="${event.availableSlots}">0</td>
-                            <td>
-                                <span th:class="'pill ' + 
-                                      (${event.eventstatus == 'APPROVED'} ? 'pill-approved' : 
-                                      (${event.eventstatus == 'REJECTED'} ? 'pill-rejected' : 'pill-pending'))"
-                                      th:text="${event.eventstatus}">STATUS</span>
-                            </td>
-                            <td>
-                                <div class="actions-cell">
-                                    <!-- Pending Actions -->
-                                    <a th:if="${event.eventstatus == 'PENDING' or event.eventstatus == 'Edited PENDING To Review'}" th:href="@{'/admin/approve/' + ${event.id}}" class="btn-action action-approve" title="Approve" onclick="return confirm('Approve this event?')">
-                                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                                    </a>
-                                    <a th:if="${event.eventstatus == 'PENDING' or event.eventstatus == 'Edited PENDING To Review'}" th:href="@{'/admin/reject/' + ${event.id}}" class="btn-action action-reject" title="Reject" onclick="return confirm('Reject this event?')">
-                                        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                                    </a>
+                                <span class="sub-text" th:text="${event.organizerPhone}">000000000</span>
+                            </div>
 
-                                    <!-- Approved Actions -->
-                                    <a th:if="${event.eventstatus == 'APPROVED'}" th:href="@{'/admin/reject/' + ${event.id}}" class="btn-action action-revoke" title="Revoke Approval" onclick="return confirm('Revoke approval and reject this event?')">
-                                        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                                    </a>
-                                    <a th:if="${event.eventstatus == 'APPROVED'}" th:href="@{'/admin/events/delete/' + ${event.id}}" class="btn-action action-delete" title="Delete" onclick="return confirm('Permanently delete this event?')">
-                                        <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                                    </a>
-
-                                    <!-- Rejected Actions -->
-                                    <a th:if="${event.eventstatus == 'REJECTED'}" th:href="@{'/admin/approve/' + ${event.id}}" class="btn-action action-reapprove" title="Re-Approve" onclick="return confirm('Re-approve this event?')">
-                                        <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
-                                    </a>
-                                    <a th:if="${event.eventstatus == 'REJECTED'}" th:href="@{'/admin/events/delete/' + ${event.id}}" class="btn-action action-delete" title="Delete" onclick="return confirm('Permanently delete this event?')">
-                                        <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                                    </a>
+                            <!-- Event Details -->
+                            <div class="card-details-admin">
+                                <div class="detail-row">
+                                    <span class="detail-label">📍 Venue</span>
+                                    <span class="detail-value" th:text="${event.venue}">Location</span>
                                 </div>
-                            </td>
-                        </tr>
+                                <div class="detail-row">
+                                    <span class="detail-label">📅 Date</span>
+                                    <span class="detail-value" th:text="${event.date}">Date</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">🕐 Time</span>
+                                    <span class="detail-value" th:text="${event.time}">Time</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">💰 Fee</span>
+                                    <span class="detail-value" th:text="${'Rs. ' + event.ticketPrice}">Price</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">🎟️ Slots</span>
+                                    <span class="detail-value" th:text="${event.availableSlots}">0</span>
+                                </div>
+                            </div>
+                        </div>
 
-                        <!-- Mockup Fallback when empty -->
-                        <th:block th:if="${#lists.isEmpty(events)}">
-                            <!-- Pending Event -->
-                            <tr>
-                                <td><span class="event-main">Tech Innovators Hackathon</span></td>
-                                <td>
-                                    <span class="org-main">IT Society</span>
-                                    <div class="sub-text">0771234567</div>
-                                </td>
-                                <td>Main Auditorium</td>
-                                <td><span class="event-main" style="font-size: 13px;">2026-08-15</span><div class="sub-text">09:00 AM</div></td>
-                                <td>Rs. 500</td>
-                                <td>150</td>
-                                <td><span class="pill pill-pending">PENDING</span></td>
-                                <td>
-                                    <div class="actions-cell">
-                                        <a href="#" class="btn-action action-approve" title="Approve"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></a>
-                                        <a href="#" class="btn-action action-reject" title="Reject"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!-- Approved Event 1 -->
-                            <tr>
-                                <td><span class="event-main">AI Engineering Symposium</span></td>
-                                <td>
-                                    <span class="org-main">Dept of Engineering</span>
-                                    <div class="sub-text">0719876543</div>
-                                </td>
-                                <td>Conference Hall B</td>
-                                <td><span class="event-main" style="font-size: 13px;">2026-09-10</span><div class="sub-text">01:00 PM</div></td>
-                                <td>Rs. 0</td>
-                                <td>200</td>
-                                <td><span class="pill pill-approved">APPROVED</span></td>
-                                <td>
-                                    <div class="actions-cell">
-                                        <a href="#" class="btn-action action-revoke" title="Revoke Approval"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></a>
-                                        <a href="#" class="btn-action action-delete" title="Delete"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!-- Approved Event 2 -->
-                            <tr>
-                                <td><span class="event-main">Annual Cultural Fiesta</span></td>
-                                <td>
-                                    <span class="org-main">Arts Circle</span>
-                                    <div class="sub-text">0755678901</div>
-                                </td>
-                                <td>Open Ground</td>
-                                <td><span class="event-main" style="font-size: 13px;">2026-10-05</span><div class="sub-text">05:30 PM</div></td>
-                                <td>Rs. 200</td>
-                                <td>500</td>
-                                <td><span class="pill pill-approved">APPROVED</span></td>
-                                <td>
-                                    <div class="actions-cell">
-                                        <a href="#" class="btn-action action-revoke" title="Revoke Approval"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></a>
-                                        <a href="#" class="btn-action action-delete" title="Delete"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <!-- Rejected Event -->
-                            <tr>
-                                <td><span class="event-main">Blockchain Workshop</span></td>
-                                <td>
-                                    <span class="org-main">Crypto Club</span>
-                                    <div class="sub-text">0704445556</div>
-                                </td>
-                                <td>Lab 04</td>
-                                <td><span class="event-main" style="font-size: 13px;">2026-07-20</span><div class="sub-text">10:00 AM</div></td>
-                                <td>Rs. 1000</td>
-                                <td>30</td>
-                                <td><span class="pill pill-rejected">REJECTED</span></td>
-                                <td>
-                                    <div class="actions-cell">
-                                        <a href="#" class="btn-action action-reapprove" title="Re-Approve"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></a>
-                                        <a href="#" class="btn-action action-delete" title="Delete"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </th:block>
-                    </tbody>
-                </table>
+                        <!-- Card Footer with Actions -->
+                        <div class="card-footer">
+                            <div class="actions-cell" style="width: 100%;">
+                                <!-- Pending Actions -->
+                                <a th:if="${event.eventstatus == 'PENDING' or event.eventstatus == 'Edited PENDING To Review'}" 
+                                   th:href="@{'/admin/approve/' + ${event.id}}" 
+                                   class="btn-action action-approve" title="Approve" onclick="return confirm('Approve this event?')"
+                                   style="flex: 1;">
+                                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                    <span style="margin-left: 4px;">Approve</span>
+                                </a>
+                                <a th:if="${event.eventstatus == 'PENDING' or event.eventstatus == 'Edited PENDING To Review'}" 
+                                   th:href="@{'/admin/reject/' + ${event.id}}" 
+                                   class="btn-action action-reject" title="Reject" onclick="return confirm('Reject this event?')"
+                                   style="flex: 1;">
+                                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                                    <span style="margin-left: 4px;">Reject</span>
+                                </a>
+
+                                <!-- Approved Actions -->
+                                <a th:if="${event.eventstatus == 'APPROVED'}" 
+                                   th:href="@{'/admin/reject/' + ${event.id}}" 
+                                   class="btn-action action-revoke" title="Revoke Approval" onclick="return confirm('Revoke approval and reject this event?')"
+                                   style="flex: 1;">
+                                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                                    <span style="margin-left: 4px;">Revoke</span>
+                                </a>
+                                <a th:if="${event.eventstatus == 'APPROVED'}" 
+                                   th:href="@{'/admin/events/delete/' + ${event.id}}" 
+                                   class="btn-action action-delete" title="Delete" onclick="return confirm('Permanently delete this event?')"
+                                   style="flex: 1;">
+                                    <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                    <span style="margin-left: 4px;">Delete</span>
+                                </a>
+
+                                <!-- Rejected Actions -->
+                                <a th:if="${event.eventstatus == 'REJECTED'}" 
+                                   th:href="@{'/admin/approve/' + ${event.id}}" 
+                                   class="btn-action action-reapprove" title="Re-Approve" onclick="return confirm('Re-approve this event?')"
+                                   style="flex: 1;">
+                                    <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                                    <span style="margin-left: 4px;">Re-Approve</span>
+                                </a>
+                                <a th:if="${event.eventstatus == 'REJECTED'}" 
+                                   th:href="@{'/admin/events/delete/' + ${event.id}}" 
+                                   class="btn-action action-delete" title="Delete" onclick="return confirm('Permanently delete this event?')"
+                                   style="flex: 1;">
+                                    <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                    <span style="margin-left: 4px;">Delete</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- No Events Message -->
+                    <div th:if="${#lists.isEmpty(events)}" class="no-events-admin">
+                        <div class="no-events-icon-admin">📋</div>
+                        <h3 class="no-events-title-admin">No Events to Review</h3>
+                        <p class="no-events-text-admin">All pending event submissions have been processed.</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -741,23 +835,24 @@
         updateClock();
 
         // Table Filtering
-        function filterAdminTable() {
+        function filterAdminCards() {
             const input = document.getElementById("adminSearch");
             const filter = input.value.toUpperCase();
-            const table = document.getElementById("adminEventTable");
-            const tr = table.getElementsByTagName("tr");
+            const grid = document.getElementById("adminEventsGrid");
+            const cards = grid.getElementsByClassName("admin-event-card");
+            let visibleCount = 0;
 
-            for (let i = 1; i < tr.length; i++) {
-                const tdEvent = tr[i].getElementsByTagName("td")[0];
-                const tdOrg = tr[i].getElementsByTagName("td")[1];
-                if (tdEvent || tdOrg) {
-                    const txtEvent = tdEvent.textContent || tdEvent.innerText;
-                    const txtOrg = tdOrg.textContent || tdOrg.innerText;
-                    if (txtEvent.toUpperCase().indexOf(filter) > -1 || txtOrg.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
+            for (let i = 0; i < cards.length; i++) {
+                const card = cards[i];
+                const eventName = card.getAttribute("data-event-name") || "";
+                const organizerName = card.getAttribute("data-organizer-name") || "";
+                
+                if (eventName.toUpperCase().indexOf(filter) > -1 || 
+                    organizerName.toUpperCase().indexOf(filter) > -1) {
+                    card.style.display = "";
+                    visibleCount++;
+                } else {
+                    card.style.display = "none";
                 }
             }
         }
