@@ -3,334 +3,764 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | FOT Management</title>
+    <title>Admin Panel | FOT Events</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- Global Reset & Foundation --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --navy: #1e2d3d;
+            --teal: #17b89e;
+            --teal-light: rgba(23, 184, 158, 0.15);
+            --amber: #ef9f27;
+            --amber-light: rgba(239, 159, 39, 0.15);
+            --red: #e24b4a;
+            --red-light: rgba(226, 75, 74, 0.15);
+            --blue: #3b82f6;
+            --blue-light: rgba(59, 130, 246, 0.15);
+            --purple: #8b5cf6;
+            --purple-light: rgba(139, 92, 246, 0.15);
+            --gray-bg: #f4f6f9;
+            --white: #ffffff;
+            --gray-text: #6b7280;
+            --gray-dark: #374151;
+            --gray-border: #e5e7eb;
+            --gray-hover: #f9fafb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
         body {
-            background-color: #f4f7f6;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #2c3e50;
-        }
-
-        /* --- Header Navigation --- */
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 1rem 5%;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            height: 100vh;
+            background-color: var(--gray-bg);
+            color: var(--gray-dark);
+            overflow: hidden;
         }
 
-        header h1 { font-size: 1.4rem; letter-spacing: 1px; }
-
-        .logout-btn {
-            background-color: #e74c3c;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            background-color: #c0392b;
-            transform: translateY(-2px);
-        }
-
-        /* --- Main Container --- */
-        .container {
-            max-width: 98%;
-            margin: 30px auto;
-            padding: 0 10px;
-        }
-
-        /* --- Info Card (Greeting & Controls) --- */
-        .info-card {
-            background: white;
-            padding: 25px 30px;
-            border-radius: 12px;
-            border-left: 6px solid #27ae60;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .info-card h2 { color: #2c3e50; font-size: 1.8rem; margin: 0; }
-        .greeting-name { color: #27ae60; }
-        .info-card p { color: #7f8c8d; margin-top: 5px; font-size: 0.95rem; }
-
-        /* --- Control Section (Buttons & Search) --- */
-        .controls-wrapper {
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 240px;
+            background-color: var(--navy);
+            color: var(--white);
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            align-items: flex-end; /* Aligns everything to the right */
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 10;
         }
 
-        .button-row {
+        .sidebar-header {
+            padding: 24px 20px;
             display: flex;
+            align-items: center;
             gap: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .btn-base {
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--teal);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .brand h2 {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .brand span {
+            font-size: 11px;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             padding: 12px 24px;
+            color: #d1d5db;
             text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255,255,255,0.05);
+            color: var(--white);
+        }
+
+        .nav-item.active {
+            background-color: var(--teal-light);
+            color: var(--teal);
+            border-left-color: var(--teal);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .admin-info p {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .admin-info span {
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
+        .btn-logout-icon {
+            color: var(--red);
+            background: rgba(226, 75, 74, 0.1);
+            padding: 8px;
+            border-radius: 6px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .btn-logout-icon:hover {
+            background: var(--red);
             color: white;
-            white-space: nowrap;
+        }
+        .btn-logout-icon svg { width: 18px; height: 18px; fill: currentColor; }
+
+        /* --- Main Content --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
         }
 
-        /* Specific Button Colors */
-        .btn-locations {
-            background-color: #2c3e50; /* Dark Blue */
+        /* --- Topbar --- */
+        .topbar {
+            background: var(--white);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        .btn-users {
-            background-color: #C08568; /* Theme Brown/Copper */
+        .greeting h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--navy);
         }
 
-        .btn-base:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-            opacity: 0.9;
+        .datetime {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-text);
+            font-size: 14px;
+            background: var(--gray-bg);
+            padding: 8px 16px;
+            border-radius: 20px;
         }
 
-        /* Search Input Styling */
-        #adminSearch {
-            width: 400px;
-            padding: 12px 15px;
-            border: 2px solid #ecf0f1;
+        .datetime svg { width: 16px; height: 16px; fill: currentColor; }
+
+        /* --- KPI Stats Row --- */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .kpi-card {
+            background: var(--white);
+            padding: 24px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+        }
+
+        .kpi-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .kpi-icon svg { width: 28px; height: 28px; }
+
+        .kpi-blue { background: var(--blue-light); color: var(--blue); }
+        .kpi-blue svg { fill: var(--blue); }
+        .kpi-amber { background: var(--amber-light); color: var(--amber); }
+        .kpi-amber svg { fill: var(--amber); }
+        .kpi-teal { background: var(--teal-light); color: var(--teal); }
+        .kpi-teal svg { fill: var(--teal); }
+        .kpi-purple { background: var(--purple-light); color: var(--purple); }
+        .kpi-purple svg { fill: var(--purple); }
+
+        .pulse-dot {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 12px;
+            height: 12px;
+            background-color: var(--red);
+            border-radius: 50%;
+            border: 2px solid white;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(226, 75, 74, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(226, 75, 74, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(226, 75, 74, 0); }
+        }
+
+        .kpi-info h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--navy);
+            line-height: 1.2;
+        }
+
+        .kpi-info p {
+            font-size: 13px;
+            color: var(--gray-text);
+            font-weight: 500;
+        }
+
+        /* --- Table Section --- */
+        .table-section {
+            padding: 0 30px 30px 30px;
+        }
+
+        .table-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .table-header h2 {
+            font-size: 18px;
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding: 10px 16px 10px 40px;
+            border: 1px solid var(--gray-border);
             border-radius: 8px;
             outline: none;
-            transition: all 0.3s;
-            font-family: inherit;
+            width: 280px;
+            font-size: 13px;
+            transition: 0.3s;
         }
 
-        #adminSearch:focus {
-            border-color: #27ae60;
-            box-shadow: 0 0 8px rgba(39, 174, 96, 0.1);
-            background-color: #fff;
+        .search-box input:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px var(--teal-light);
         }
 
-        /* --- Table Styling --- */
-        .table-wrapper {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+        .search-box svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            fill: var(--gray-text);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed;
+            text-align: left;
         }
 
         th {
-            background-color: #f8f9fa;
-            color: #34495e;
-            padding: 18px 15px;
-            text-align: left;
-            border-bottom: 3px solid #27ae60;
+            background: #fafafa;
+            padding: 16px 24px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-text);
             text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 1px;
-            font-weight: 700;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--gray-border);
         }
 
         td {
-            padding: 15px;
-            border-bottom: 1px solid #f1f1f1;
+            padding: 16px 24px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--gray-border);
             vertical-align: middle;
-            font-size: 0.85rem;
         }
 
-        tr:hover { background-color: #fcfcfc; }
+        tr:hover td {
+            background-color: var(--gray-hover);
+        }
 
-        /* Column Widths */
-        .col-event { width: 18%; }
-        .col-org { width: 12%; }
-        .col-venue { width: 12%; }
-        .col-date { width: 14%; }
-        .col-price { width: 8%; }
-        .col-slots { width: 7%; text-align: center; }
-        .col-status { width: 12%; }
-        .col-action { width: 13%; }
+        tr:nth-child(even) {
+            background-color: #fafbfc;
+        }
 
-        .org-name { font-weight: 600; display: block; color: #2c3e50; }
-        .org-phone { font-size: 0.75rem; color: #7f8c8d; display: block; margin-top: 2px; }
+        .event-main {
+            font-weight: 600;
+            color: var(--navy);
+            display: block;
+        }
+        
+        .org-main {
+            font-weight: 500;
+            color: var(--gray-dark);
+            display: block;
+        }
+        
+        .sub-text {
+            font-size: 12px;
+            color: var(--gray-text);
+            margin-top: 2px;
+        }
 
-        .event-title { font-weight: 700; display: block; color: #2c3e50; margin-bottom: 4px; }
-        .event-desc { font-size: 0.75rem; color: #95a5a6; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-
-        .status-pill {
-            padding: 6px 10px;
+        /* Pill Badges */
+        .pill {
+            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 0.65rem;
-            font-weight: 800;
+            font-size: 11px;
+            font-weight: 600;
             text-transform: uppercase;
-            display: inline-block;
-            text-align: center;
-            min-width: 90px;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 85px;
         }
 
-        .status-approved { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .status-rejected { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .status-pending { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .pill-approved { background: var(--teal-light); color: var(--teal); border: 1px solid rgba(23,184,158,0.2); }
+        .pill-pending { background: var(--amber-light); color: var(--amber); border: 1px solid rgba(239,159,39,0.2); }
+        .pill-rejected { background: var(--red-light); color: var(--red); border: 1px solid rgba(226,75,74,0.2); }
 
-        /* Action Grid */
-        .action-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 5px;
+        /* Action Buttons */
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+            align-items: center;
         }
 
-        .btn-sm {
-            padding: 10px 4px;
-            border-radius: 4px;
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
             text-decoration: none;
-            color: white;
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-align: center;
             transition: 0.2s;
+            position: relative;
         }
 
-        .btn-sm:hover{ transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-            opacity: 0.9;}
+        .btn-action svg { width: 16px; height: 16px; fill: currentColor; }
+        
+        /* Tooltip */
+        .btn-action[title]:hover::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-5px);
+            background: var(--navy);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 10;
+        }
 
-        .btn-approve { background-color: #27ae60; }
-        .btn-reject { background-color: #f39c12; }
-        .btn-delete { background-color: #e74c3c; }
+        .action-approve { background: var(--teal-light); color: var(--teal); }
+        .action-approve:hover { background: var(--teal); color: white; }
 
-        .empty-row td { text-align: center; padding: 50px; color: #bdc3c7; font-style: italic; }
+        .action-reject { background: var(--amber-light); color: var(--amber); }
+        .action-reject:hover { background: var(--amber); color: white; }
+
+        .action-revoke { background: #f3f4f6; color: #6b7280; }
+        .action-revoke:hover { background: #d1d5db; color: #374151; }
+
+        .action-delete { background: var(--red-light); color: var(--red); }
+        .action-delete:hover { background: var(--red); color: white; }
+
+        .action-reapprove { background: var(--blue-light); color: var(--blue); }
+        .action-reapprove:hover { background: var(--blue); color: white; }
+
     </style>
 </head>
-
 <body>
 
-<header>
-    <h1>FOT EVENTS | Admin Dashboard</h1>
-    <a th:href="@{/login}" class="logout-btn">Logout</a>
-</header>
-
-<div class="container">
-
-    <div class="info-card">
-        <div class="greeting-box">
-            <h2>Welcome Admin, <span class="greeting-name" th:text="${fullName}">Administrator</span>!</h2>
-            <p>Manage faculty locations, system users, and event approvals from one place.</p>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-icon">F</div>
+            <div class="brand">
+                <h2>FOT Events</h2>
+                <span>Admin Panel</span>
+            </div>
         </div>
 
-        <div class="controls-wrapper">
-            <div class="button-row">
-                <a th:href="@{/admin/locations}" class="btn-base btn-locations">View Locations</a>
-                <a th:href="@{/users}" class="btn-base btn-users">View System Users</a>
+        <nav class="nav-menu">
+            <a th:href="@{/admin}" class="nav-item active">
+                <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                Dashboard
+            </a>
+
+            <a th:href="@{/admin/locations}" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                Locations
+            </a>
+            <a th:href="@{/users}" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                System Users
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="admin-profile">
+                <div class="admin-avatar">A</div>
+                <div class="admin-info">
+                    <p th:text="${fullName}">Admin</p>
+                    <span>Administrator</span>
+                </div>
+            </div>
+            <a th:href="@{/login}" class="btn-logout-icon" title="Logout">
+                <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="greeting">
+                <h1>Welcome back, <span th:text="${fullName}">Admin</span> 👋</h1>
+            </div>
+            <div class="datetime" id="liveDateTime">
+                <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                <span id="dtString">Loading...</span>
+            </div>
+        </div>
+
+        <!-- KPI Stats -->
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <div class="kpi-icon kpi-blue">
+                    <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+                </div>
+                <div class="kpi-info">
+                    <h3 th:text="${totalEvents}">0</h3>
+                    <p>Total Events</p>
+                </div>
             </div>
 
-            <input type="text" id="adminSearch" onkeyup="filterAdminTable()"
-                   placeholder="Search by event name or organizer...">
+            <div class="kpi-card">
+                <div class="kpi-icon kpi-amber">
+                    <div class="pulse-dot" th:if="${pendingApprovals > 0}"></div>
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                </div>
+                <div class="kpi-info">
+                    <h3 th:text="${pendingApprovals}">0</h3>
+                    <p>Pending Approvals</p>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon kpi-teal">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                </div>
+                <div class="kpi-info">
+                    <h3 th:text="${totalUsers}">0</h3>
+                    <p>Registered Users</p>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon kpi-purple">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                </div>
+                <div class="kpi-info">
+                    <h3 th:text="${totalLocations}">0</h3>
+                    <p>Total Locations</p>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <div class="table-wrapper">
-        <table id="adminEventTable">
-            <thead>
-            <tr>
-                <th class="col-event">Event Details</th>
-                <th class="col-org">Organizer</th>
-                <th class="col-venue">Venue</th>
-                <th class="col-date">Schedule</th>
-                <th class="col-price">Fee</th>
-                <th class="col-slots">Slots</th>
-                <th class="col-status">Status</th>
-                <th class="col-action">Actions</th>
-            </tr>
-            </thead>
-
-            <tbody>
-            <tr th:each="event : ${events}">
-                <td>
-                    <span class="event-title" th:text="${event.eventName}">Event Name</span>
-                    <p class="event-desc" th:text="${event.description}">Description</p>
-                </td>
-                <td class="col-org">
-                    <span class="org-name" th:text="${event.organizerName}">Dept Name</span>
-                    <span class="org-phone" th:text="${event.organizerPhone != null ? event.organizerPhone : 'No Contact'}">0000000000</span>
-                </td>
-                <td th:text="${event.venue}">Venue</td>
-                <td>
-                    <strong th:text="${event.date}" style="color: #27ae60;">Date</strong><br>
-                    <small th:text="${event.time}">Time</small>
-                </td>
-                <td th:text="${'Rs.' + event.ticketPrice}">Price</td>
-                <td style="text-align: center;">
-                    <span th:text="${event.availableSlots}" style="font-weight: bold;">0</span>
-                </td>
-                <td>
-                    <span th:text="${event.eventstatus}"
-                          th:class="'status-pill ' +
-                          (${event.eventstatus == 'APPROVED'} ? 'status-approved' :
-                          (${event.eventstatus == 'REJECTED'} ? 'status-rejected' : 'status-pending'))">
-                    </span>
-                </td>
-                <td>
-                    <div class="action-grid">
-                        <a th:href="@{'/admin/approve/' + ${event.id}}" class="btn-sm btn-approve" onclick="return confirm('Approve this event?')">Approve</a>
-                        <a th:href="@{'/admin/reject/' + ${event.id}}" class="btn-sm btn-reject" onclick="return confirm('Reject this event?')">Reject</a>
-                        <a th:href="@{'/admin/events/delete/' + ${event.id}}" class="btn-sm btn-delete" style="grid-column: span 2;" onclick="return confirm('Delete permanently?')">Delete Event</a>
+        <!-- Table Section -->
+        <div class="table-section">
+            <div class="table-card">
+                <div class="table-header">
+                    <h2>Event Approvals</h2>
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                        <input type="text" id="adminSearch" onkeyup="filterAdminTable()" placeholder="Search events or organizers...">
                     </div>
-                </td>
-            </tr>
+                </div>
 
-            <tr th:if="${#lists.isEmpty(events)}" class="empty-row">
-                <td colspan="8">No events found in the system.</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+                <table id="adminEventTable">
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                            <th>Organizer</th>
+                            <th>Venue</th>
+                            <th>Schedule</th>
+                            <th>Fee</th>
+                            <th>Slots</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamic Data -->
+                        <tr th:each="event : ${events}">
+                            <td>
+                                <span class="event-main" th:text="${event.eventName}">Event Name</span>
+                            </td>
+                            <td>
+                                <span class="org-main" th:text="${event.organizerName}">Organizer</span>
+                                <div class="sub-text" th:text="${event.organizerPhone}">000000000</div>
+                            </td>
+                            <td th:text="${event.venue}">Venue</td>
+                            <td>
+                                <span class="event-main" th:text="${event.date}" style="font-size: 13px;">Date</span>
+                                <div class="sub-text" th:text="${event.time}">Time</div>
+                            </td>
+                            <td th:text="${'Rs. ' + event.ticketPrice}">Price</td>
+                            <td th:text="${event.availableSlots}">0</td>
+                            <td>
+                                <span th:class="'pill ' + 
+                                      (${event.eventstatus == 'APPROVED'} ? 'pill-approved' : 
+                                      (${event.eventstatus == 'REJECTED'} ? 'pill-rejected' : 'pill-pending'))"
+                                      th:text="${event.eventstatus}">STATUS</span>
+                            </td>
+                            <td>
+                                <div class="actions-cell">
+                                    <!-- Pending Actions -->
+                                    <a th:if="${event.eventstatus == 'PENDING' or event.eventstatus == 'Edited PENDING To Review'}" th:href="@{'/admin/approve/' + ${event.id}}" class="btn-action action-approve" title="Approve" onclick="return confirm('Approve this event?')">
+                                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                    </a>
+                                    <a th:if="${event.eventstatus == 'PENDING' or event.eventstatus == 'Edited PENDING To Review'}" th:href="@{'/admin/reject/' + ${event.id}}" class="btn-action action-reject" title="Reject" onclick="return confirm('Reject this event?')">
+                                        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                                    </a>
 
-</div>
+                                    <!-- Approved Actions -->
+                                    <a th:if="${event.eventstatus == 'APPROVED'}" th:href="@{'/admin/reject/' + ${event.id}}" class="btn-action action-revoke" title="Revoke Approval" onclick="return confirm('Revoke approval and reject this event?')">
+                                        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                                    </a>
+                                    <a th:if="${event.eventstatus == 'APPROVED'}" th:href="@{'/admin/events/delete/' + ${event.id}}" class="btn-action action-delete" title="Delete" onclick="return confirm('Permanently delete this event?')">
+                                        <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                    </a>
 
-<script>
-    function filterAdminTable() {
-        const input = document.getElementById("adminSearch");
-        const filter = input.value.toUpperCase();
-        const table = document.getElementById("adminEventTable");
-        const tr = table.getElementsByTagName("tr");
+                                    <!-- Rejected Actions -->
+                                    <a th:if="${event.eventstatus == 'REJECTED'}" th:href="@{'/admin/approve/' + ${event.id}}" class="btn-action action-reapprove" title="Re-Approve" onclick="return confirm('Re-approve this event?')">
+                                        <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                                    </a>
+                                    <a th:if="${event.eventstatus == 'REJECTED'}" th:href="@{'/admin/events/delete/' + ${event.id}}" class="btn-action action-delete" title="Delete" onclick="return confirm('Permanently delete this event?')">
+                                        <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
 
-        for (let i = 1; i < tr.length; i++) {
-            const tdEvent = tr[i].getElementsByTagName("td")[0];
-            const tdOrg = tr[i].getElementsByTagName("td")[1];
-            if (tdEvent || tdOrg) {
-                const txtEvent = tdEvent.textContent || tdEvent.innerText;
-                const txtOrg = tdOrg.textContent || tdOrg.innerText;
-                if (txtEvent.toUpperCase().indexOf(filter) > -1 || txtOrg.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
+                        <!-- Mockup Fallback when empty -->
+                        <th:block th:if="${#lists.isEmpty(events)}">
+                            <!-- Pending Event -->
+                            <tr>
+                                <td><span class="event-main">Tech Innovators Hackathon</span></td>
+                                <td>
+                                    <span class="org-main">IT Society</span>
+                                    <div class="sub-text">0771234567</div>
+                                </td>
+                                <td>Main Auditorium</td>
+                                <td><span class="event-main" style="font-size: 13px;">2026-08-15</span><div class="sub-text">09:00 AM</div></td>
+                                <td>Rs. 500</td>
+                                <td>150</td>
+                                <td><span class="pill pill-pending">PENDING</span></td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <a href="#" class="btn-action action-approve" title="Approve"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></a>
+                                        <a href="#" class="btn-action action-reject" title="Reject"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Approved Event 1 -->
+                            <tr>
+                                <td><span class="event-main">AI Engineering Symposium</span></td>
+                                <td>
+                                    <span class="org-main">Dept of Engineering</span>
+                                    <div class="sub-text">0719876543</div>
+                                </td>
+                                <td>Conference Hall B</td>
+                                <td><span class="event-main" style="font-size: 13px;">2026-09-10</span><div class="sub-text">01:00 PM</div></td>
+                                <td>Rs. 0</td>
+                                <td>200</td>
+                                <td><span class="pill pill-approved">APPROVED</span></td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <a href="#" class="btn-action action-revoke" title="Revoke Approval"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></a>
+                                        <a href="#" class="btn-action action-delete" title="Delete"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Approved Event 2 -->
+                            <tr>
+                                <td><span class="event-main">Annual Cultural Fiesta</span></td>
+                                <td>
+                                    <span class="org-main">Arts Circle</span>
+                                    <div class="sub-text">0755678901</div>
+                                </td>
+                                <td>Open Ground</td>
+                                <td><span class="event-main" style="font-size: 13px;">2026-10-05</span><div class="sub-text">05:30 PM</div></td>
+                                <td>Rs. 200</td>
+                                <td>500</td>
+                                <td><span class="pill pill-approved">APPROVED</span></td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <a href="#" class="btn-action action-revoke" title="Revoke Approval"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></a>
+                                        <a href="#" class="btn-action action-delete" title="Delete"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Rejected Event -->
+                            <tr>
+                                <td><span class="event-main">Blockchain Workshop</span></td>
+                                <td>
+                                    <span class="org-main">Crypto Club</span>
+                                    <div class="sub-text">0704445556</div>
+                                </td>
+                                <td>Lab 04</td>
+                                <td><span class="event-main" style="font-size: 13px;">2026-07-20</span><div class="sub-text">10:00 AM</div></td>
+                                <td>Rs. 1000</td>
+                                <td>30</td>
+                                <td><span class="pill pill-rejected">REJECTED</span></td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <a href="#" class="btn-action action-reapprove" title="Re-Approve"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></a>
+                                        <a href="#" class="btn-action action-delete" title="Delete"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </th:block>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Live Clock
+        function updateClock() {
+            const now = new Date();
+            const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            document.getElementById('dtString').textContent = now.toLocaleDateString('en-US', options);
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Table Filtering
+        function filterAdminTable() {
+            const input = document.getElementById("adminSearch");
+            const filter = input.value.toUpperCase();
+            const table = document.getElementById("adminEventTable");
+            const tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) {
+                const tdEvent = tr[i].getElementsByTagName("td")[0];
+                const tdOrg = tr[i].getElementsByTagName("td")[1];
+                if (tdEvent || tdOrg) {
+                    const txtEvent = tdEvent.textContent || tdEvent.innerText;
+                    const txtOrg = tdOrg.textContent || tdOrg.innerText;
+                    if (txtEvent.toUpperCase().indexOf(filter) > -1 || txtOrg.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
                 }
             }
         }
-    }
-</script>
-
+    </script>
 </body>
 </html>

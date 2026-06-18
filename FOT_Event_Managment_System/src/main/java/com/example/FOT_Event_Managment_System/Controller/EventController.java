@@ -26,6 +26,9 @@ public class EventController {
     @Autowired
     private EventRepo eventRepo;
 
+    @Autowired
+    private com.example.FOT_Event_Managment_System.Repository.EventRegiRepo eventRegiRepo;
+
     @GetMapping("/events")
     public String events(Model model, Authentication authentication) {
         String email = authentication.getName();
@@ -36,9 +39,35 @@ public class EventController {
             List<Event> allUserEvents = eventServices.getEventsByOrganizer(user.getUserid());
             model.addAttribute("events", allUserEvents);
             model.addAttribute("fullName", user.getUsername());
+            
+            long myEventsCount = allUserEvents.size();
+            long pendingCount = allUserEvents.stream()
+                .filter(e -> "PENDING".equals(e.getEventstatus()) || "Edited PENDING To Review".equals(e.getEventstatus()))
+                .count();
+            
+            long totalParticipants = 0;
+            double totalRevenue = 0.0;
+            
+            for (Event event : allUserEvents) {
+                long participantsCount = eventRegiRepo.findActiveParticipants(event.getId()).size();
+                totalParticipants += participantsCount;
+                if (event.getTicketPrice() != null) {
+                    totalRevenue += participantsCount * event.getTicketPrice();
+                }
+            }
+            
+            model.addAttribute("myEventsCount", myEventsCount);
+            model.addAttribute("pendingCount", pendingCount);
+            model.addAttribute("totalParticipants", totalParticipants);
+            model.addAttribute("totalRevenue", totalRevenue);
+            
         } else {
             model.addAttribute("events", new ArrayList<>());
             model.addAttribute("fullName", "User");
+            model.addAttribute("myEventsCount", 0);
+            model.addAttribute("pendingCount", 0);
+            model.addAttribute("totalParticipants", 0);
+            model.addAttribute("totalRevenue", 0.0);
         }
 
         model.addAttribute("eventForm", new Event());

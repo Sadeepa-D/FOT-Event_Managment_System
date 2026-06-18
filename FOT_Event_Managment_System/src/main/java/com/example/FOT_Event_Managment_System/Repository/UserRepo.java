@@ -21,4 +21,5 @@ public interface UserRepo extends JpaRepository<Users, Long> {
     void activateUser(Long id);
     Users findByRegno(String regno);
     List<Users> findByuserroleNot(String role);
+    long countByUserrole(String role);
 }

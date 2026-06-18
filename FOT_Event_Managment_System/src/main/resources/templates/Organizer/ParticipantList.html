@@ -1,278 +1,584 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Event Participants - FOT Management</title>
-  <style>
-    /* General Reset */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background-color: #f4f7f6; font-family: 'Segoe UI', Arial, sans-serif; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Participants | FOT Event Management System</title>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-    /* Header Styling */
-    header {
-      background-color: #2c3e50;
-      color: white;
-      padding: 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-      margin-bottom: 30px;
-    }
+    <style>
+        :root {
+            --navy: #1e2d3d;
+            --teal: #17b89e;
+            --teal-light: rgba(23, 184, 158, 0.15);
+            --red: #e24b4a;
+            --red-light: rgba(226, 75, 74, 0.15);
+            --amber: #ef9f27;
+            --amber-light: rgba(239, 159, 39, 0.15);
+            --blue: #3b82f6;
+            --blue-light: rgba(59, 130, 246, 0.15);
+            --purple: #7f77dd;
+            --purple-light: rgba(127, 119, 221, 0.15);
+            --gray-bg: #f4f6f9;
+            --white: #ffffff;
+            --gray-text: #6b7280;
+            --gray-dark: #374151;
+            --border-color: #e5e7eb;
+            --gray-hover: #f9fafb;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+        }
 
-    header h1 { font-size: 1.5rem; margin: 0; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
 
-    .container {
-      max-width: 1300px;
-      margin: auto;
-      padding: 0 20px;
-    }
+        body {
+            background-color: var(--gray-bg);
+            color: var(--gray-dark);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-    /* Event Info Card */
-    .event-info-card {
-      background: white;
-      padding: 20px 25px;
-      border-radius: 8px;
-      border-left: 5px solid #27ae60;
-      margin-bottom: 25px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        /* --- Main Content Area --- */
+        .main-content {
+            flex: 1;
+            padding: 30px 40px;
+            overflow-y: auto;
+        }
 
-    .event-info-card h2 { color: #2c3e50; margin-bottom: 5px; }
-    .event-info-card p { color: #7f8c8d; font-size: 0.9rem; }
+        /* --- Top Bar --- */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
 
-    /* Search Box Styling */
-    .search-container {
-      margin-top: 15px;
-      text-align: right;
-    }
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--navy);
+        }
+        
+        .page-subtitle {
+            font-size: 0.95rem;
+            color: var(--gray-text);
+            margin-top: 4px;
+        }
 
-    #searchInput {
-      width: 250px;
-      padding: 10px 15px;
-      border: 2px solid #ecf0f1;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.3s;
-    }
+        .live-date {
+            font-size: 0.95rem;
+            color: var(--gray-text);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--white);
+            padding: 8px 16px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-sm);
+        }
 
-    #searchInput:focus { border-color: #27ae60; }
+        /* --- Summary Stats --- */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
 
-    /* Table Styling */
-    .table-wrapper {
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    }
+        .stat-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-    table { width: 100%; border-collapse: collapse; }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
 
-    th {
-      background-color: #ecf0f1;
-      color: #2c3e50;
-      padding: 15px;
-      text-align: left;
-      border-bottom: 3px solid #27ae60;
-      text-transform: uppercase;
-      font-size: 0.8rem;
-      letter-spacing: 0.5px;
-    }
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
 
-    td {
-      padding: 12px 15px;
-      border-bottom: 1px solid #eee;
-      color: #2c3e50;
-      vertical-align: middle;
-      font-size: 0.9rem;
-    }
+        .stat-icon.total { background-color: var(--blue-light); color: var(--blue); }
+        .stat-icon.approved { background-color: var(--teal-light); color: var(--teal); }
+        .stat-icon.pending { background-color: var(--amber-light); color: var(--amber); }
+        .stat-icon.checkedin { background-color: var(--purple-light); color: var(--purple); }
 
-    tr:hover { background-color: #fcfcfc; }
+        .stat-details h3 {
+            font-size: 0.9rem;
+            color: var(--gray-text);
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
 
-    /* Badges & Pills */
-    .slot-badge {
-      background-color: #e3f2fd;
-      color: #1565c0;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: bold;
-    }
+        .stat-details .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--navy);
+        }
 
-    .status-pill {
-      padding: 5px 10px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      display: inline-block;
-      text-align: center;
-      min-width: 85px;
-    }
+        /* --- Section Header & Search --- */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-    .reg-approved { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-    .reg-pending { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
-    .reg-rejected { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-    .check-in { background-color: #cce5ff; color: #004085; border: 1px solid #b8daff; }
-    .check-out { background-color: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
+        .section-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--navy);
+        }
 
-    /* --- Action Buttons Grid --- */
-    .action-col {
-      width: 220px; /* Adjusted width for 2-column grid */
-    }
+        .controls-wrapper {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
 
-    .action-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5px;
-    }
+        .search-box {
+            position: relative;
+        }
 
-    .btn-grid {
-      padding: 6px 4px;
-      text-decoration: none;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: bold;
-      text-align: center;
-      transition: all 0.2s;
-      color: white;
-      border: none;
-    }
+        .search-box input {
+            padding: 10px 16px 10px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+            width: 300px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
 
-    .btn-grid:hover { transform: translateY(-1px); opacity: 0.9; }
+        .search-box input:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px var(--teal-light);
+        }
 
-    .btn-approve { background-color: #27ae60; }
-    .btn-reject { background-color: #FF0000; }
-    .btn-checkin { background-color: #3498db; }
-    .btn-checkout { background-color: #34495e; }
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            color: var(--gray-text);
+        }
 
-    /* Utility */
-    .btn-register {
-      background-color: #27ae60;
-      color: white;
-      padding: 12px 22px;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: bold;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: 0.3s;
-    }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
 
-    .btn-back { display: inline-block; margin-top: 25px; color: #3498db; text-decoration: none; font-weight: bold; }
-  </style>
+        .btn-primary {
+            background-color: var(--teal);
+            color: var(--white);
+            box-shadow: 0 4px 10px rgba(23, 184, 158, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: #14a089;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--border-color);
+            background: var(--white);
+            color: var(--gray-dark);
+        }
+
+        .btn-outline:hover {
+            background: var(--gray-bg);
+            border-color: var(--gray-text);
+        }
+
+        /* --- Table Section --- */
+        .table-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: #fafafa;
+            padding: 16px 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--gray-text);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 16px 20px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+            color: var(--gray-dark);
+        }
+
+        tr:hover td {
+            background-color: var(--gray-hover);
+        }
+
+        .user-main {
+            font-weight: 600;
+            color: var(--navy);
+            display: block;
+        }
+
+        .sub-text {
+            font-size: 0.8rem;
+            color: var(--gray-text);
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .reg-no-text {
+            font-family: monospace;
+            font-weight: 600;
+            color: var(--navy);
+            background: var(--gray-bg);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        /* --- Pills & Badges --- */
+        .pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 90px;
+        }
+
+        .slot-badge {
+            background-color: var(--gray-bg);
+            color: var(--gray-dark);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Statuses */
+        .reg-approved { background: var(--teal-light); color: var(--teal); }
+        .reg-pending { background: var(--amber-light); color: var(--amber); }
+        .reg-rejected { background: var(--red-light); color: var(--red); }
+        
+        .check-in { background: var(--blue-light); color: var(--blue); }
+        .check-out { background: var(--gray-bg); color: var(--gray-text); border: 1px solid var(--border-color); }
+        .check-pending { background: var(--amber-light); color: var(--amber); }
+
+        /* --- Action Buttons --- */
+        .actions-cell {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+            position: relative;
+            font-size: 1.1rem;
+        }
+
+        .btn-action[title]:hover::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-5px);
+            background: var(--navy);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .action-approve { background: var(--teal-light); color: var(--teal); }
+        .action-approve:hover { background: var(--teal); color: white; }
+
+        .action-decline { background: var(--red-light); color: var(--red); }
+        .action-decline:hover { background: var(--red); color: white; }
+
+        .action-checkin { background: var(--blue-light); color: var(--blue); }
+        .action-checkin:hover { background: var(--blue); color: white; }
+
+        .action-checkout { background: var(--gray-bg); color: var(--gray-dark); }
+        .action-checkout:hover { background: var(--gray-dark); color: white; }
+
+        .empty-row td {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray-text);
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .search-box input { width: 220px; }
+        }
+
+        @media (max-width: 900px) {
+            .stats-row { grid-template-columns: 1fr; }
+            .section-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+            .controls-wrapper { width: 100%; justify-content: space-between; }
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <h1>FOT EVENTS | Registerd Participants</h1>
-</header>
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div>
+                <h1 class="page-title" th:text="${event.eventName}">Event Name</h1>
+                <div class="page-subtitle" th:text="${'Registered Participants for ' + event.organizerName}">Organizer Info</div>
+            </div>
+            <div class="controls-wrapper">
+                <a th:href="@{/events}" class="btn btn-outline">
+                    <i class="ph ph-arrow-left"></i> Back to Events
+                </a>
+                <div class="live-date">
+                    <i class="ph ph-clock"></i>
+                    <span id="currentDate">Loading date...</span>
+                </div>
+            </div>
+        </div>
 
-<div class="container">
-  <div class="event-info-card">
-    <div>
-      <h2 th:text="${event.eventName}">Event Name</h2>
-      <p th:text="${'Registered Participants for ' + event.organizerName}">Organizer Info</p>
-    </div>
-    <div style="display: flex; flex-direction: column; align-items: flex-end;">
-      <a th:href="@{/event/register(id=${event.id}, name=${event.eventName}, organizer=${event.organizerName},source='organizer')}"
-         class="btn-register">+ Register Participant</a>
+        <!-- Summary Stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="ph ph-users-three"></i>
+                </div>
+                <div class="stat-details">
+                    <h3>Total Registrations</h3>
+                    <div class="stat-value" th:text="${#lists.size(participants)}">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon approved">
+                    <i class="ph ph-check-circle"></i>
+                </div>
+                <div class="stat-details">
+                    <h3>Approved</h3>
+                    <div class="stat-value" th:text="${#lists.size(participants.?[registatus == 'Approved'])}">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="ph ph-hourglass-high"></i>
+                </div>
+                <div class="stat-details">
+                    <h3>Pending</h3>
+                    <div class="stat-value" th:text="${#lists.size(participants.?[registatus != 'Approved' and registatus != 'Rejected'])}">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon checkedin">
+                    <i class="ph ph-sign-in"></i>
+                </div>
+                <div class="stat-details">
+                    <h3>Checked In</h3>
+                    <div class="stat-value" th:text="${#lists.size(participants.?[checkinstatus == 'Checked In'])}">0</div>
+                </div>
+            </div>
+        </div>
 
-      <div class="search-container">
-        <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search by Reg. No (TG/...)">
-      </div>
-    </div>
-  </div>
+        <!-- Section Header -->
+        <div class="section-header">
+            <h2>Event Roster</h2>
+            <div class="controls-wrapper">
+                <div class="search-box">
+                    <i class="ph ph-magnifying-glass"></i>
+                    <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search by Reg. No (TG/...)">
+                </div>
+                <a th:href="@{/event/register(id=${event.id}, name=${event.eventName}, organizer=${event.organizerName},source='organizer')}" class="btn btn-primary">
+                    <i class="ph ph-user-plus"></i> Register Participant
+                </a>
+            </div>
+        </div>
 
-  <div class="table-wrapper">
-    <table id="participantTable">
-      <thead>
-      <tr>
-        <th>No.</th>
-        <th>Participant Name</th>
-        <th>Reg. Number</th>
-        <th>Contact</th>
-        <th>Slots</th>
-        <th>Reg. Status</th>
-        <th>Check-In Status</th>
-        <th style="text-align: center;">Actions</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="participant, iter : ${participants}">
-        <td th:text="${iter.count}">1</td>
-        <td th:text="${participant.Pname}" style="font-weight: 600;">Name</td>
-        <td th:text="${participant.pRegistrationnnum}">TG/XXX</td>
-        <td th:text="${participant.pnumber}">07X</td>
-        <td style="text-align: center;"><span class="slot-badge" th:text="${participant.pslots}">1</span></td>
+        <!-- Participants Table -->
+        <div class="table-card">
+            <table id="participantTable">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Participant Identity</th>
+                        <th>Reg. Number</th>
+                        <th>Slots</th>
+                        <th>Reg. Status</th>
+                        <th>Check-In Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="participant, iter : ${participants}">
+                        <td th:text="${iter.count}">1</td>
+                        <td>
+                            <span class="user-main" th:text="${participant.Pname}">Name</span>
+                            <div class="sub-text">
+                                <i class="ph ph-phone"></i>
+                                <span th:text="${participant.pnumber}">07X</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="reg-no-text" th:text="${participant.pRegistrationnnum}">TG/XXX</span>
+                        </td>
+                        <td>
+                            <span class="slot-badge" th:text="${participant.pslots}">1</span>
+                        </td>
+                        <td>
+                            <span th:class="'pill ' + 
+                                  (${participant.registatus == 'Approved'} ? 'reg-approved' : 
+                                  (${participant.registatus == 'Rejected'} ? 'reg-rejected' : 'reg-pending'))"
+                                  th:text="${participant.registatus != null ? participant.registatus : 'Pending'}">
+                            </span>
+                        </td>
+                        <td>
+                            <span th:class="'pill ' + 
+                                  (${participant.checkinstatus == 'Checked In'} ? 'check-in' : 
+                                  (${participant.checkinstatus == 'Checked Out'} ? 'check-out' : 'check-pending'))"
+                                  th:text="${participant.checkinstatus != null ? participant.checkinstatus : 'Pending'}">
+                            </span>
+                        </td>
+                        <td>
+                            <div class="actions-cell">
+                                <a th:href="@{/event/registration/approve/{id}(id=${participant.id})}" 
+                                   class="btn-action action-approve" title="Approve Registration"
+                                   onclick="return confirm('Approve this participant?')">
+                                    <i class="ph ph-check-circle"></i>
+                                </a>
 
-        <td>
-          <span th:class="'status-pill ' +
-                (${participant.registatus == 'Approved'} ? 'reg-approved' :
-                (${participant.registatus == 'Rejected'} ? 'reg-rejected' : 'reg-pending'))"
-                th:text="${participant.registatus != null ? participant.registatus : 'Pending'}">
-          </span>
-        </td>
+                                <a th:href="@{/event/registration/remove/{id}(id=${participant.id})}" 
+                                   class="btn-action action-decline" title="Decline Registration"
+                                   onclick="return confirm('Decline this participant?')">
+                                    <i class="ph ph-x-circle"></i>
+                                </a>
 
-        <td>
-          <span th:class="'status-pill ' +
-                (${participant.checkinstatus == 'Checked In'} ? 'check-in' : 'check-out')"
-                th:text="${participant.checkinstatus != null ? participant.checkinstatus : 'Pending'}">
-          </span>
-        </td>
+                                <a th:href="@{/event/registration/checkin/{id}(id=${participant.id})}" 
+                                   class="btn-action action-checkin" title="Check In">
+                                    <i class="ph ph-sign-in"></i>
+                                </a>
 
-        <td class="action-col">
-          <div class="action-grid">
-            <a th:href="@{/event/registration/approve/{id}(id=${participant.id})}"
-               class="btn-grid btn-approve" onclick="return confirm('Approve participant?')">Approve</a>
+                                <a th:href="@{/event/registration/checkout/{id}(id=${participant.id})}" 
+                                   class="btn-action action-checkout" title="Check Out">
+                                    <i class="ph ph-sign-out"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
 
-            <a th:href="@{/event/registration/remove/{id}(id=${participant.id})}"
-               class="btn-grid btn-reject" onclick="return confirm('Reject participant?')">Decline</a>
+                    <tr th:if="${#lists.isEmpty(participants)}" class="empty-row">
+                        <td colspan="7">No participants registered for this event yet.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
 
-            <a th:href="@{/event/registration/checkin/{id}(id=${participant.id})}"
-               class="btn-grid btn-checkin">Check In</a>
-
-            <a th:href="@{/event/registration/checkout/{id}(id=${participant.id})}"
-               class="btn-grid btn-checkout">Check Out</a>
-          </div>
-        </td>
-      </tr>
-
-      <tr th:if="${#lists.isEmpty(participants)}">
-        <td colspan="8" style="text-align: center; padding: 40px; color: #95a5a6;">No participants found.</td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <a th:href="@{/events}" class="btn-back">← Back to My Events</a>
-</div>
-
-<script>
-  function filterTable() {
-    let input = document.getElementById("searchInput");
-    let filter = input.value.toUpperCase();
-    let table = document.getElementById("participantTable");
-    let tr = table.getElementsByTagName("tr");
-
-    for (let i = 1; i < tr.length; i++) {
-      let td = tr[i].getElementsByTagName("td")[2];
-      if (td) {
-        let txtValue = td.textContent || td.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
+    <!-- Scripts -->
+    <script>
+        // Update Live Date
+        function updateDate() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', options);
         }
-      }
-    }
-  }
-</script>
+        setInterval(updateDate, 1000);
+        updateDate();
 
+        // Search Filter
+        function filterTable() {
+            const input = document.getElementById("searchInput");
+            const filter = input.value.toUpperCase();
+            const table = document.getElementById("participantTable");
+            const tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) {
+                // Column 2 is Reg. Number
+                const tdReg = tr[i].getElementsByTagName("td")[2];
+                // Added Name filtering as well just in case they search by Name
+                const tdName = tr[i].getElementsByTagName("td")[1];
+                
+                if (tdReg || tdName) {
+                    const txtReg = tdReg ? (tdReg.textContent || tdReg.innerText) : "";
+                    const txtName = tdName ? (tdName.textContent || tdName.innerText) : "";
+                    
+                    if (txtReg.toUpperCase().indexOf(filter) > -1 || txtName.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
 </body>
 </html>
